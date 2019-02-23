@@ -90,7 +90,6 @@ vector<Point*> loadModel(char* modelFile)
     vector<Point*> model;
     ifstream infile(modelFile);
     while (infile >> x >> y >> z) {
-        cerr << x << " " << y << " " << z << endl;
         model.push_back(new Point(x, y, z));
     }
 
