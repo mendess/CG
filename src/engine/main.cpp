@@ -1,13 +1,13 @@
-#include "point.hpp"
-#include "rapidxml.hpp"
+#include "../common/point.hpp"
+#include "../dependencies/rapidxml.hpp"
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
+#include <functional>
 #include <iostream>
+#include <random>
 #include <string>
 #include <vector>
-#include <random>
-#include <functional>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -21,9 +21,11 @@ using namespace std;
 
 static vector<vector<Point*>> models;
 
-float CAM_X = sin(0.0) * 5;
+float CAM_D = 5;
+float SCALE = 1;
+float CAM_X = sin(0.0) * CAM_D;
 float CAM_Y = 5.0;
-float CAM_Z = cos(0.0) * 5;
+float CAM_Z = cos(0.0) * CAM_D;
 
 void changeSize(int w, int h)
 {
@@ -69,11 +71,11 @@ char* read_file()
 void drawTriangle(Point* a, Point* b, Point* c)
 {
     static default_random_engine generator;
-    static uniform_int_distribution<int> distribution(0,100);
+    static uniform_int_distribution<int> distribution(0, 100);
     static auto rng = std::bind(distribution, generator);
-    float r = (((float) rng()) / 100.0f);
-    float g = (((float) rng()) / 100.0f);
-    float u = (((float) rng()) / 100.0f);
+    float r = (((float)rng()) / 100.0f);
+    float g = (((float)rng()) / 100.0f);
+    float u = (((float)rng()) / 100.0f);
     glColor3f(r, g, u);
     glBegin(GL_TRIANGLES);
     {
@@ -114,6 +116,7 @@ void renderScene()
     gluLookAt(CAM_X, CAM_Y, CAM_Z,
         0.0, 0.0, 0.0,
         0.0f, 1.0f, 0.0f);
+    glScalef(SCALE, SCALE, SCALE);
     for (vector<vector<Point*>>::iterator it = models.begin(); it != models.end(); ++it) {
         drawModel(*it);
     }
@@ -137,35 +140,52 @@ void loadModels()
     }
 }
 
-
 void key_bindings(unsigned char key, int _x, int _y)
 {
     static float px = 0.0;
     static float pz = 0.0;
+    bool moveCam = false;
     switch (key) {
+    case 'q':
+        exit(0);
     case 'j':
         CAM_Y -= 0.1;
+        break;
+    case '+':
+        SCALE += 0.1;
+        break;
+    case '-':
+        SCALE -= 0.1;
         break;
     case 'k':
         CAM_Y += 0.1;
         break;
     case 'l':
-        CAM_X = sin(px) * 5;
         px += 0.1;
-        CAM_Z = cos(pz) * 5;
         pz += 0.1;
+        moveCam = true;
         break;
     case 'h':
-        CAM_X = sin(px) * 5;
         px -= 0.1;
-        CAM_Z = cos(pz) * 5;
         pz -= 0.1;
+        moveCam = true;
         break;
-    case 'q':
-        exit(0);
+    case 'o':
+        CAM_D += 0.1;
+        moveCam = true;
+        break;
+    case 'i':
+        CAM_D -= 0.1;
+        moveCam = true;
+        break;
+    }
+    if (moveCam) {
+        CAM_X = sin(px) * CAM_D;
+        CAM_Z = cos(pz) * CAM_D;
     }
     renderScene();
 }
+
 int main(int argc, char** argv)
 {
     loadModels();
