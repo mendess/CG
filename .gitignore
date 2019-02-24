@@ -32,4 +32,6 @@
 *.app
 
 out/*
+target/*
 *.3d
+*.xml
