@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 # Project Name
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_executable(engine main.cpp )
+add_executable(engine main.cpp model.cpp)
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})
@@ -40,9 +40,3 @@ else (WIN32) #Linux and Mac
 	   message(ERROR ": GLUT not found!")
 	endif(NOT GLUT_FOUND)
 endif(WIN32)
-
-
-
-
-
-
