@@ -17,7 +17,7 @@ public:
     int num_points() const { return points.size(); };
     bool draw_model() const;
     char* name() const { return modelName; };
-    ~Model() {};
+    ~Model() { free(modelName); };
 };
 
 class Models {

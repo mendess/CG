@@ -15,6 +15,7 @@ public:
     float x() { return _x; }
     float y() { return _y; }
     float z() { return _z; }
+    ~Point() {}
 };
 
 #endif // POINT_H

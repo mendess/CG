@@ -23,6 +23,7 @@ Model::Model(char* modelFile)
         points.push_back(new Point(x, y, z));
     }
     modelName = modelFile;
+    infile.close();
 }
 
 void drawTriangle(Point* a, Point* b, Point* c)
@@ -74,10 +75,17 @@ void Models::load(string config)
 
     text.assign((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
     xml_document<> doc;
-    doc.parse<0>(strdup(text.data()));
-    xml_node<>* node = doc.first_node("scene");
-    for (node = node->first_node(); node; node = node->next_sibling()) {
-        xml_attribute<>* attr = node->first_attribute();
-        Models::get()->add_model(Model(attr->value()));
+    char* t = strdup(text.data());
+    try {
+        doc.parse<0>(t);
+        xml_node<>* node = doc.first_node("scene");
+        for (node = node->first_node(); node; node = node->next_sibling()) {
+            xml_attribute<>* attr = node->first_attribute();
+            Models::get()->add_model(Model(strdup(attr->value())));
+        }
+    } catch (rapidxml::parse_error e) {
+        cout << config << ": " << e.what() << " " << endl;
     }
+    doc.clear();
+    free(t);
 }
