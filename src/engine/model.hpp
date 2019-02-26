@@ -8,16 +8,15 @@
 
 class Model {
 private:
-    std::vector<Point*> points;
+    std::vector<Point> points;
     char* modelName;
 
 public:
     Model(char*);
-    const Point* get_point(int i) const { return points[i]; };
-    int num_points() const { return points.size(); };
+    Model(const Model& other);
     bool draw_model() const;
     char* name() const { return modelName; };
-    ~Model() {};
+    ~Model() { free(modelName); };
 };
 
 class Models {
