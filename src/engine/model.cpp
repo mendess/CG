@@ -20,13 +20,19 @@ Model::Model(char* modelFile)
     float x, y, z;
     ifstream infile(modelFile);
     while (infile >> x >> y >> z) {
-        points.push_back(new Point(x, y, z));
+        points.push_back(Point(x, y, z));
     }
-    modelName = modelFile;
+    modelName = strdup(modelFile);
     infile.close();
 }
 
-void drawTriangle(Point* a, Point* b, Point* c)
+Model::Model(const Model& other)
+    : points(other.points)
+    , modelName(strdup(other.modelName))
+{
+}
+
+void drawTriangle(const Point* a, const Point* b, const Point* c)
 {
     static default_random_engine generator;
     static uniform_int_distribution<int> distribution(0, 100);
@@ -49,11 +55,11 @@ bool Model::draw_model() const
     if (points.size() % 3 != 0) {
         return false;
     }
-    vector<Point*>::const_iterator it = points.begin();
+    vector<Point>::const_iterator it = points.begin();
     while (it != points.end()) {
-        Point* a = *it++;
-        Point* b = *it++;
-        Point* c = *it++;
+        const Point* a = &*it++;
+        const Point* b = &*it++;
+        const Point* c = &*it++;
         drawTriangle(a, b, c);
     }
     return true;
@@ -81,7 +87,7 @@ void Models::load(string config)
         xml_node<>* node = doc.first_node("scene");
         for (node = node->first_node(); node; node = node->next_sibling()) {
             xml_attribute<>* attr = node->first_attribute();
-            Models::get()->add_model(Model(strdup(attr->value())));
+            Models::get()->add_model(Model(attr->value()));
         }
     } catch (rapidxml::parse_error e) {
         cout << config << ": " << e.what() << " " << endl;
