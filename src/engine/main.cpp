@@ -10,11 +10,11 @@
 
 using namespace std;
 
-float CAM_D = 20;
+float CAM_R = 5;
 float SCALE = 1;
-float CAM_X = sin(0.0) * CAM_D;
-float CAM_Y = 1.0;
-float CAM_Z = cos(0.0) * CAM_D;
+float CAM_X = cos(0.0) * sin(0.0) * CAM_R;
+float CAM_Y = 0.0;
+float CAM_Z = cos(0.0) * cos(0.0) * CAM_R;
 
 void changeSize(int w, int h)
 {
@@ -86,14 +86,28 @@ void renderScene()
 
 void key_bindings(unsigned char key, int _x, int _y)
 {
-    static float px = 0.0;
-    static float pz = 0.0;
-    bool moveCam = false;
+    static float _alpha = 0.0;
+    static float _beta = 0.0;
     switch (key) {
-    case 'q':
-        exit(0);
     case 'j':
-        CAM_Y -= 0.1;
+        if (_beta + 0.1 < M_PI / 2)
+            _beta += 0.1;
+        break;
+    case 'k':
+        if (_beta - 0.1 > -M_PI / 2)
+            _beta -= 0.1;
+        break;
+    case 'l':
+        _alpha += 0.1;
+        break;
+    case 'h':
+        _alpha -= 0.1;
+        break;
+    case 'i':
+        CAM_R -= 0.1;
+        break;
+    case 'o':
+        CAM_R += 0.1;
         break;
     case '+':
         SCALE += 0.1;
@@ -101,32 +115,12 @@ void key_bindings(unsigned char key, int _x, int _y)
     case '-':
         SCALE -= 0.1;
         break;
-    case 'k':
-        CAM_Y += 0.1;
-        break;
-    case 'l':
-        px += 0.1;
-        pz += 0.1;
-        moveCam = true;
-        break;
-    case 'h':
-        px -= 0.1;
-        pz -= 0.1;
-        moveCam = true;
-        break;
-    case 'o':
-        CAM_D += 0.1;
-        moveCam = true;
-        break;
-    case 'i':
-        CAM_D -= 0.1;
-        moveCam = true;
-        break;
+    case 'q':
+        exit(0);
     }
-    if (moveCam) {
-        CAM_X = sin(px) * CAM_D;
-        CAM_Z = cos(pz) * CAM_D;
-    }
+    CAM_X = CAM_R * cos(_beta) * sin(_alpha);
+    CAM_Z = CAM_R * cos(_beta) * cos(_alpha);
+    CAM_Y = CAM_R * sin(_beta);
     renderScene();
 }
 
