@@ -42,11 +42,11 @@ void printHelpPage(char* programName)
          << "\nUse --help Option to learn what params to pass to the options" << endl;
 }
 
-void write_to_file(char *fileName, vector<Point>* points)
+void write_to_file(char *fileName, vector<Point*>* points)
 {
     ofstream file(fileName);
-    for(vector<Point>::const_iterator it = points->begin(); it != points->end(); ++it){
-        file << (*it).to_string() << endl;
+    for(vector<Point*>::const_iterator it = points->begin(); it != points->end(); ++it){
+        file << (*it)->to_string() << endl;
     }
 }
 
@@ -94,7 +94,7 @@ bool parse_sphere(int argc, char** args, double* radius, double* slices, double*
     return true;
 }
 
-bool parse_cone(int argc, char** args, double* radius, double* slices, double* stacks)
+bool parse_cone(int argc, char** args, double* radius, int* slices, int* stacks)
 {
     if (argc < 3) {
         printHelpCone();
@@ -103,9 +103,9 @@ bool parse_cone(int argc, char** args, double* radius, double* slices, double* s
     char* test;
     *radius = strtod(args[2], &test);
     PARSE_OR_RETURN(args[2], test, printHelpCone);
-    *slices = strtod(args[3], &test);
+    *slices = strtol(args[3], &test, 10);
     PARSE_OR_RETURN(args[3], test, printHelpCone);
-    *stacks = strtod(args[4], &test);
+    *stacks = strtol(args[4], &test, 10);
     PARSE_OR_RETURN(args[4], test, printHelpCone);
     return true;
 }
@@ -116,7 +116,7 @@ int main(int argc, char** argv)
         printHelpPage(argv[0]);
         return 1;
     }
-    vector<Point> points;
+    vector<Point*> points;
     if (!strcmp("plane", argv[2])) {
         double side_length;
         if (parse_plane(argc - 3, argv + 3, &side_length)) {
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
     } else if (!strcmp("box", argv[2])) {
         double x, y, z;
         if (parse_box(argc - 3, argv + 3, &x, &y, &z)) {
-            points = draw_box(x, y, z);
+            points = draw_box(x, y, z, 0);
         } else {
             return 1;
         }
@@ -139,9 +139,10 @@ int main(int argc, char** argv)
             return 1;
         }
     } else if (!strcmp("cone", argv[2])) {
-        double radius = 0, slices = 0, stacks = 0;
+        double radius = 0;
+        int slices = 0, stacks = 0;
         if (parse_cone(argc - 3, argv + 3, &radius, &slices, &stacks)) {
-            points = draw_cone(radius, slices, stacks);
+            points = draw_cone(radius, 10.0, slices, stacks);
         } else {
             return 1;
         }
