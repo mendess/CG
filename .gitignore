@@ -35,3 +35,9 @@ out/*
 target/*
 *.3d
 *.xml
+
+*.log
+*.aux
+*.out
+*.toc
+Report.pdf
