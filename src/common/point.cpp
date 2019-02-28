@@ -7,6 +7,6 @@ Point::Point(float x, float y, float z): _x(x), _y(y), _z(z){}
 std::string Point::to_string() const
 {
     std::ostringstream sstream;
-    sstream << _x << ' ' << _y << ' ' << _z << '\n';
+    sstream << _x << ' ' << _y << ' ' << _z;
     return sstream.str();
 }
