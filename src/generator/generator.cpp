@@ -12,13 +12,13 @@ std::vector<Point*> draw_plane(double side_length){
 
         //first triangle
         coordsPlane.push_back(new Point(axis, 0, axis));
-        coordsPlane.push_back(new Point(-axis, 0, axis));
         coordsPlane.push_back(new Point(-axis, 0, -axis));
+        coordsPlane.push_back(new Point(-axis, 0, axis));
 
         //second triangle
         coordsPlane.push_back(new Point(-axis, 0, -axis));
-        coordsPlane.push_back(new Point(axis, 0, -axis));
         coordsPlane.push_back(new Point(axis, 0, axis));
+        coordsPlane.push_back(new Point(axis, 0, -axis));
 
 	return coordsPlane;
 }
