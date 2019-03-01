@@ -148,7 +148,7 @@ std::vector<Point*> draw_cone(double radius, double height, int slices, int stac
 
 	vector<Point*> coordsCone;
 	float phi = (2 * M_PI) / slices;
-	float stackSpacing = height / stacks;
+	float stackSpacing = sqrt(pow(radius,2) + pow(height,2)) / stacks;
 	float theta = radius / slices;
 
 	for(int i = 0; i < stacks; i++){
