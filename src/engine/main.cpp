@@ -10,19 +10,21 @@
 
 using namespace std;
 
-enum class Camera { EXPLORER,
-    FPS };
+enum class Camera {
+    EXPLORER,
+    FPS
+};
 
 static float CAM_R = 5;
 static float SCALE = 1;
 static float CAM_X = cos(0.0) * sin(0.0) * CAM_R;
 static float CAM_Y = 0.0;
 static float CAM_Z = cos(0.0) * cos(0.0) * CAM_R;
-static float CAM_LOOK_X = 1.0;
+static float CAM_LOOK_X = 0.0;
 static float CAM_LOOK_Y = 0.0;
-static float CAM_LOOK_Z = 0.0;
-static float _alpha = 0.0;
-static float _beta = 0.0;
+static float CAM_LOOK_Z = 1.0;
+static float ALPHA = 0.0;
+static float BETA = 0.0;
 static Camera CURRENT_CAM = Camera::EXPLORER;
 
 void changeSize(int w, int h)
@@ -104,22 +106,36 @@ void renderScene()
     glutSwapBuffers();
 }
 
+void update_cam_pos()
+{
+    CAM_X = CAM_R * cos(BETA) * sin(ALPHA);
+    CAM_Z = CAM_R * cos(BETA) * cos(ALPHA);
+    CAM_Y = CAM_R * sin(BETA);
+}
+
+void update_cam_look()
+{
+    CAM_LOOK_X = cos(BETA) * sin(ALPHA);
+    CAM_LOOK_Z = cos(BETA) * cos(ALPHA);
+    CAM_LOOK_Y = sin(BETA);
+}
+
 void explorer_cam(unsigned char key)
 {
     switch (key) {
-    case 'j':
-        if (_beta + 0.1 < M_PI / 2)
-            _beta += 0.1;
-        break;
     case 'k':
-        if (_beta - 0.1 > -M_PI / 2)
-            _beta -= 0.1;
+        if (BETA + 0.1 < M_PI / 2)
+            BETA += 0.1;
+        break;
+    case 'j':
+        if (BETA - 0.1 > -M_PI / 2)
+            BETA -= 0.1;
         break;
     case 'l':
-        _alpha += 0.1;
+        ALPHA += 0.1;
         break;
     case 'h':
-        _alpha -= 0.1;
+        ALPHA -= 0.1;
         break;
     case 'i':
         CAM_R -= 0.1;
@@ -127,19 +143,10 @@ void explorer_cam(unsigned char key)
     case 'o':
         CAM_R += 0.1;
         break;
-    case '+':
-        SCALE += 0.1;
-        break;
-    case '-':
-        SCALE -= 0.1;
-        break;
     }
-    CAM_X = CAM_R * cos(_beta) * sin(_alpha);
-    CAM_Z = CAM_R * cos(_beta) * cos(_alpha);
-    CAM_Y = CAM_R * sin(_beta);
+    update_cam_pos();
 }
 
-#include <iostream>
 void fps_cam(unsigned char key)
 {
     const double speed = 1.0;
@@ -160,25 +167,28 @@ void fps_cam(unsigned char key)
         CAM_X += speed * -1 * CAM_LOOK_X;
         CAM_Z += speed * -1 * CAM_LOOK_Z;
         break;
-    case 'j':
-        _alpha += 0.1;
-        CAM_LOOK_X = cos(_beta) * sin(_alpha);
-        CAM_LOOK_Z = cos(_beta) * cos(_alpha);
+    case 'h':
+        ALPHA += 0.05;
         break;
     case 'l':
-        _alpha -= 0.1;
-        CAM_LOOK_X = cos(_beta) * sin(_alpha);
-        CAM_LOOK_Z = cos(_beta) * cos(_alpha);
+        ALPHA -= 0.05;
         break;
-    case 'H':
-        CAM_Y += 1.0;
+    case 'j':
+        if (BETA - 0.1 > -M_PI / 2)
+            BETA -= 0.01;
         break;
-    case 'h':
-        CAM_Y -= 1.0;
+    case 'k':
+        if (BETA + 0.1 < M_PI / 2)
+            BETA += 0.01;
+        break;
+    case 'G':
+        CAM_Y += 0.1;
+        break;
+    case 'g':
+        CAM_Y -= 0.1;
         break;
     }
-    cerr << "CAM_X: " << CAM_X << " CAM_Y " << CAM_Y << " CAM_Z " << CAM_Z << " ";
-    cerr << "CAM_L_X: " << CAM_LOOK_X << " CAM_L_Y " << CAM_LOOK_Y << " CAM_L_Z " << CAM_LOOK_Z << endl;
+    update_cam_look();
 }
 
 void key_bindings(unsigned char key, int _x, int _y)
@@ -188,15 +198,27 @@ void key_bindings(unsigned char key, int _x, int _y)
     switch (key) {
     case 'v':
         switch (CURRENT_CAM) {
-        case Camera::EXPLORER:
-            current_cam = fps_cam;
-            CURRENT_CAM = Camera::FPS;
-            break;
         case Camera::FPS:
             current_cam = explorer_cam;
             CURRENT_CAM = Camera::EXPLORER;
             break;
+        case Camera::EXPLORER:
+            current_cam = fps_cam;
+            CURRENT_CAM = Camera::FPS;
+            ALPHA = ALPHA + M_PI;
+            BETA = BETA + M_PI;
+            cerr << "alpha: " << ALPHA << " beta: " << BETA << endl;
+            CAM_LOOK_X = cos(BETA) * sin(ALPHA);
+            CAM_LOOK_Z = cos(BETA) * cos(ALPHA);
+            CAM_LOOK_Y = sin(BETA);
+            break;
         }
+        break;
+    case '+':
+        SCALE += 0.1;
+        break;
+    case '-':
+        SCALE -= 0.1;
         break;
     case 'q':
         exit(0);
