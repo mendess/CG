@@ -10,10 +10,10 @@
 
 using namespace std;
 
-float CAM_D = 5;
+float CAM_D = 20;
 float SCALE = 1;
 float CAM_X = sin(0.0) * CAM_D;
-float CAM_Y = 5.0;
+float CAM_Y = 1.0;
 float CAM_Z = cos(0.0) * CAM_D;
 
 void changeSize(int w, int h)

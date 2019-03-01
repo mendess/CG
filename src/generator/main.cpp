@@ -102,19 +102,19 @@ bool parse_sphere(int argc, char** args, double* radius, double* slices, double*
 
 bool parse_cone(int argc, char** args, double* radius, double* height, int* slices, int* stacks)
 {
-    if (argc < 3) {
+    if (argc < 4) {
         printHelpCone();
         return 1;
     }
     char* test;
-    *radius = strtod(args[2], &test);
+    *radius = strtod(args[0], &test);
+    PARSE_OR_RETURN(args[0], test, printHelpCone);
+    *height = strtod(args[1], &test);
+    PARSE_OR_RETURN(args[1], test, printHelpCone);
+    *slices = strtol(args[2], &test, 10);
     PARSE_OR_RETURN(args[2], test, printHelpCone);
-    *height = strtod(args[2], &test);
-    PARSE_OR_RETURN(args[2], test, printHelpCone);
-    *slices = strtol(args[3], &test, 10);
+    *stacks = strtol(args[3], &test, 10);
     PARSE_OR_RETURN(args[3], test, printHelpCone);
-    *stacks = strtol(args[4], &test, 10);
-    PARSE_OR_RETURN(args[4], test, printHelpCone);
     return true;
 }
 
