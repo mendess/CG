@@ -152,8 +152,7 @@ public:
     {
         mode = CameraType::EXPLORER;
         alpha = atan(x / z);
-        if ((z < 0.0 && x > 0.0) || (z < 0.0 && x < 0.0))
-            alpha += M_PI;
+        if (z < 0.0) alpha += M_PI;
         beta = asin(y / sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)));
         radius = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
         update_cam_pos();
