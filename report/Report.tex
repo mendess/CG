@@ -52,11 +52,38 @@ O projecto está dividido em dois executaveis, o \texttt{generator} e o \texttt{
 
 \section{Primitivas}
 \subsection{Plano}
+
 \subsection{Paralelepípedo}
+
 \subsection{Esfera}
+
 \subsection{Cone}
 
 \section{Camera}
+A camera pode ser utilizada em dois modos, \textit{Explorer mode} e \textit{FPS mode}, que podem ser alternados durante a execução do engine.
+
+\subsection{Explorer Mode}
+
+Neste modo o movimento da camera pode ser descrito por uma superfície esférica na qual o utilizador se movimenta, enquanto mantém o seu olhar fixo na origem do referencial. O raio desta esfera pode ser aumentado para afastar o utilizador do centro do espaço 3d.
+
+\subsection{FPS Mode}
+
+Neste modo a posição da camera no espaço 3d é completamente livre, podendo o utilizador se mover em linha recta em qualquer direcção. Pode também alterar o ponto para o qual está a olhar na horizontal e na vertical.
+\subsubsection{Controlos \textit{(key bindings)}}
+
+\begin{itemize}
+    \item \texttt{w}: Mover para a frente
+    \item \texttt{a}: Andar para a esquerda
+    \item \texttt{s}: Andar para trás
+    \item \texttt{d}: Andar para a direita
+    \item \texttt{h}: Olhar para a esquerda
+    \item \texttt{j}: Olhar para baixo
+    \item \texttt{k}: Olhar para cima
+    \item \texttt{l}: Olhar para a direita
+    \item \texttt{g}: Descer
+    \item \texttt{Shift+G} Subir
+\end{itemize}
+
 
 \section{Controlos \textit{(key bindings)}}
 
