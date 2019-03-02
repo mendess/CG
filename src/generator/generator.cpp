@@ -149,7 +149,8 @@ std::vector<Point*> draw_cone(double radius, double height, int slices, int stac
 	vector<Point*> coordsCone;
 	float phi = (2 * M_PI) / slices;
 	float stackSpacing = sqrt(pow(radius,2) + pow(height,2)) / stacks;
-	float theta = radius / slices;
+	float theta = (M_PI / 2) / stacks;
+	/*float theta = radius / slices;*/
 
 	for(int i = 0; i < stacks; i++){
 		for(int k = 0; k < slices; k++){
@@ -175,7 +176,16 @@ std::vector<Point*> draw_cone(double radius, double height, int slices, int stac
 				coordsCone.push_back(new Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
 				coordsCone.push_back(new Point((radius - theta * i) * sin(phi * (k+1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k+1))));
 				coordsCone.push_back(new Point((radius - theta * (i+1)) * sin(phi * (k+1)), (i+1) * stackSpacing, (radius - theta * (i+1)) * cos(phi * (k+1))));
-				}
+				} 
+
+		/*	if(i == 0){
+				//Base
+				coordsCone.push_back(new Point(0, 0, 0));
+				coordsCone.push_back(new Point(radius * cos(0) * cos(phi * (k+1)), 0, radius * cos(0) * sin(phi * (k+1))));
+                                coordsCone.push_back(new Point(radius * cos(0)  * cos(phi * k), 0, radius * cos(phi * k)));
+
+				
+			}*/
 		}
 	}
 
