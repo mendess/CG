@@ -10,44 +10,202 @@
 
 using namespace std;
 
-enum class Camera {
+enum class CameraType {
     EXPLORER,
     FPS
 };
 
-static float CAM_R = 5;
+class Camera {
+private:
+    static float speed;
+    static float radius;
+    static float x;
+    static float y;
+    static float z;
+    static float look_x;
+    static float look_y;
+    static float look_z;
+    static float alpha;
+    static float beta;
+    static CameraType mode;
+
+public:
+    static void place_camera()
+    {
+        switch (mode) {
+        case CameraType::EXPLORER:
+            gluLookAt(x, y, z,
+                0.0, 0.0, 0.0,
+                0.0f, 1.0f, 0.0f);
+            break;
+        case CameraType::FPS:
+            gluLookAt(x, y, z,
+                x + look_x, y + look_y, z + look_z,
+                0.0f, 1.0f, 0.0f);
+            break;
+        }
+    }
+
+    static void update_cam_pos()
+    {
+        x = radius * cos(beta) * sin(alpha);
+        z = radius * cos(beta) * cos(alpha);
+        y = radius * sin(beta);
+    }
+
+    static void update_cam_look()
+    {
+        look_x = cos(beta) * sin(alpha);
+        look_z = cos(beta) * cos(alpha);
+        look_y = sin(beta);
+    }
+
+    static void fps_move_forward()
+    {
+        x += speed * look_x;
+        z += speed * look_z;
+    }
+
+    static void fps_move_left()
+    {
+        x += speed * look_z;
+        z += speed * -1 * look_x;
+    }
+
+    static void fps_move_back()
+    {
+        x += speed * -1 * look_x;
+        z += speed * -1 * look_z;
+    }
+
+    static void fps_move_right()
+    {
+        x += speed * -1 * look_z;
+        z += speed * look_x;
+    }
+
+    static void fps_look_left()
+    {
+        alpha += 0.05;
+    }
+
+    static void fps_look_down()
+    {
+        if (beta - 0.1 > -M_PI / 2)
+            beta -= 0.1;
+    }
+
+    static void fps_look_up()
+    {
+        if (beta + 0.1 < M_PI / 2)
+            beta += 0.1;
+    }
+
+    static void fps_look_right()
+    {
+        alpha -= 0.05;
+    }
+
+    static void fps_move_down()
+    {
+        y -= 0.1;
+    }
+
+    static void fps_move_up()
+    {
+        y += 0.1;
+    }
+
+    static void explorer_move_up()
+    {
+        if (beta + 0.1 < M_PI / 2)
+            beta += 0.1;
+    }
+
+    static void explorer_move_down()
+    {
+        if (beta - 0.1 > -M_PI / 2)
+            beta -= 0.1;
+    }
+
+    static void explorer_move_c_clockwise()
+    {
+        alpha += 0.1;
+    }
+
+    static void explorer_move_clockwise()
+    {
+        alpha -= 0.1;
+    }
+
+    static void explorer_move_in()
+    {
+        radius -= 0.1;
+    }
+
+    static void explorer_move_out()
+    {
+        radius += 0.1;
+    }
+
+    static void set_explorer()
+    {
+        mode = CameraType::EXPLORER;
+        alpha = atan(x / z);
+        if ((z < 0.0 && x > 0.0) || (z < 0.0 && x < 0.0))
+            alpha += M_PI;
+        beta = asin(y / sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)));
+        radius = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+        update_cam_pos();
+    }
+
+    static void set_fps()
+    {
+        mode = CameraType::FPS;
+        if (alpha < 0.0) {
+            alpha += M_PI;
+        } else {
+            alpha -= M_PI;
+        }
+        beta = -beta;
+        update_cam_look();
+    }
+
+    static CameraType current_cam()
+    {
+        return mode;
+    }
+};
+
+float Camera::speed = 1.0;
+float Camera::radius = 5;
+float Camera::x = cos(0.0) * sin(0.0) * radius;
+float Camera::y = 0.0;
+float Camera::z = cos(0.0) * cos(0.0) * radius;
+float Camera::look_x = 0.0;
+float Camera::look_y = 0.0;
+float Camera::look_z = 1.0;
+float Camera::alpha = 0.0;
+float Camera::beta = 0.0;
+CameraType Camera::mode = CameraType::EXPLORER;
+
 static float SCALE = 1;
-static float CAM_X = cos(0.0) * sin(0.0) * CAM_R;
-static float CAM_Y = 0.0;
-static float CAM_Z = cos(0.0) * cos(0.0) * CAM_R;
-static float CAM_LOOK_X = 0.0;
-static float CAM_LOOK_Y = 0.0;
-static float CAM_LOOK_Z = 1.0;
-static float ALPHA = 0.0;
-static float BETA = 0.0;
-static Camera CURRENT_CAM = Camera::EXPLORER;
 
 void changeSize(int w, int h)
 {
     // Prevent a divide by zero, when window is too short
     // (you cant make a window with zero width).
-    if (h == 0)
-        h = 1;
-
+    if (h == 0) h = 1;
     // compute window's aspect ratio
     float ratio = w * 1.0 / h;
-
     // Set the projection matrix as current
     glMatrixMode(GL_PROJECTION);
     // Load Identity Matrix
     glLoadIdentity();
-
     // Set the viewport to be the entire window
     glViewport(0, 0, w, h);
-
     // Set perspective
     gluPerspective(45.0f, ratio, 1.0f, 1000.0f);
-
     // return to the model view matrix mode
     glMatrixMode(GL_MODELVIEW);
 }
@@ -56,42 +214,29 @@ void renderScene()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    switch (CURRENT_CAM) {
-    case Camera::EXPLORER:
-        gluLookAt(CAM_X, CAM_Y, CAM_Z,
-            0.0, 0.0, 0.0,
-            0.0f, 1.0f, 0.0f);
-        break;
-    case Camera::FPS:
-        gluLookAt(CAM_X, CAM_Y, CAM_Z,
-            CAM_X + CAM_LOOK_X, CAM_Y + CAM_LOOK_Y, CAM_Z + CAM_LOOK_Z,
-            0.0f, 1.0f, 0.0f);
-        break;
-    }
+    Camera::place_camera();
     // x axis
     glColor3f(1, 0, 0);
     glBegin(GL_LINES);
     {
-        glVertex3f(-1000, 0, 0);
-        glVertex3f(1000, 0, 0);
+        glVertex3f(-10000, 0, 0);
+        glVertex3f(10000, 0, 0);
     }
     glEnd();
-
     // y axis
     glColor3f(0, 1, 0);
     glBegin(GL_LINES);
     {
-        glVertex3f(0, -1000, 0);
-        glVertex3f(0, 1000, 0);
+        glVertex3f(0, -10000, 0);
+        glVertex3f(0, 10000, 0);
     }
     glEnd();
-
     // z axis
     glColor3f(0, 0, 1);
     glBegin(GL_LINES);
     {
-        glVertex3f(0, 0, -1000);
-        glVertex3f(0, 0, 1000);
+        glVertex3f(0, 0, -10000);
+        glVertex3f(0, 0, 10000);
     }
     glEnd();
     glScalef(SCALE, SCALE, SCALE);
@@ -106,89 +251,66 @@ void renderScene()
     glutSwapBuffers();
 }
 
-void update_cam_pos()
-{
-    CAM_X = CAM_R * cos(BETA) * sin(ALPHA);
-    CAM_Z = CAM_R * cos(BETA) * cos(ALPHA);
-    CAM_Y = CAM_R * sin(BETA);
-}
-
-void update_cam_look()
-{
-    CAM_LOOK_X = cos(BETA) * sin(ALPHA);
-    CAM_LOOK_Z = cos(BETA) * cos(ALPHA);
-    CAM_LOOK_Y = sin(BETA);
-}
-
 void explorer_cam(unsigned char key)
 {
     switch (key) {
     case 'k':
-        if (BETA + 0.1 < M_PI / 2)
-            BETA += 0.1;
+        Camera::explorer_move_up();
         break;
     case 'j':
-        if (BETA - 0.1 > -M_PI / 2)
-            BETA -= 0.1;
+        Camera::explorer_move_down();
         break;
     case 'l':
-        ALPHA += 0.1;
+        Camera::explorer_move_c_clockwise();
         break;
     case 'h':
-        ALPHA -= 0.1;
+        Camera::explorer_move_clockwise();
         break;
     case 'i':
-        CAM_R -= 0.1;
+        Camera::explorer_move_in();
         break;
     case 'o':
-        CAM_R += 0.1;
+        Camera::explorer_move_out();
         break;
     }
-    update_cam_pos();
+    Camera::update_cam_pos();
 }
 
 void fps_cam(unsigned char key)
 {
-    const double speed = 1.0;
     switch (key) {
     case 'w':
-        CAM_X += speed * CAM_LOOK_X;
-        CAM_Z += speed * CAM_LOOK_Z;
+        Camera::fps_move_forward();
         break;
     case 'a':
-        CAM_X += speed * CAM_LOOK_Z;
-        CAM_Z += speed * -1 * CAM_LOOK_X;
+        Camera::fps_move_left();
         break;
     case 'd':
-        CAM_X += speed * -1 * CAM_LOOK_Z;
-        CAM_Z += speed * CAM_LOOK_X;
+        Camera::fps_move_right();
         break;
     case 's':
-        CAM_X += speed * -1 * CAM_LOOK_X;
-        CAM_Z += speed * -1 * CAM_LOOK_Z;
+        Camera::fps_move_back();
         break;
     case 'h':
-        ALPHA += 0.05;
+        Camera::fps_look_left();
         break;
     case 'l':
-        ALPHA -= 0.05;
+        Camera::fps_look_right();
         break;
     case 'j':
-        if (BETA - 0.1 > -M_PI / 2)
-            BETA -= 0.1;
+        Camera::fps_look_down();
         break;
     case 'k':
-        if (BETA + 0.1 < M_PI / 2)
-            BETA += 0.1;
-        break;
-    case 'G':
-        CAM_Y += 0.1;
+        Camera::fps_look_up();
         break;
     case 'g':
-        CAM_Y -= 0.1;
+        Camera::fps_move_down();
+        break;
+    case 'G':
+        Camera::fps_move_up();
         break;
     }
-    update_cam_look();
+    Camera::update_cam_look();
 }
 
 void key_bindings(unsigned char key, int _x, int _y)
@@ -197,27 +319,14 @@ void key_bindings(unsigned char key, int _x, int _y)
     current_cam(key);
     switch (key) {
     case 'v':
-        switch (CURRENT_CAM) {
-        case Camera::FPS:
-            current_cam = explorer_cam;
-            CURRENT_CAM = Camera::EXPLORER;
-            ALPHA = atan(CAM_X / CAM_Z);
-            if ((CAM_Z < 0.0 && CAM_X > 0.0) || (CAM_Z < 0.0 && CAM_X < 0.0))
-                ALPHA += M_PI;
-            BETA = asin(CAM_Y / sqrt(pow(CAM_X, 2) + pow(CAM_Y, 2) + pow(CAM_Z, 2)));
-            CAM_R = sqrt(pow(CAM_X, 2) + pow(CAM_Y, 2) + pow(CAM_Z, 2));
-            update_cam_pos();
-            break;
-        case Camera::EXPLORER:
+        switch (Camera::current_cam()) {
+        case CameraType::EXPLORER:
             current_cam = fps_cam;
-            CURRENT_CAM = Camera::FPS;
-            if (ALPHA < 0.0) {
-                ALPHA += M_PI;
-            } else {
-                ALPHA -= M_PI;
-            }
-            BETA = -BETA;
-            update_cam_look();
+            Camera::set_fps();
+            break;
+        case CameraType::FPS:
+            current_cam = explorer_cam;
+            Camera::set_explorer();
             break;
         }
         break;
@@ -242,19 +351,14 @@ int main(int argc, char** argv)
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(800, 800);
     glutCreateWindow("CG-Engine");
-
     // Required callback registry
     glutDisplayFunc(renderScene);
     glutReshapeFunc(changeSize);
-
     glutKeyboardFunc(key_bindings);
-
     //  OpenGL settings
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-
     // enter GLUT's main cycle
     glutMainLoop();
-
     return 1;
 }
