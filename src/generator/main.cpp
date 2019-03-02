@@ -67,7 +67,7 @@ bool parse_plane(int argc, char** args, double* side_length)
 bool parse_box(int argc, char** args, double* x, double* y, double* z, int* divisions)
 {
     if (argc < 3) {
-        printHelpPlane();
+        printHelpBox();
         return false;
     }
     char* test;
