@@ -10,11 +10,22 @@
 
 using namespace std;
 
-float CAM_D = 20;
-float SCALE = 1;
-float CAM_X = sin(0.0) * CAM_D;
-float CAM_Y = 1.0;
-float CAM_Z = cos(0.0) * CAM_D;
+enum class Camera {
+    EXPLORER,
+    FPS
+};
+
+static float CAM_R = 5;
+static float SCALE = 1;
+static float CAM_X = cos(0.0) * sin(0.0) * CAM_R;
+static float CAM_Y = 0.0;
+static float CAM_Z = cos(0.0) * cos(0.0) * CAM_R;
+static float CAM_LOOK_X = 0.0;
+static float CAM_LOOK_Y = 0.0;
+static float CAM_LOOK_Z = 1.0;
+static float ALPHA = 0.0;
+static float BETA = 0.0;
+static Camera CURRENT_CAM = Camera::EXPLORER;
 
 void changeSize(int w, int h)
 {
@@ -45,7 +56,18 @@ void renderScene()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    gluLookAt(CAM_X, CAM_Y, CAM_Z, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
+    switch (CURRENT_CAM) {
+    case Camera::EXPLORER:
+        gluLookAt(CAM_X, CAM_Y, CAM_Z,
+            0.0, 0.0, 0.0,
+            0.0f, 1.0f, 0.0f);
+        break;
+    case Camera::FPS:
+        gluLookAt(CAM_X, CAM_Y, CAM_Z,
+            CAM_X + CAM_LOOK_X, CAM_Y + CAM_LOOK_Y, CAM_Z + CAM_LOOK_Z,
+            0.0f, 1.0f, 0.0f);
+        break;
+    }
     // x axis
     glColor3f(1, 0, 0);
     glBegin(GL_LINES);
@@ -84,16 +106,120 @@ void renderScene()
     glutSwapBuffers();
 }
 
+void update_cam_pos()
+{
+    CAM_X = CAM_R * cos(BETA) * sin(ALPHA);
+    CAM_Z = CAM_R * cos(BETA) * cos(ALPHA);
+    CAM_Y = CAM_R * sin(BETA);
+}
+
+void update_cam_look()
+{
+    CAM_LOOK_X = cos(BETA) * sin(ALPHA);
+    CAM_LOOK_Z = cos(BETA) * cos(ALPHA);
+    CAM_LOOK_Y = sin(BETA);
+}
+
+void explorer_cam(unsigned char key)
+{
+    switch (key) {
+    case 'k':
+        if (BETA + 0.1 < M_PI / 2)
+            BETA += 0.1;
+        break;
+    case 'j':
+        if (BETA - 0.1 > -M_PI / 2)
+            BETA -= 0.1;
+        break;
+    case 'l':
+        ALPHA += 0.1;
+        break;
+    case 'h':
+        ALPHA -= 0.1;
+        break;
+    case 'i':
+        CAM_R -= 0.1;
+        break;
+    case 'o':
+        CAM_R += 0.1;
+        break;
+    }
+    update_cam_pos();
+}
+
+void fps_cam(unsigned char key)
+{
+    const double speed = 1.0;
+    switch (key) {
+    case 'w':
+        CAM_X += speed * CAM_LOOK_X;
+        CAM_Z += speed * CAM_LOOK_Z;
+        break;
+    case 'a':
+        CAM_X += speed * CAM_LOOK_Z;
+        CAM_Z += speed * -1 * CAM_LOOK_X;
+        break;
+    case 'd':
+        CAM_X += speed * -1 * CAM_LOOK_Z;
+        CAM_Z += speed * CAM_LOOK_X;
+        break;
+    case 's':
+        CAM_X += speed * -1 * CAM_LOOK_X;
+        CAM_Z += speed * -1 * CAM_LOOK_Z;
+        break;
+    case 'h':
+        ALPHA += 0.05;
+        break;
+    case 'l':
+        ALPHA -= 0.05;
+        break;
+    case 'j':
+        if (BETA - 0.1 > -M_PI / 2)
+            BETA -= 0.1;
+        break;
+    case 'k':
+        if (BETA + 0.1 < M_PI / 2)
+            BETA += 0.1;
+        break;
+    case 'G':
+        CAM_Y += 0.1;
+        break;
+    case 'g':
+        CAM_Y -= 0.1;
+        break;
+    }
+    update_cam_look();
+}
+
 void key_bindings(unsigned char key, int _x, int _y)
 {
-    static float px = 0.0;
-    static float pz = 0.0;
-    bool moveCam = false;
+    static auto current_cam = explorer_cam;
+    current_cam(key);
     switch (key) {
-    case 'q':
-        exit(0);
-    case 'j':
-        CAM_Y -= 0.1;
+    case 'v':
+        switch (CURRENT_CAM) {
+        case Camera::FPS:
+            current_cam = explorer_cam;
+            CURRENT_CAM = Camera::EXPLORER;
+            ALPHA = atan(CAM_X / CAM_Z);
+            if ((CAM_Z < 0.0 && CAM_X > 0.0) || (CAM_Z < 0.0 && CAM_X < 0.0))
+                ALPHA += M_PI;
+            BETA = asin(CAM_Y / sqrt(pow(CAM_X, 2) + pow(CAM_Y, 2) + pow(CAM_Z, 2)));
+            CAM_R = sqrt(pow(CAM_X, 2) + pow(CAM_Y, 2) + pow(CAM_Z, 2));
+            update_cam_pos();
+            break;
+        case Camera::EXPLORER:
+            current_cam = fps_cam;
+            CURRENT_CAM = Camera::FPS;
+            if (ALPHA < 0.0) {
+                ALPHA += M_PI;
+            } else {
+                ALPHA -= M_PI;
+            }
+            BETA = -BETA;
+            update_cam_look();
+            break;
+        }
         break;
     case '+':
         SCALE += 0.1;
@@ -101,31 +227,8 @@ void key_bindings(unsigned char key, int _x, int _y)
     case '-':
         SCALE -= 0.1;
         break;
-    case 'k':
-        CAM_Y += 0.1;
-        break;
-    case 'l':
-        px += 0.1;
-        pz += 0.1;
-        moveCam = true;
-        break;
-    case 'h':
-        px -= 0.1;
-        pz -= 0.1;
-        moveCam = true;
-        break;
-    case 'o':
-        CAM_D += 0.1;
-        moveCam = true;
-        break;
-    case 'i':
-        CAM_D -= 0.1;
-        moveCam = true;
-        break;
-    }
-    if (moveCam) {
-        CAM_X = sin(px) * CAM_D;
-        CAM_Z = cos(pz) * CAM_D;
+    case 'q':
+        exit(0);
     }
     renderScene();
 }
