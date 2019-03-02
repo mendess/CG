@@ -201,16 +201,11 @@ void key_bindings(unsigned char key, int _x, int _y)
         case Camera::FPS:
             current_cam = explorer_cam;
             CURRENT_CAM = Camera::EXPLORER;
-            if (ALPHA < 0.0) {
+            ALPHA = atan(CAM_X / CAM_Z);
+            if ((CAM_Z < 0.0 && CAM_X > 0.0) || (CAM_Z < 0.0 && CAM_X < 0.0))
                 ALPHA += M_PI;
-            } else {
-                ALPHA -= M_PI;
-            }
-            /* if (BETA < 0.0) { */
-            /*     BETA += M_PI / 2; */
-            /* } else { */
-            /*     BETA -= M_PI / 2; */
-            /* } */
+            BETA = asin(CAM_Y / sqrt(pow(CAM_X, 2) + pow(CAM_Y, 2) + pow(CAM_Z, 2)));
+            CAM_R = sqrt(pow(CAM_X, 2) + pow(CAM_Y, 2) + pow(CAM_Z, 2));
             update_cam_pos();
             break;
         case Camera::EXPLORER:
@@ -221,12 +216,7 @@ void key_bindings(unsigned char key, int _x, int _y)
             } else {
                 ALPHA -= M_PI;
             }
-            /* if (BETA < 0.0) { */
-            /*     BETA += M_PI / 2; */
-            /* } else { */
-            /*     BETA -= M_PI / 2; */
-            /* } */
-            cerr << "alpha: " << ALPHA << " beta: " << BETA << endl;
+            BETA = -BETA;
             update_cam_look();
             break;
         }
