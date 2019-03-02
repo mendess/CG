@@ -175,11 +175,11 @@ void fps_cam(unsigned char key)
         break;
     case 'j':
         if (BETA - 0.1 > -M_PI / 2)
-            BETA -= 0.01;
+            BETA -= 0.1;
         break;
     case 'k':
         if (BETA + 0.1 < M_PI / 2)
-            BETA += 0.01;
+            BETA += 0.1;
         break;
     case 'G':
         CAM_Y += 0.1;
@@ -201,16 +201,33 @@ void key_bindings(unsigned char key, int _x, int _y)
         case Camera::FPS:
             current_cam = explorer_cam;
             CURRENT_CAM = Camera::EXPLORER;
+            if (ALPHA < 0.0) {
+                ALPHA += M_PI;
+            } else {
+                ALPHA -= M_PI;
+            }
+            /* if (BETA < 0.0) { */
+            /*     BETA += M_PI / 2; */
+            /* } else { */
+            /*     BETA -= M_PI / 2; */
+            /* } */
+            update_cam_pos();
             break;
         case Camera::EXPLORER:
             current_cam = fps_cam;
             CURRENT_CAM = Camera::FPS;
-            ALPHA = ALPHA + M_PI;
-            BETA = BETA + M_PI;
+            if (ALPHA < 0.0) {
+                ALPHA += M_PI;
+            } else {
+                ALPHA -= M_PI;
+            }
+            /* if (BETA < 0.0) { */
+            /*     BETA += M_PI / 2; */
+            /* } else { */
+            /*     BETA -= M_PI / 2; */
+            /* } */
             cerr << "alpha: " << ALPHA << " beta: " << BETA << endl;
-            CAM_LOOK_X = cos(BETA) * sin(ALPHA);
-            CAM_LOOK_Z = cos(BETA) * cos(ALPHA);
-            CAM_LOOK_Y = sin(BETA);
+            update_cam_look();
             break;
         }
         break;
