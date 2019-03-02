@@ -46,6 +46,32 @@ void renderScene()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     gluLookAt(CAM_X, CAM_Y, CAM_Z, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
+    // x axis
+    glColor3f(1, 0, 0);
+    glBegin(GL_LINES);
+    {
+        glVertex3f(-1000, 0, 0);
+        glVertex3f(1000, 0, 0);
+    }
+    glEnd();
+
+    // y axis
+    glColor3f(0, 1, 0);
+    glBegin(GL_LINES);
+    {
+        glVertex3f(0, -1000, 0);
+        glVertex3f(0, 1000, 0);
+    }
+    glEnd();
+
+    // z axis
+    glColor3f(0, 0, 1);
+    glBegin(GL_LINES);
+    {
+        glVertex3f(0, 0, -1000);
+        glVertex3f(0, 0, 1000);
+    }
+    glEnd();
     glScalef(SCALE, SCALE, SCALE);
 
     Models* models = Models::get();

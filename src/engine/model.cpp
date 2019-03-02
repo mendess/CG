@@ -32,14 +32,8 @@ Model::Model(const Model& other)
 {
 }
 
-void drawTriangle(const Point* a, const Point* b, const Point* c)
+void drawTriangle(const Point* a, const Point* b, const Point* c, float r, float g, float u)
 {
-    static default_random_engine generator;
-    static uniform_int_distribution<int> distribution(0, 100);
-    static auto rng = bind(distribution, generator);
-    float r = (((float)rng()) / 100.0f);
-    float g = (((float)rng()) / 100.0f);
-    float u = (((float)rng()) / 100.0f);
     glColor3f(r, g, u);
     glBegin(GL_TRIANGLES);
     {
@@ -52,6 +46,9 @@ void drawTriangle(const Point* a, const Point* b, const Point* c)
 
 bool Model::draw_model() const
 {
+    default_random_engine generator(42);
+    uniform_int_distribution<int> distribution(0, 100);
+    auto rng = bind(distribution, generator);
     if (points.size() % 3 != 0) {
         return false;
     }
@@ -60,7 +57,10 @@ bool Model::draw_model() const
         const Point* a = &*it++;
         const Point* b = &*it++;
         const Point* c = &*it++;
-        drawTriangle(a, b, c);
+        float r = rng() / 100.0f;
+        float g = rng() / 100.0f;
+        float u = rng() / 100.0f;
+        drawTriangle(a, b, c, r, g, u);
     }
     return true;
 }
