@@ -86,7 +86,7 @@ Este modulo é composto pelo \texttt{model.cpp/hpp} que representa cada modelo, 
 Este modulo é composto pelo \texttt{generator.cpp/hpp} que disponibiliza métodos para gerar os pontos necessários para desenhar as 4 primitivas geométricas e a \texttt{main.cpp} que interpreta os argumentos da linha de comandos para chamar estes métodos e produzir um ficheiro com estes.
 
 \section{Primitivas}
- Para esta fase do projeto foram desenhadas quatro figuras, contando com um plano, um cubo, uma esfera e um cone. Serão a seguir apresentados os algoritmos apresentados para o cálculo dos pontos necessários para desenhar cada uma dessas primitivas, bem como uma contextualização com as premissas utilizadas durante o raciocínio, quando necessário.
+ Para esta fase do projeto foram desenhadas quatro figuras, contando com um plano, um cubo, uma esfera e um cone. Serão, em seguida, apresentados os algoritmos para o cálculo dos pontos necessários para desenhar cada uma destas primitivas, bem como uma contextualização com as premissas utilizadas durante o raciocínio, quando necessário.
 \subsection{Plano}
 \begin{figure}[H]
 \centering
@@ -94,32 +94,30 @@ Este modulo é composto pelo \texttt{generator.cpp/hpp} que disponibiliza métod
 \caption{Plano: Comprimento de Lado: 10}
 \end{figure}
 
-O plano é um figura de extrema simplicidade, constando de 6 pontos que constituem 2 triângulos, que por sua vez criarão o plano em XoZ.
+O plano é uma figura de extrema simplicidade, composto apenas por 6 pontos que formam 2 triângulos, que por sua vez darão origem ao plano em XoZ.
 
 
-
-É recebido como parâmetro o comprimento do lado do quadrado em questão, que será usado para calcular os pontos. Sendo que este plano estará centrado na origem, cada um dos pontos é calculado da seguinte forma:
+É recebido como parâmetro o comprimento do lado do quadrado em questão, que será usado para calcular os pontos. Sendo que este plano está centrado na origem, cada um dos pontos é calculado da seguinte forma:
 \\
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.5\linewidth]{esquemaPlano.PNG}
 \caption{Esquema do Plano.}
 \end{figure}
-\pagebreak
 
-Para o triângulo superior:\\
+Para definir o triângulo superior:\\
 \\
--  \texttt{h/2, 0, h/2}\\
--  \texttt{-h/2, 0, -h/2}\\
--  \texttt{-h/2, 0, h/2}\\
+-  \texttt{(h/2, 0, h/2)}\\
+-  \texttt{(-h/2, 0, -h/2)}\\
+-  \texttt{(-h/2, 0, h/2)}\\
+
+Para definir o triângulo inferior:\\
 \\
-Para o triângulo inferior:\\
+-  \texttt{(-h/2, 0, -h/2)}\\
+-  \texttt{(h/2, 0, h/2)}\\
+-  \texttt{(h/2, 0, -h/2)}\\
 \\
--  \texttt{-h/2, 0, -h/2}\\
--  \texttt{h/2, 0, h/2}\\
--  \texttt{h/2, 0, -h/2}\\
-\\
-Com base nisto, temos então o algoritmo usado para o cálculo dos pontos.\\
+Com base em tudo referido até agora, temos então o algoritmo usado para o cálculo dos pontos.\\
 \begin{lstlisting}
 std::vector<Point*> draw_plane(double side_length){
     vector<Point*> coordsPlane;
