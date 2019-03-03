@@ -90,8 +90,8 @@ Este modulo é composto pelo \texttt{generator.cpp/hpp} que disponibiliza metodo
 \subsection{Plano}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.5\linewidth]{plano.png}
-\caption{Plano: args = ....}
+\includegraphics[width=0.5\linewidth]{plane.png}
+\caption{Plano: Comprimento de Lado: 10}
 \end{figure}
 
 O plano é um figura de extrema simplicidade, constando de 6 pontos que constituem 2 triângulos, que por sua vez criarão o plano em XoZ.
@@ -143,8 +143,8 @@ std::vector<Point*> draw_plane(double side_length){
 \subsection{Paralelepípedo}
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.5\linewidth]{paralelicoiso.png}
-\caption{Paralelepípedo: args = ....}
+\includegraphics[width=0.5\linewidth]{box.png}
+\caption{Paralelepípedo: x: 3, y: 4, z: 5, Divisões: 6}
 \end{figure}
 
 Um paralelepípedo é formado por 6 faces, sendo cada face formada por $divisions^2$ quadrados, sendo cada um desses quadrados formado por dois triângulos. Estas divisões são utilizadas para iterar sobre todas as superfícies do paralelepípedo, sendo esta distância entre divisões usada para calcular o próximo ponto baseado no ponto "atual". \\
@@ -235,8 +235,8 @@ std::vector<Point*> draw_box(double x, double y, double z, int divisions){
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.5\linewidth]{bolinha.png}
-\caption{Esfera: args=....}
+\includegraphics[width=0.5\linewidth]{sphere.png}
+\caption{Esfera: Raio: 3, \textit{Slices}: 10, \textit{Stacks}: 7}
 \end{figure}
 
 Uma esfera é dividida em stacks e slices, que serão usadas para iterar a toda a volta da mesma. A interseção entre as slices e as stacks forma retângulos, e cada um desses retângulos será formado por dois triângulos.
@@ -318,8 +318,8 @@ std::vector<Point*> draw_sphere(double radius, double slices, double stacks){
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.5\linewidth]{insertConeHerePlease.png}
-\caption{Cone: args = ....}
+\includegraphics[width=0.5\linewidth]{cone.png}
+\caption{Cone: Raio: 4, Altura: 5, \textit{Slices}: 6, \textit{Stacks}: 7}
 \end{figure}
 
 O cone tem a base sobre o eixo XoZ, centrada na origem, e é dividido em stacks e slices. A função geradora dos pontos do cone recebe como parâmetros o raio, a altura, o número de slices e o número de stacks.
@@ -436,18 +436,18 @@ Neste modo a posição da câmera no espaço 3d é completamente livre, assim o 
     \item \texttt{Shift+G}: Sobe.
 \end{itemize}
 
-\subsection{Transição de modos de câmera}
+\subsection{Transição de modos da câmera}
 
-Para que a transição seja \textit{smooth} foi necessário converter de um sistema de coordenadas para o outro.
+Para que a transição seja \textit{smooth} foi necessário reccorrer à conversão de um sistema de coordenadas para o outro.
 
-Quando a câmera se encontra no modo \textit{Explorer} a sua posição é determinada pelo vetor definido através dos ângulos $\alpha$ e $\beta$ e através da distância à origem. E o ponto para onde está a olhar é a origem. Logo para efectuar a transição para \textit{FPS} foi necessário encontrar um vector que quando aplicado na posição da camera, olhe para a origem.
+Quando a câmera se encontra no modo \textit{Explorer}, a sua posição é determinada através do vetor definido pelos ângulos $\alpha$ e $\beta$ e através da sua distância à origem. O ponto para onde a câmera olha é a origem. Ou seja, para efetuar a transição para o modo \textit{FPS} foi necessário encontrar um vetor que quando aplicado na posição da câmera, olhe para a origem.
 
 \begin{figure}[H]
     \[
         \alpha_f =
         \begin{cases}
             \alpha_e + \pi & \quad \text{se } \alpha_e < 0\\
-            \alpha_e - \pi & \quad \text{caso contrario}
+            \alpha_e - \pi & \quad \text{caso contrário}
         \end{cases}
     \]
     \[
@@ -456,7 +456,7 @@ Quando a câmera se encontra no modo \textit{Explorer} a sua posição é determ
     \caption{Transição de \textit{Explorer} para \textit{FPS}.}
 \end{figure}
 
-Quando a câmera se encontra no modo \textit{FPS} é necessário encontrar o ângulos $\alpha$ e $\beta$ e o raio. Estes definem o vetor correspondente às coordenadas (\texttt{(x,y,z)}) da câmera no momento da transição.
+Quando a câmera se encontra no modo \textit{FPS} é necessário encontrar os ângulos $\alpha$ e $\beta$ e também o raio. Estes definem o vetor correspondente às coordenadas (\texttt{(x,y,z)}) da câmera no momento da transição.
 
 \begin{figure}[H]
     \[
