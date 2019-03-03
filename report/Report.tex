@@ -9,6 +9,7 @@
 \usepackage{indentfirst}
 \usepackage{subcaption}
 \usepackage[cache=false]{minted}
+\usepackage{amsmath}
 
 \begin{document}
 
@@ -48,7 +49,19 @@ Este trabalho foi realizado no âmbito da unidade curricular de Computação Gr�
 O projecto está dividido em varias fazes, sendo esta a primeira onde são implementadas primitivas gráficas, como o plano, paralelepípedo, esfera e cone. Há também uma primeira implementação de dois modos de camera.
 
 \section{Arquitectura do Projecto}
-O projecto está dividido em dois executaveis, o \texttt{generator} e o \texttt{engine}, ao lado destes temos também um biblioteca comum aos dois.
+O projecto está dividido em dois executáveis, o \texttt{generator} e o \texttt{engine}, ao lado destes temos também um biblioteca comum aos dois, apropriadamente nomeada \texttt{common}.
+
+\subsection{Common}
+
+Aqui está apenas defindo um \texttt{Point.cpp/hpp} que representa um ponto no espaço 3D.
+
+\subsection{Engine}
+
+Este modulo é composto pelo \texttt{model.cpp/hpp} que representa cada modelo, ou seja, cada conjunto de pontos, disponibilizando também um método para o desenhar. E a \texttt{main.cpp} que carrega todos os ficheiros especificados no ficheiro \texttt{config.xml} e desenha-os no ecrã. Esta define também a lógica que controla a camera.
+
+\subsection{Generator}
+
+Este modulo é composto pelo \texttt{generator.cpp/hpp} que disponibiliza metodos para gerar os pontos necessários para desenhar as 4 primitivas geométricas e a \texttt{main.cpp} que interpreta os argumentos da linha de comandos para chamar estes métodos e produzir um ficheiro com estes.
 
 \section{Primitivas}
 \subsection{Plano}
@@ -80,6 +93,7 @@ Neste modo o movimento da camera pode ser descrito por uma superfície esférica
 \subsection{FPS Mode}
 
 Neste modo a posição da camera no espaço 3d é completamente livre, podendo o utilizador se mover em linha recta em qualquer direcção. Pode também alterar o ponto para o qual está a olhar na horizontal e na vertical.
+
 \subsubsection{Controlos \textit{(key bindings)}}
 
 \begin{itemize}
@@ -97,7 +111,42 @@ Neste modo a posição da camera no espaço 3d é completamente livre, podendo o
 
 \subsection{Transição de modos de camera}
 
-Para que a transição seja \textit{smooth} foi necessário converter de um sistema de coordenadas para o outro. Quando a camera se encontra no modo explorer a sua posição é determinada pelo vetor definido atravez dos algulos $\alpha$ e $\beta$ e a distância à origem. E o ponto para onde está a olhar é a origem. Logo para efetuar a transição foi necessário encontrar um vetor que quando aplicado na posição da camera, olhe para a origem.
+Para que a transição seja \textit{smooth} foi necessário converter de um sistema de coordenadas para o outro.
+
+Quando a camera se encontra no modo \textit{Explorer} a sua posição é determinada pelo vector definido através dos ângulos $\alpha$ e $\beta$ e a distância à origem. E o ponto para onde está a olhar é a origem. Logo para efectuar a transição para \textit{FPS} foi necessário encontrar um vector que quando aplicado na posição da camera, olhe para a origem.
+
+\begin{figure}[H]
+    \[
+        \alpha_f =
+        \begin{cases}
+            \alpha_e + \pi & \quad \text{se } \alpha_e < 0\\
+            \alpha_e - \pi & \quad \text{caso contrario}
+        \end{cases}
+    \]
+    \[
+        \beta_f = -\beta_e
+    \]
+    \caption{Transição de \textit{Explorer} para \textit{FPS}.}
+\end{figure}
+
+Quando a camera se encontra no modo \textit{FPS} é necessário encontrar o ângulos $\alpha$ e $\beta$ e o raio que definem um vector correspondente as coordenadas (\texttt{(x,y,z)}) da camera no momento da transição.
+
+\begin{figure}[H]
+    \[
+        \alpha_e =
+        \begin{cases}
+            \arctan(x / z)       & \quad \text{se } z < 0\\
+            \arctan(x / z) + \pi & \quad \text{caso contrario}
+        \end{cases}
+    \]
+    \[
+        \beta_e = \arcsin\bigg(\frac{y}{\sqrt{x^2 + y^2 + z^2}}\bigg)\\
+    \]
+    \[
+        radius = \sqrt{x^2 + y^2 + z^2}
+    \]
+    \caption{Transição de \textit{FPS} para \textit{Explorer}.}
+\end{figure}
 
 \subsection{Outros controlos \textit{(key bindings)}}
 
