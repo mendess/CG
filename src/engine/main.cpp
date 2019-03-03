@@ -177,15 +177,15 @@ public:
 };
 
 float Camera::speed = 1.0;
-float Camera::radius = 5;
-float Camera::x = cos(0.0) * sin(0.0) * radius;
-float Camera::y = 0.0;
-float Camera::z = cos(0.0) * cos(0.0) * radius;
+float Camera::radius = 10;
+float Camera::alpha = 0.0;
+float Camera::beta = 0.0;
+float Camera::x = Camera::radius * cos(Camera::beta) * sin(Camera::alpha);
+float Camera::y = Camera::radius * sin(Camera::beta);
+float Camera::z = Camera::radius * cos(Camera::beta) * cos(Camera::alpha);
 float Camera::look_x = 0.0;
 float Camera::look_y = 0.0;
 float Camera::look_z = 1.0;
-float Camera::alpha = 0.0;
-float Camera::beta = 0.0;
 CameraType Camera::mode = CameraType::EXPLORER;
 
 static float SCALE = 1;
