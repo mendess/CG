@@ -95,6 +95,9 @@ Neste modo a posição da camera no espaço 3d é completamente livre, podendo o
     \item \texttt{Shift+G}: Subir
 \end{itemize}
 
+\subsection{Transição de modos de camera}
+
+Para que a transição seja \textit{smooth} foi necessário converter de um sistema de coordenadas para o outro. Quando a camera se encontra no modo explorer a sua posição é determinada pelo vetor definido atravez dos algulos $\alpha$ e $\beta$ e a distância à origem. E o ponto para onde está a olhar é a origem. Logo para efetuar a transição foi necessário encontrar um vetor que quando aplicado na posição da camera, olhe para a origem.
 
 \subsection{Outros controlos \textit{(key bindings)}}
 
