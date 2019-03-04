@@ -77,7 +77,9 @@ bool parse_box(int argc, char** args, double* x, double* y, double* z, int* divi
     PARSE_OR_RETURN(args[1], test, printHelpPlane)
     *z = strtod(args[2], &test);
     PARSE_OR_RETURN(args[3], test, printHelpPlane)
-    *divisions = strtod(args[3], &test);
+    test = NULL;
+    if (args[3])
+        *divisions = strtod(args[3], &test);
     if (test == args[3]) {
         *divisions = 1;
     }
