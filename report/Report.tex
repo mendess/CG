@@ -248,13 +248,13 @@ Para a criação da esfera serão usadas coordenadas esféricas devido à facili
     \caption{Coordenadas esféricas.}
 \end{figure}
 
-Para cálculo das coordenadas de cada ponto será também necessário calcular a stack e slice em que se encontram atualmente as iterações, \texttt{currentStack} e \texttt{currentSlice} que serão calculadas da seguinte forma:
+Para o cálculo das coordenadas de cada ponto será também necessário calcular a stack e slice em que se encontram atualmente as iterações, \texttt{currentStack} e \texttt{currentSlice} que serão calculadas da seguinte forma:
 
 \[currentStack = \theta \times \theta_{Movement}\]
 \[currentSlice = \phi \times \phi_{Movement}\]
 
 
-As variáveis $\theta_{Movement}$ e $\phi_{Movement}$ correspondem respetivamente à distância entre Stacks e à distância entre Slices.
+As variáveis $\theta_{Movement}$ e $\phi_{Movement}$ correspondem, respetivamente, à distância entre Stacks e à distância entre Slices.
 
 \[\phi_{Movement} = \pi \times 2 / slices\]
 \[\theta_{Movement} = \pi / stacks\]
