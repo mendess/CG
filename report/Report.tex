@@ -1,5 +1,5 @@
 \documentclass[a4paper]{article}
-
+\usepackage[utf8x]{inputenc}
 \usepackage[portuguese]{babel}
 \usepackage{graphicx}
 \usepackage{a4wide}
@@ -32,6 +32,9 @@ breaklines=true,
 breakatwhitespace=true,
 tabsize=4
 }
+
+\newcommand{\x}{\times}
+
 \begin{document}
 
 \title{Computação Gráfica\\ Primitivas gráficas}
@@ -180,21 +183,21 @@ Para a criação da esfera serão usadas coordenadas esféricas devido à facili
 
 Para o cálculo das coordenadas de cada ponto será também necessário calcular a stack e slice em que se encontram atualmente as iterações, \texttt{currentStack} e \texttt{currentSlice} que serão calculadas da seguinte forma:
 
-\[currentStack = \theta \times \theta_{Movement}\]
-\[currentSlice = \phi \times \phi_{Movement}\]
+\[currentStack = \theta \x \theta_{Movement}\]
+\[currentSlice = \phi \x \phi_{Movement}\]
 
 
 As variáveis $\theta_{Movement}$ e $\phi_{Movement}$ correspondem, respetivamente, à distância entre Stacks e à distância entre Slices.
 
-\[\phi_{Movement} = \pi \times 2 / slices\]
+\[\phi_{Movement} = 2\pi / slices\]
 \[\theta_{Movement} = \pi / stacks\]
 
 
 Para utilizar coordenadas esféricas, o X, Y e Z devem ser alterados, passando a ser:
 
-\[x = radius \times \sin(theta) \times \sin(\phi)\]
-\[y = radius \times \cos(theta)\]
-\[z = radius \times \sin(theta) \times \cos(\phi)\]
+\[x = radius \x \sin(theta) \x \sin(\phi)\]
+\[y = radius \x \cos(theta)\]
+\[z = radius \x \sin(theta) \x \cos(\phi)\]
 
 O algoritmo de cálculo dos pontos para desenhar uma esfera é a seguir apresentado.
 
@@ -213,7 +216,7 @@ São declaradas três variáveis, $\phi$, $\theta$ e $stackSpacing$.
 
 A primeira corresponde à divisão equivalente da base por cada slice.
 
-\[\phi = (2 \times \pi) / slices\]
+\[\phi = (2 \pi) / slices\]
 
 A segunda, $\theta$, é calculada dividindo o raio da base pelo numero de stacks, o que se traduz na prática a calcular o recuo do raio à medida que se sobe nas stacks.
 
@@ -227,21 +230,38 @@ Por fim, $stackSpacing$, tal como o nome indica, corresponde à distância entre
 
 O desenho do cone em si foi dividido em 3 fases: Base, Topo e a zona em volta, e tal como na esfera, são utilizadas coordenadas esféricas.
 
-Para a base, quando estamos na primeira stack, em cada iteração é desenhado um triângulo, e conjunto destes triângulos desenhados formarão a base concêntrica na origem quando tiverem sido executadas todas as iterações.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{coneEsquema.PNG}
+    \caption{Esquema do cone.}
+\end{figure}
 
-O topo é desenhado no fim, para completar a `ponta' do cone, então, quando estamos na penúltima stack (a última é o vértice do cone), são desenhados triângulos a toda a volta que partilham um ponto em comum (o vértice), um por cada slice.
+Para a base, quando estamos na primeira stack, em cada iteração é desenhado um triângulo, e conjunto destes triângulos desenhados formarão a base concêntrica na origem quando tiverem sido executadas todas as iterações. Utilizando coordenadas esféricas chegamos às seguintes coordenadas:
 
-Para os lados, com exceção do topo, serão desenhados retângulos formados por dois triângulos cada um, e serão esses retângulos que constituem o cone até chegar ao topo.
+ \[\Big(0, 0, 0\Big)\]
+ \[\Big(radius \x \sin(\phi (k+1)), 0, radius \x \cos(\phi (k+1))\Big)\]
+ \[\Big(radius \x \sin(\phi k), 0, radius \x \cos(\phi k)\Big)\]
 
-Esta lógica traduzida para código resultou no seguinte algoritmo:
+sendo que $k$ toma valores entre $0$ e $slices-1$. Quando temos $\phi (k+1)$ representa o próximo valor de $\phi$.
 
+O topo é desenhado no fim, para completar a "ponta" do cone, então, quando estamos na penúltima stack (a última é o vértice do cone), são desenhados triângulos a toda a volta que partilham um ponto em comum (o vértice), um por cada slice. Utilizando coordenadas esféricas chegamos às seguintes coordenadas:
 
-\section{Câmera}
-A Câmera pode ser utilizada em dois modos diferentes, o modo \textit{Explorer mode} e o modo \textit{FPS mode}, que podem ser alternados durante a execução do engine.
+\[\Big((radius - \theta i) \x \sin(\phi k), i \x stackSpacing, (radius - \theta i) \x \cos(\phi k)\Big)\]
+\[\Big((radius - \theta i) \x \sin(\phi (k + 1)), i \x stackSpacing, (radius - \theta i) \x \cos(\phi (k + 1))\Big)\]
+\[\Big(0, stacks \x stackSpacing, 0\Big)\]
+
+Para os lados, com exceção do topo, serão desenhados retângulos formados por dois triângulos cada um, e serão esses retângulos que constituem o cone até chegar ao topo. Chegamos às seguintes coordenadas:
+
+\[\Big(i(radius - \theta) \x \sin(\phi k), i \x stackSpacing, i(radius - \theta) \x \cos(\phi k)\Big)\]
+\[\Big(i(radius - \theta) \x \sin(\phi (k + 1)), i \x stackSpacing, (radius - \theta i) \x \cos(\phi (k + 1))\Big)\]
+\[\Big((radius - \theta (i + 1)) \x \sin(\phi k), (i + 1) \x stackSpacing, (radius - \theta (i + 1)) \x \cos(\phi k)\Big)\]
+
+\section{Camera}
+A Camera pode ser utilizada em dois modos diferentes, o modo \textit{Explorer mode} e o modo \textit{FPS mode}, que podem ser alternados durante a execução do engine.
 
 \subsection{Explorer Mode}
 
-Neste modo o movimento da câmera é descrito por uma superfície esférica, na qual o utilizador se movimenta enquanto mantém, sempre, o seu olhar fixo na origem do referencial. O raio desta superfície esférica é que define a distância até ao centro, podendo ser aumentado para afastar o utilizador do centro do espaço 3d, ou diminuído para o aproximar.
+Neste modo o movimento da camera é descrito por uma superfície esférica, na qual o utilizador se movimenta enquanto mantém, sempre, o seu olhar fixo na origem do referencial. O raio desta superfície esférica é que define a distância até ao centro, podendo ser aumentado para afastar o utilizador do centro do espaço 3d, ou diminuído para o aproximar.
 
 \subsubsection{Controlos \textit{(key bindings)}}
 
