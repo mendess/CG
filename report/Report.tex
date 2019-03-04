@@ -90,7 +90,7 @@ Para esta fase do projeto foram desenhadas quatro figuras, contando com um plano
 \subsection{Plano}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{plane.png}
+    \includegraphics[width=\textwidth]{plane.png}
     \caption{Plano: Comprimento de Lado: 10}
 \end{figure}
 
@@ -101,7 +101,7 @@ O plano é uma figura de extrema simplicidade, composto apenas por 6 pontos que 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{esquemaPlano.PNG}
+    \includegraphics[width=0.6\textwidth]{esquemaPlano.PNG}
     \caption{Esquema do Plano.}
 \end{figure}
 
@@ -119,30 +119,12 @@ Para definir o triângulo inferior:
 
 Com base em tudo referido até agora, temos então o algoritmo usado para o cálculo dos pontos.
 
-\begin{lstlisting}
-std::vector<Point*> draw_plane(double side_length){
-    vector<Point*> coordsPlane;
-    float axis = side_length / 2;
-
-    //first triangle
-    coordsPlane.push_back(new Point(axis, 0, axis));
-    coordsPlane.push_back(new Point(-axis, 0, -axis));
-    coordsPlane.push_back(new Point(-axis, 0, axis));
-
-    //second triangle
-    coordsPlane.push_back(new Point(-axis, 0, -axis));
-    coordsPlane.push_back(new Point(axis, 0, axis));
-    coordsPlane.push_back(new Point(axis, 0, -axis));
-
-    return coordsPlane;
-}
-
-\end{lstlisting}
+\input{plane_code.tex}
 
 \subsection{Paralelepípedo}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{box.png}
+    \includegraphics[width=\textwidth]{box.png}
     \caption{Paralelepípedo: x: 3, y: 4, z: 5, Divisões: 6}
 \end{figure}
 
@@ -164,76 +146,13 @@ como sendo os valores que, tal como o nome indica, correspondem ao espaçamento 
 
 Para calcular todos os pontos foi feito uso do seguinte algoritmo:
 
-\begin{lstlisting}
-std::vector<Point*> draw_box(double x, double y, double z, int divisions){
-    vector<Point*> coordsBox;
-    double axisX = x / 2;
-    double axisY = y / 2;
-    double axisZ = z / 2;
-    double spacingX = x / divisions;
-    double spacingY = y / divisions;
-    double spacingZ = z / divisions;
+\input{box_code.tex}
 
-    for (int i = 0; i < divisions; i++) {
-        for (int k = 0; k < divisions; k++) {
-            //Front
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * k, axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * (k + 1), axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), axisZ));
-
-            //Back
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * k, -axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), -axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, -axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, -axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), -axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * (k + 1), -axisZ));
-
-            //Up
-            coordsBox.push_back(new Point(-axisX + spacingX * i, axisY, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, axisY, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), axisY, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, axisY, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), axisY, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), axisY, -axisZ + spacingZ * k));
-
-            //Down
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY, -axisZ + spacingZ * (k + 1)));
-
-            //Left
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * i, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * (k + 1)));
-
-            //Right
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * i, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
-        }
-    }
-
-    return coordsBox;
-    }
-\end{lstlisting}
 \subsection{Esfera}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{sphere.png}
+    \includegraphics[width=\textwidth]{sphere.png}
     \caption{Esfera: Raio: 3, \textit{Slices}: 10, \textit{Stacks}: 7}
 \end{figure}
 
@@ -244,7 +163,7 @@ Para a criação da esfera serão usadas coordenadas esféricas devido à facili
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{coords.png}
+    \includegraphics[width=0.5\textwidth]{coords.png}
     \caption{Coordenadas esféricas.}
 \end{figure}
 
@@ -268,55 +187,13 @@ Para utilizar coordenadas esféricas, o X, Y e Z devem ser alterados, passando a
 
 O algoritmo de cálculo dos pontos para desenhar uma esfera é a seguir apresentado.
 
-\begin{lstlisting}
-std::vector<Point*> draw_sphere(double radius, double slices, double stacks){
-    vector<Point*> coordsSphere;
-
-    float phiMovement = M_PI * 2 / slices;
-
-    float thetaMovement = M_PI / stacks;
-
-    for (float phi = 0; phi < slices; phi++)
-    for (float theta = 0; theta < stacks; theta++) {
-
-        float currentStack = theta * thetaMovement;
-        float currentSlice = phi * phiMovement;
-
-        coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
-        radius * cos(currentStack + thetaMovement),
-        radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
-
-        coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice),
-        radius * cos(currentStack),
-        radius * sin(currentStack) * cos(currentSlice)));
-
-        coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice),
-        radius * cos(currentStack + thetaMovement),
-        radius * sin(currentStack + thetaMovement) * cos(currentSlice)));
-
-        coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice + phiMovement),
-        radius * cos(currentStack),
-        radius * sin(currentStack) * cos(currentSlice + phiMovement)));
-
-        coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice),
-        radius * cos(currentStack),
-        radius * sin(currentStack) * cos(currentSlice)));
-
-        coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
-        radius * cos(currentStack + thetaMovement),
-        radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
-    }
-
-    return coordsSphere;
-}
-
-\end{lstlisting}
+\input{sphere_code.tex}
 
 \subsection{Cone}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{cone.png}
+    \includegraphics[width=\textwidth]{cone.png}
     \caption{Cone: Raio: 4, Altura: 5, \textit{Slices}: 6, \textit{Stacks}: 7}
 \end{figure}
 
@@ -348,45 +225,7 @@ Para os lados, com exceção do topo, serão desenhados retângulos formados por
 
 Esta lógica traduzida para código resultou no seguinte algoritmo:
 
-\begin{lstlisting}
-std::vector<Point*> draw_cone(double radius, double height, int slices, int stacks){
-    vector<Point*> coordsCone;
-    float phi = (2 * M_PI) / slices;
-    float stackSpacing = height / stacks;
-    float theta = radius / stacks;
-
-    for (int i = 0; i < stacks; i++) {
-        for (int k = 0; k < slices; k++) {
-
-            if (!i) {
-                //Base
-                coordsCone.push_back(new Point(0, 0, 0));
-                coordsCone.push_back(new Point(radius * sin(phi * (k + 1)), 0, radius * cos(phi * (k + 1))));
-                coordsCone.push_back(new Point(radius * sin(phi * k), 0, radius * cos(phi * k)));
-            }
-
-            if (i == stacks - 1) {
-                //Top
-                coordsCone.push_back(new Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
-                coordsCone.push_back(new Point((radius - theta * i) * sin(phi * (k + 1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k + 1))));
-                coordsCone.push_back(new Point(0, stacks * stackSpacing, 0));
-            }
-
-            else { //Around
-            coordsCone.push_back(new Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
-            coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
-            coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * k), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * k)));
-            coordsCone.push_back(new Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
-            coordsCone.push_back(new Point((radius - theta * i) * sin(phi * (k + 1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k + 1))));
-            coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
-            }
-        }
-    }
-
-    return coordsCone;
-}
-
-\end{lstlisting}
+\input{cone_code.tex}
 
 \section{Câmera}
 A Câmera pode ser utilizada em dois modos diferentes, o modo \textit{Explorer mode} e o modo \textit{FPS mode}, que podem ser alternados durante a execução do engine.
