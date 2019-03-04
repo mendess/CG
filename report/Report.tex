@@ -74,18 +74,32 @@ Após analisar o problema, foi decidido que o projeto está dividido em dois exe
 
 \subsection{Common}
 
-Aqui está apenas defindo um \texttt{Point.cpp/hpp} que representa um ponto no espaço 3D.
+Aqui está apenas definido um \texttt{Point.cpp/hpp} que representa um ponto no espaço 3D.
+
+\begin{minted}{C++}
+    class Point {
+        private:
+        float _x, _y, _z;
+        // -- snip -- /
+    }
+\end{minted}
 
 \subsection{Engine}
 
 Este modulo é composto pelo \texttt{model.cpp/hpp} que representa cada modelo, ou seja, o conjunto de pontos que define cada um dos modelos, e disponibilizando também um método para os desenhar. E a \texttt{main.cpp} que carrega todos os ficheiros especificados no ficheiro \texttt{config.xml} e desenha-os no ecrã. Esta define também a lógica que controla a câmera.
 
+O algoritmo de desenho é simples. Primeiro todos os modelos do ficheiro de configuração são carregados para memoria sobre a forma de \texttt{Model}s. De seguida cada um destes modelos é renderizado no ecrã, chamando \texttt{glVertex3f} para cada um dos seus pontos, pela ordem em que foram lidos, e, por fim, inicia-se o \textit{loop} do \textit{glut}. Desta forma os modelos são carregados apenas uma vez para memória.
+
 \subsection{Generator}
 
 Este modulo é composto pelo \texttt{generator.cpp/hpp} que disponibiliza métodos para gerar os pontos necessários para desenhar as 4 primitivas geométricas e a \texttt{main.cpp} que interpreta os argumentos da linha de comandos para chamar estes métodos e produzir um ficheiro com estes.
 
-\section{Primitivas}
+O trabalho feito por este modulo é explicado em mais detalhe na secção~\ref{sec:primitivas}.
+
+\section{Primitivas}\label{sec:primitivas}
+
 Para esta fase do projeto foram desenhadas quatro figuras, contando com um plano, um cubo, uma esfera e um cone. Serão, em seguida, apresentados os algoritmos para o cálculo dos pontos necessários para desenhar cada uma destas primitivas, bem como uma contextualização com as premissas utilizadas durante o raciocínio, quando necessário.
+
 \subsection{Plano}
 \begin{figure}[H]
     \centering
@@ -227,7 +241,7 @@ A Câmera pode ser utilizada em dois modos diferentes, o modo \textit{Explorer m
 
 \subsection{Explorer Mode}
 
-Neste modo o movimento da Câmera é descrito por uma superfície esférica, na qual o utilizador se movimenta enquanto mantém, sempre, o seu olhar fixo na origem do referencial. O raio desta superfície esférica é que define a distância até ao centro, podendo ser aumentado para afastar o utilizador do centro do espaço 3d, ou diminuído para o aproximar.
+Neste modo o movimento da câmera é descrito por uma superfície esférica, na qual o utilizador se movimenta enquanto mantém, sempre, o seu olhar fixo na origem do referencial. O raio desta superfície esférica é que define a distância até ao centro, podendo ser aumentado para afastar o utilizador do centro do espaço 3d, ou diminuído para o aproximar.
 
 \subsubsection{Controlos \textit{(key bindings)}}
 
@@ -261,7 +275,7 @@ Neste modo a posição da câmera no espaço 3d é completamente livre, assim o 
 
 \subsection{Transição de modos da câmera}
 
-Para que a transição seja \textit{smooth} foi necessário reccorrer à conversão de um sistema de coordenadas para o outro.
+Para que a transição seja o mais suave possível foi necessário recorrer à conversão de um sistema de coordenadas para o outro.
 
 Quando a câmera se encontra no modo \textit{Explorer}, a sua posição é determinada através do vetor definido pelos ângulos $\alpha$ e $\beta$ e através da sua distância à origem. O ponto para onde a câmera olha é a origem. Ou seja, para efetuar a transição para o modo \textit{FPS} foi necessário encontrar um vetor que quando aplicado na posição da câmera, esta fique a olhar para a origem.
 
@@ -306,6 +320,18 @@ Quando a câmera se encontra no modo \textit{FPS} é necessário encontrar os â
     \item \texttt{V}: Muda o modo da câmera.
     \item \texttt{Q}: Termina o programa.
 \end{itemize}
+
+\section{Gestão de memória}
+
+Foi utilizada a ferramenta \texttt{Valgrind} para garantir que não havia \textit{leak}s de memória.
+
+Para o gerador foram testadas todas as primitivas:
+
+\input{valgrind_generator.tex}
+
+E para o motor foi testado todo o código à exceção das rotinas do OpenGl:
+
+\input{valgrind_engine.tex}
 
 \section{Conclusões e Trabalho Futuro}
 Em suma, todas as primitivas são geradas corretamente e o motor gráfico é capaz de as representar genericamente.
