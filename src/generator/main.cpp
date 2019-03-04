@@ -44,11 +44,11 @@ void printHelpPage()
          << "\nUse --help Option to learn what params to pass to the options" << endl;
 }
 
-void write_to_file(char* fileName, vector<Point*>* points)
+void write_to_file(char* fileName, vector<Point>* points)
 {
     ofstream file(fileName);
-    for (vector<Point*>::const_iterator it = points->begin(); it != points->end(); ++it) {
-        file << (*it)->to_string() << endl;
+    for (vector<Point>::const_iterator it = points->begin(); it != points->end(); ++it) {
+        file << (*it).to_string() << endl;
     }
 }
 
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
         printHelpPage();
         return 1;
     }
-    vector<Point*> points;
+    vector<Point> points;
     if (!strcmp("plane", argv[2])) {
         double side_length;
         if (parse_plane(argc - 3, argv + 3, &side_length)) {
@@ -161,5 +161,6 @@ int main(int argc, char** argv)
         return 1;
     }
     write_to_file(argv[1], &points);
+    points.clear();
     return 0;
 }

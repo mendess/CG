@@ -5,27 +5,27 @@
 
 using namespace std;
 
-std::vector<Point*> draw_plane(double side_length)
+std::vector<Point> draw_plane(double side_length)
 {
-    vector<Point*> coordsPlane;
+    vector<Point> coordsPlane;
     float axis = side_length / 2;
 
     //first triangle
-    coordsPlane.push_back(new Point(axis, 0, axis));
-    coordsPlane.push_back(new Point(-axis, 0, -axis));
-    coordsPlane.push_back(new Point(-axis, 0, axis));
+    coordsPlane.push_back(Point(axis, 0, axis));
+    coordsPlane.push_back(Point(-axis, 0, -axis));
+    coordsPlane.push_back(Point(-axis, 0, axis));
 
     //second triangle
-    coordsPlane.push_back(new Point(-axis, 0, -axis));
-    coordsPlane.push_back(new Point(axis, 0, axis));
-    coordsPlane.push_back(new Point(axis, 0, -axis));
+    coordsPlane.push_back(Point(-axis, 0, -axis));
+    coordsPlane.push_back(Point(axis, 0, axis));
+    coordsPlane.push_back(Point(axis, 0, -axis));
 
     return coordsPlane;
 }
 
-std::vector<Point*> draw_box(double x, double y, double z, int divisions)
+std::vector<Point> draw_box(double x, double y, double z, int divisions)
 {
-    vector<Point*> coordsBox;
+    vector<Point> coordsBox;
     double axisX = x / 2;
     double axisY = y / 2;
     double axisZ = z / 2;
@@ -36,61 +36,61 @@ std::vector<Point*> draw_box(double x, double y, double z, int divisions)
     for (int i = 0; i < divisions; i++) {
         for (int k = 0; k < divisions; k++) {
             //Front
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * k, axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * (k + 1), axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * i, -axisY + spacingY * k, axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), -axisY + spacingY * (k + 1), axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), axisZ));
 
             //Back
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * k, -axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), -axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, -axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, -axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), -axisZ));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY + spacingY * (k + 1), -axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * i, -axisY + spacingY * k, -axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), -axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, -axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), -axisY + spacingY * k, -axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * i, -axisY + spacingY * (k + 1), -axisZ));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), -axisY + spacingY * (k + 1), -axisZ));
 
             //Up
-            coordsBox.push_back(new Point(-axisX + spacingX * i, axisY, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, axisY, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), axisY, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, axisY, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), axisY, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), axisY, -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(-axisX + spacingX * i, axisY, -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(-axisX + spacingX * i, axisY, -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), axisY, -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(-axisX + spacingX * i, axisY, -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), axisY, -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), axisY, -axisZ + spacingZ * k));
 
             //Down
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX + spacingX * i, -axisY, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX + spacingX * (i + 1), -axisY, -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(-axisX + spacingX * i, -axisY, -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), -axisY, -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(-axisX + spacingX * i, -axisY, -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(-axisX + spacingX * i, -axisY, -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), -axisY, -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(-axisX + spacingX * (i + 1), -axisY, -axisZ + spacingZ * (k + 1)));
 
             //Left
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * i, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(-axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(-axisX, -axisY + spacingY * i, -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(-axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(-axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(-axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(-axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(-axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * (k + 1)));
 
             //Right
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * i, -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * (k + 1)));
-            coordsBox.push_back(new Point(axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(axisX, -axisY + spacingY * i, -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * k));
+            coordsBox.push_back(Point(axisX, -axisY + spacingY * (i + 1), -axisZ + spacingZ * (k + 1)));
+            coordsBox.push_back(Point(axisX, -axisY + spacingY * i, -axisZ + spacingZ * (k + 1)));
         }
     }
 
     return coordsBox;
 }
 
-std::vector<Point*> draw_sphere(double radius, double slices, double stacks)
+std::vector<Point> draw_sphere(double radius, double slices, double stacks)
 {
-    vector<Point*> coordsSphere;
+    vector<Point> coordsSphere;
 
     //calculate the Phi Movement (triangle's up/down side length)
     //PI * 2 because it is necessary to go all around to count all of the slices
@@ -107,27 +107,27 @@ std::vector<Point*> draw_sphere(double radius, double slices, double stacks)
             float currentStack = theta * thetaMovement;
             float currentSlice = phi * phiMovement;
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
+            coordsSphere.push_back(Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
                 radius * cos(currentStack + thetaMovement),
                 radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice),
+            coordsSphere.push_back(Point(radius * sin(currentStack) * sin(currentSlice),
                 radius * cos(currentStack),
                 radius * sin(currentStack) * cos(currentSlice)));
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice),
+            coordsSphere.push_back(Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice),
                 radius * cos(currentStack + thetaMovement),
                 radius * sin(currentStack + thetaMovement) * cos(currentSlice)));
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice + phiMovement),
+            coordsSphere.push_back(Point(radius * sin(currentStack) * sin(currentSlice + phiMovement),
                 radius * cos(currentStack),
                 radius * sin(currentStack) * cos(currentSlice + phiMovement)));
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice),
+            coordsSphere.push_back(Point(radius * sin(currentStack) * sin(currentSlice),
                 radius * cos(currentStack),
                 radius * sin(currentStack) * cos(currentSlice)));
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
+            coordsSphere.push_back(Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
                 radius * cos(currentStack + thetaMovement),
                 radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
         }
@@ -135,9 +135,9 @@ std::vector<Point*> draw_sphere(double radius, double slices, double stacks)
     return coordsSphere;
 }
 
-std::vector<Point*> draw_cone(double radius, double height, int slices, int stacks)
+std::vector<Point> draw_cone(double radius, double height, int slices, int stacks)
 {
-    vector<Point*> coordsCone;
+    vector<Point> coordsCone;
     float phi = (2 * M_PI) / slices;
     float stackSpacing = height / stacks;
     float theta = radius / stacks;
@@ -147,25 +147,25 @@ std::vector<Point*> draw_cone(double radius, double height, int slices, int stac
 
             if (!i) {
                 //Base
-                coordsCone.push_back(new Point(0, 0, 0));
-                coordsCone.push_back(new Point(radius * sin(phi * (k + 1)), 0, radius * cos(phi * (k + 1))));
-                coordsCone.push_back(new Point(radius * sin(phi * k), 0, radius * cos(phi * k)));
+                coordsCone.push_back(Point(0, 0, 0));
+                coordsCone.push_back(Point(radius * sin(phi * (k + 1)), 0, radius * cos(phi * (k + 1))));
+                coordsCone.push_back(Point(radius * sin(phi * k), 0, radius * cos(phi * k)));
             }
 
             if (i == stacks - 1) {
                 //Top
-                coordsCone.push_back(new Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
-                coordsCone.push_back(new Point((radius - theta * i) * sin(phi * (k + 1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k + 1))));
-                coordsCone.push_back(new Point(0, stacks * stackSpacing, 0));
+                coordsCone.push_back(Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
+                coordsCone.push_back(Point((radius - theta * i) * sin(phi * (k + 1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k + 1))));
+                coordsCone.push_back(Point(0, stacks * stackSpacing, 0));
             }
 
             else { //Around
-                coordsCone.push_back(new Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
-                coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
-                coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * k), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * k)));
-                coordsCone.push_back(new Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
-                coordsCone.push_back(new Point((radius - theta * i) * sin(phi * (k + 1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k + 1))));
-                coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
+                coordsCone.push_back(Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
+                coordsCone.push_back(Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
+                coordsCone.push_back(Point((radius - theta * (i + 1)) * sin(phi * k), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * k)));
+                coordsCone.push_back(Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
+                coordsCone.push_back(Point((radius - theta * i) * sin(phi * (k + 1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k + 1))));
+                coordsCone.push_back(Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
             }
         }
     }
