@@ -18,20 +18,20 @@
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
 \lstset{frame=tb,
-  language=C++,
-  aboveskip=3mm,
-  belowskip=3mm,
-  showstringspaces=false,
-  columns=flexible,
-  basicstyle={\small\ttfamily},
-  numbers=none,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  breaklines=true,
-  breakatwhitespace=true,
-  tabsize=3
+language=C++,
+aboveskip=3mm,
+belowskip=3mm,
+showstringspaces=false,
+columns=flexible,
+basicstyle={\small\ttfamily},
+numbers=none,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=true,
+breakatwhitespace=true,
+tabsize=4
 }
 \begin{document}
 
@@ -86,38 +86,39 @@ Este modulo é composto pelo \texttt{model.cpp/hpp} que representa cada modelo, 
 Este modulo é composto pelo \texttt{generator.cpp/hpp} que disponibiliza métodos para gerar os pontos necessários para desenhar as 4 primitivas geométricas e a \texttt{main.cpp} que interpreta os argumentos da linha de comandos para chamar estes métodos e produzir um ficheiro com estes.
 
 \section{Primitivas}
- Para esta fase do projeto foram desenhadas quatro figuras, contando com um plano, um cubo, uma esfera e um cone. Serão, em seguida, apresentados os algoritmos para o cálculo dos pontos necessários para desenhar cada uma destas primitivas, bem como uma contextualização com as premissas utilizadas durante o raciocínio, quando necessário.
+Para esta fase do projeto foram desenhadas quatro figuras, contando com um plano, um cubo, uma esfera e um cone. Serão, em seguida, apresentados os algoritmos para o cálculo dos pontos necessários para desenhar cada uma destas primitivas, bem como uma contextualização com as premissas utilizadas durante o raciocínio, quando necessário.
 \subsection{Plano}
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.5\linewidth]{plane.png}
-\caption{Plano: Comprimento de Lado: 10}
+    \centering
+    \includegraphics[width=0.5\linewidth]{plane.png}
+    \caption{Plano: Comprimento de Lado: 10}
 \end{figure}
 
 O plano é uma figura de extrema simplicidade, composto apenas por 6 pontos que formam 2 triângulos, que por sua vez darão origem ao plano em XoZ.
 
 
 É recebido como parâmetro o comprimento do lado do quadrado em questão, que será usado para calcular os pontos. Sendo que este plano está centrado na origem, cada um dos pontos é calculado da seguinte forma:
-\\
+
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.5\linewidth]{esquemaPlano.PNG}
-\caption{Esquema do Plano.}
+    \centering
+    \includegraphics[width=0.5\linewidth]{esquemaPlano.PNG}
+    \caption{Esquema do Plano.}
 \end{figure}
 
-Para definir o triângulo superior:\\
-\\
--  \texttt{(h/2, 0, h/2)}\\
--  \texttt{(-h/2, 0, -h/2)}\\
--  \texttt{(-h/2, 0, h/2)}\\
+Para definir o triângulo superior:
 
-Para definir o triângulo inferior:\\
-\\
--  \texttt{(-h/2, 0, -h/2)}\\
--  \texttt{(h/2, 0, h/2)}\\
--  \texttt{(h/2, 0, -h/2)}\\
-\\
-Com base em tudo referido até agora, temos então o algoritmo usado para o cálculo dos pontos.\\
+\[(h/2,\quad 0, \quad h/2)\]
+\[(-h/2,\quad  0, \quad -h/2)\]
+\[(-h/2,\quad  0, \quad h/2)\]
+
+Para definir o triângulo inferior:
+
+\[(-h/2, \quad 0, \quad -h/2)\]
+\[(h/2, \quad  0, \quad  h/2)\]
+\[(h/2, \quad  0, \quad -h/2)\]
+
+Com base em tudo referido até agora, temos então o algoritmo usado para o cálculo dos pontos.
+
 \begin{lstlisting}
 std::vector<Point*> draw_plane(double side_length){
     vector<Point*> coordsPlane;
@@ -140,30 +141,29 @@ std::vector<Point*> draw_plane(double side_length){
 
 \subsection{Paralelepípedo}
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.5\linewidth]{box.png}
-\caption{Paralelepípedo: x: 3, y: 4, z: 5, Divisões: 6}
+    \centering
+    \includegraphics[width=0.5\linewidth]{box.png}
+    \caption{Paralelepípedo: x: 3, y: 4, z: 5, Divisões: 6}
 \end{figure}
 
-Um paralelepípedo é formado por 6 faces, sendo cada face formada por $divisions^2$ quadrados, sendo cada um desses quadrados formado por dois triângulos. Estas divisões são utilizadas para iterar sobre todas as superfícies do paralelepípedo, sendo esta distância entre divisões usada para calcular o próximo ponto baseado no ponto "atual". \\
-\\
+Um paralelepípedo é formado por 6 faces, sendo cada face formada por $divisions^2$ quadrados, sendo cada um desses quadrados formado por dois triângulos. Estas divisões são utilizadas para iterar sobre todas as superfícies do paralelepípedo, sendo esta distância entre divisões usada para calcular o próximo ponto baseado no ponto `atual'.
 
-Tendo o paralelepípedo centrado na origem por motivos de facilidade de cálculos, calculamos:\\
-\\
-\texttt{double axisX = x / 2;}\\
-\texttt{double axisY = y / 2;}\\
-\texttt{double axisZ = z / 2;}\\
+Tendo o paralelepípedo centrado na origem por motivos de facilidade de cálculos, calculamos:
 
-como "valores máximos" que podem ser tomados por cada uma das coordenadas dos pontos que constituem o paralelepípedo, e\\
-\\
-\texttt{double spacingX = x / divisions;}\\
-\texttt{double spacingY = y / divisions;}\\
-\texttt{double spacingZ = z / divisions;}\\
+\[X_{axis} = x / 2\]
+\[Y_{axis} = y / 2\]
+\[Z_{axis} = z / 2\]
 
-como sendo os valores que, tal como o nome indica, correspondem ao espaçamento entre divisões para cada eixo.\\
+como `valores máximos' que podem ser tomados por cada uma das coordenadas dos pontos que constituem o paralelepípedo, e
 
-Para calcular todos os pontos foi feito uso do seguinte algoritmo:\\
-\\
+\[X_{spacing} = x / divisions\]
+\[Y_{spacing} = y / divisions\]
+\[Z_{spacing} = z / divisions\]
+
+como sendo os valores que, tal como o nome indica, correspondem ao espaçamento entre divisões para cada eixo.
+
+Para calcular todos os pontos foi feito uso do seguinte algoritmo:
+
 \begin{lstlisting}
 std::vector<Point*> draw_box(double x, double y, double z, int divisions){
     vector<Point*> coordsBox;
@@ -227,14 +227,14 @@ std::vector<Point*> draw_box(double x, double y, double z, int divisions){
     }
 
     return coordsBox;
-}
+    }
 \end{lstlisting}
 \subsection{Esfera}
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.5\linewidth]{sphere.png}
-\caption{Esfera: Raio: 3, \textit{Slices}: 10, \textit{Stacks}: 7}
+    \centering
+    \includegraphics[width=0.5\linewidth]{sphere.png}
+    \caption{Esfera: Raio: 3, \textit{Slices}: 10, \textit{Stacks}: 7}
 \end{figure}
 
 Uma esfera é dividida em stacks e slices, que serão usadas para iterar a toda a volta da mesma. A interseção entre as slices e as stacks forma retângulos, e cada um desses retângulos será formado por dois triângulos.
@@ -243,31 +243,31 @@ Uma esfera é dividida em stacks e slices, que serão usadas para iterar a toda 
 Para a criação da esfera serão usadas coordenadas esféricas devido à facilidade que proporcionam no caso em questão. Assim sendo, são necessárias duas variáveis para representar os dois ângulos que constituem este tipo de coordenadas, \texttt{Phi} e \texttt{Theta}, utilizadas na iteração.
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.5\linewidth]{coords.png}
-\caption{Coordenadas esféricas.}
+    \centering
+    \includegraphics[width=0.5\linewidth]{coords.png}
+    \caption{Coordenadas esféricas.}
 \end{figure}
 
-Para cálculo das coordenadas de cada ponto será também necessário calcular a stack e slice em que se encontram atualmente as iterações, \texttt{currentStack} e \texttt{currentSlice} que serão calculadas da seguinte forma:\\
-\\
-\texttt{float currentStack = theta * thetaMovement}\\
-\texttt{float currentSlice = phi * phiMovement}\\
-\\
+Para cálculo das coordenadas de cada ponto será também necessário calcular a stack e slice em que se encontram atualmente as iterações, \texttt{currentStack} e \texttt{currentSlice} que serão calculadas da seguinte forma:
 
-As variáveis \texttt{thetaMovement} e \texttt{phiMovement} correspondem respetivamente à distância entre Stacks e à distância entre Slices.\\
-\\
-\texttt{float phiMovement = M\_PI * 2 / slices;}\\
-\texttt{float thetaMovement = M\_PI / stacks;}\\
-\\
+\[currentStack = \theta \times \theta_{Movement}\]
+\[currentSlice = \phi \times \phi_{Movement}\]
 
-Para utilizar coordenadas esféricas, o X, Y e Z devem ser alterados, passando a ser:\\
-\\
-\texttt{x = radius * sin(theta) * sin(phi);}\\
-\texttt{y = radius * cos(theta);}\\
-\texttt{z = radius * sin(theta) * cos(phi);}\\
 
-O algoritmo de cálculo dos pontos para desenhar uma esfera é a seguir apresentado.\\
-\\
+As variáveis $\theta_{Movement}$ e $\phi_{Movement}$ correspondem respetivamente à distância entre Stacks e à distância entre Slices.
+
+\[\phi_{Movement} = \pi \times 2 / slices\]
+\[\theta_{Movement} = \pi / stacks\]
+
+
+Para utilizar coordenadas esféricas, o X, Y e Z devem ser alterados, passando a ser:
+
+\[x = radius \times \sin(theta) \times \sin(\phi)\]
+\[y = radius \times \cos(theta)\]
+\[z = radius \times \sin(theta) \times \cos(\phi)\]
+
+O algoritmo de cálculo dos pontos para desenhar uma esfera é a seguir apresentado.
+
 \begin{lstlisting}
 std::vector<Point*> draw_sphere(double radius, double slices, double stacks){
     vector<Point*> coordsSphere;
@@ -277,35 +277,35 @@ std::vector<Point*> draw_sphere(double radius, double slices, double stacks){
     float thetaMovement = M_PI / stacks;
 
     for (float phi = 0; phi < slices; phi++)
-        for (float theta = 0; theta < stacks; theta++) {
+    for (float theta = 0; theta < stacks; theta++) {
 
-            float currentStack = theta * thetaMovement;
-            float currentSlice = phi * phiMovement;
+        float currentStack = theta * thetaMovement;
+        float currentSlice = phi * phiMovement;
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
-                radius * cos(currentStack + thetaMovement),
-                radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
+        coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
+        radius * cos(currentStack + thetaMovement),
+        radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice),
-                radius * cos(currentStack),
-                radius * sin(currentStack) * cos(currentSlice)));
+        coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice),
+        radius * cos(currentStack),
+        radius * sin(currentStack) * cos(currentSlice)));
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice),
-                radius * cos(currentStack + thetaMovement),
-                radius * sin(currentStack + thetaMovement) * cos(currentSlice)));
+        coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice),
+        radius * cos(currentStack + thetaMovement),
+        radius * sin(currentStack + thetaMovement) * cos(currentSlice)));
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice + phiMovement),
-                radius * cos(currentStack),
-                radius * sin(currentStack) * cos(currentSlice + phiMovement)));
+        coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice + phiMovement),
+        radius * cos(currentStack),
+        radius * sin(currentStack) * cos(currentSlice + phiMovement)));
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice),
-                radius * cos(currentStack),
-                radius * sin(currentStack) * cos(currentSlice)));
+        coordsSphere.push_back(new Point(radius * sin(currentStack) * sin(currentSlice),
+        radius * cos(currentStack),
+        radius * sin(currentStack) * cos(currentSlice)));
 
-            coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
-                radius * cos(currentStack + thetaMovement),
-                radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
-        }
+        coordsSphere.push_back(new Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
+        radius * cos(currentStack + thetaMovement),
+        radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
+    }
 
     return coordsSphere;
 }
@@ -315,48 +315,39 @@ std::vector<Point*> draw_sphere(double radius, double slices, double stacks){
 \subsection{Cone}
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.5\linewidth]{cone.png}
-\caption{Cone: Raio: 4, Altura: 5, \textit{Slices}: 6, \textit{Stacks}: 7}
+    \centering
+    \includegraphics[width=0.5\linewidth]{cone.png}
+    \caption{Cone: Raio: 4, Altura: 5, \textit{Slices}: 6, \textit{Stacks}: 7}
 \end{figure}
 
 O cone tem a base sobre o eixo XoZ, centrada na origem, e é dividido em stacks e slices. A função geradora dos pontos do cone recebe como parâmetros o raio, a altura, o número de slices e o número de stacks.
 
-São declaradas três variáveis, \texttt{phi}, \texttt{theta} e \texttt{stackSpacing}.
-\\
+São declaradas três variáveis, $\phi$, $\theta$ e $stackSpacing$.
 
 A primeira corresponde à divisão equivalente da base por cada slice.
-\\
-\\
+
+\[\phi = (2 \times \pi) / slices\]
+
+A segunda, $\theta$, é calculada dividindo o raio da base pelo numero de stacks, o que se traduz na prática a calcular o recuo do raio à medida que se sobe nas stacks.
+
+\[\theta = radius / stacks\]
+
+Por fim, $stackSpacing$, tal como o nome indica, corresponde à distância entre cada stack, o *  `stack shift', e é calculado dividindo a altura pelo número de stacks.
 
 
-\texttt{float phi = (2 * M\_PI) / slices;}\\
-\\
+\[stackSpacing = height / stacks\]
 
-A segunda, \texttt{theta}, é calculada dividindo o raio da base pelo numero de stacks, o que se traduz na prática a calcular o recuo do raio à medida que se sobe nas stacks.
-\\
-\\
-
-\texttt{float theta = radius / stacks;}\\
-\\
-
-Por fim, \texttt{stackSpacing}, tal como o nome indica, corresponde à distância entre cada stack, o "stack shift", e é calculado dividindo a altura pelo número de stacks.\\
-\\
-
-
-\texttt{float stackSpacing = height / stacks;}\\
-\\
 
 O desenho do cone em si foi dividido em 3 fases: Base, Topo e a zona em volta, e tal como na esfera, são utilizadas coordenadas esféricas.
 
 Para a base, quando estamos na primeira stack, em cada iteração é desenhado um triângulo, e conjunto destes triângulos desenhados formarão a base concêntrica na origem quando tiverem sido executadas todas as iterações.
 
-O topo é desenhado no fim, para completar a "ponta" do cone, então, quando estamos na penúltima stack(a última é o vértice do cone), são desenhados triângulos a toda a volta que partilham um ponto em comum (o vértice), um por cada slice.
+O topo é desenhado no fim, para completar a `ponta' do cone, então, quando estamos na penúltima stack (a última é o vértice do cone), são desenhados triângulos a toda a volta que partilham um ponto em comum (o vértice), um por cada slice.
 
 Para os lados, com exceção do topo, serão desenhados retângulos formados por dois triângulos cada um, e serão esses retângulos que constituem o cone até chegar ao topo.
-\\
+
 Esta lógica traduzida para código resultou no seguinte algoritmo:
-\\
+
 \begin{lstlisting}
 std::vector<Point*> draw_cone(double radius, double height, int slices, int stacks){
     vector<Point*> coordsCone;
@@ -382,12 +373,12 @@ std::vector<Point*> draw_cone(double radius, double height, int slices, int stac
             }
 
             else { //Around
-                coordsCone.push_back(new Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
-                coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
-                coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * k), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * k)));
-                coordsCone.push_back(new Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
-                coordsCone.push_back(new Point((radius - theta * i) * sin(phi * (k + 1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k + 1))));
-                coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
+            coordsCone.push_back(new Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
+            coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
+            coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * k), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * k)));
+            coordsCone.push_back(new Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
+            coordsCone.push_back(new Point((radius - theta * i) * sin(phi * (k + 1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k + 1))));
+            coordsCone.push_back(new Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
             }
         }
     }
@@ -488,6 +479,4 @@ Em suma, todas as primitivas são geradas corretamente e o motor gráfico é cap
 Futuramente, a câmera será melhorada para que se possa utilizar o rato no modo \textit{FPS}.
 
 \end{document}
-
-
 
