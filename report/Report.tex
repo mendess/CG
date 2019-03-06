@@ -224,9 +224,7 @@ A segunda, $\theta$, é calculada dividindo o raio da base pelo numero de stacks
 
 Por fim, $stackSpacing$, tal como o nome indica, corresponde à distância entre cada stack, o *  `stack shift', e é calculado dividindo a altura pelo número de stacks.
 
-
 \[stackSpacing = height / stacks\]
-
 
 O desenho do cone em si foi dividido em 3 fases: Base, Topo e a zona em volta, e tal como na esfera, são utilizadas coordenadas esféricas.
 
@@ -244,7 +242,7 @@ Para a base, quando estamos na primeira stack, em cada iteração é desenhado u
 
 sendo que $k$ toma valores entre $0$ e $slices-1$. Quando temos $\phi (k+1)$ representa o próximo valor de $\phi$.
 
-O topo é desenhado no fim, para completar a "ponta" do cone, então, quando estamos na penúltima stack (a última é o vértice do cone), são desenhados triângulos a toda a volta que partilham um ponto em comum (o vértice), um por cada slice. Utilizando coordenadas esféricas chegamos às seguintes coordenadas:
+O topo é desenhado no fim, para completar a ``ponta'' do cone, então, quando estamos na penúltima stack (a última é o vértice do cone), são desenhados triângulos a toda a volta que partilham um ponto em comum (o vértice), um por cada slice. Utilizando coordenadas esféricas chegamos às seguintes coordenadas:
 
 \[\Big((radius - \theta i) \x \sin(\phi k), i \x stackSpacing, (radius - \theta i) \x \cos(\phi k)\Big)\]
 \[\Big((radius - \theta i) \x \sin(\phi (k + 1)), i \x stackSpacing, (radius - \theta i) \x \cos(\phi (k + 1))\Big)\]
