@@ -67,13 +67,14 @@ bool Model::draw_model() const
 
 using namespace rapidxml;
 
-void Models::load(string config)
+bool Models::load(string config)
 {
     ifstream file(config);
     if (!file.good()) {
         cerr << config << ": file not found" << endl;
-        return;
+        return false;
     }
+    bool success = true;
     string text;
     file.seekg(0, ios::end);
     text.reserve(file.tellg());
@@ -89,9 +90,11 @@ void Models::load(string config)
             xml_attribute<>* attr = node->first_attribute();
             Models::get()->add_model(Model(attr->value()));
         }
-    } catch (rapidxml::parse_error e) {
+    } catch (rapidxml::parse_error& e) {
         cout << config << ": " << e.what() << " " << endl;
+        success = false;
     }
     doc.clear();
     free(t);
+    return success;
 }

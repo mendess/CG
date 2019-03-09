@@ -33,7 +33,7 @@ public:
     int num_models() { return models.size(); }
     const Model* get_model(int i) { return &models[i]; };
     void add_model(Model m) { models.push_back(m); }
-    static void load(std::string config);
+    static bool load(std::string config);
 };
 
 #endif //MODEL_H

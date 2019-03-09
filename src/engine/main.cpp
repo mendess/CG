@@ -152,7 +152,8 @@ public:
     {
         mode = CameraType::EXPLORER;
         alpha = atan(x / z);
-        if (z < 0.0) alpha += M_PI;
+        if (z < 0.0)
+            alpha += M_PI;
         beta = asin(y / sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)));
         radius = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
         update_cam_pos();
@@ -194,7 +195,8 @@ void changeSize(int w, int h)
 {
     // Prevent a divide by zero, when window is too short
     // (you cant make a window with zero width).
-    if (h == 0) h = 1;
+    if (h == 0)
+        h = 1;
     // compute window's aspect ratio
     float ratio = w * 1.0 / h;
     // Set the projection matrix as current
@@ -343,7 +345,14 @@ void key_bindings(unsigned char key, int _x, int _y)
 
 int main(int argc, char** argv)
 {
-    Models::load("config.xml");
+    if (argc < 2) {
+        if(!Models::load("config.xml")) return 1;
+    } else if ("--help" == string(argv[1]) || "-h" == string(argv[1])) {
+        cerr << argv[0] << " [config.xml]" << endl;
+        return 2;
+    } else {
+        if(!Models::load(string(argv[1]))) return 1;
+    }
     // init GLUT and the window
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
