@@ -3,7 +3,7 @@
 \usepackage[portuguese]{babel}
 \usepackage{graphicx}
 \usepackage{a4wide}
-\usepackage[pdftex,hidelinks]{hyperref}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
 \usepackage{float}
 \usepackage{indentfirst}
 \usepackage{subcaption}
@@ -73,7 +73,7 @@ Este trabalho foi proposto no âmbito da unidade curricular de Computação Grá
 O projeto está dividido em várias fases, sendo que nesta primeira, serão implementadas algumas primitivas gráficas, como o plano, o paralelepípedo, a esfera e o cone e também uma primeira implementação de dois modos de Câmera.
 
 \section{Arquitetura do Projecto}
-Após analisar o problema, foi decidido que o projeto está dividido em dois executáveis, o \texttt{generator} e o \texttt{engine}. Para além destes, temos também na nossa arquitetura uma biblioteca comum aos dois.
+Após analisar o problema, foi decidido que o projeto está dividido em dois executáveis, o \texttt{generator} e o \texttt{engine}. Para além destes, temos também na nossa arquitetura uma biblioteca comum aos dois, \texttt{common}, e as nossas dependencias em \texttt{dependencies}.
 
 \subsection{Common}
 
@@ -89,7 +89,7 @@ Aqui está apenas definido um \texttt{Point.cpp/hpp} que representa um ponto no 
 
 \subsection{Engine}
 
-Este módulo é definido em \texttt{model.cpp/hpp} que representa cada modelo, ou seja, o conjunto de pontos que define cada um dos modelos, e disponibilizando também um método para os desenhar. E a \texttt{main.cpp} que carrega todos os ficheiros especificados no ficheiro \texttt{config.xml} e desenha-os no ecrã. Esta define também a lógica que controla a câmera.
+Este módulo é composto pelos \texttt{model.cpp/hpp} que representa cada modelo, ou seja, o conjunto de pontos que define cada um dos modelos, e disponibilizando também um método para os desenhar, e a \texttt{main.cpp} que carrega todos os ficheiros especificados no ficheiro \texttt{config.xml} (ou o ficheiro passado como argumento do programa) e desenha-os no ecrã. Esta define também a lógica que controla a câmera.
 
 O algoritmo de desenho é simples. Primeiro todos os modelos do ficheiro de configuração são carregados para memoria sobre a forma de \texttt{Model}s. De seguida cada um destes modelos é renderizado no ecrã, chamando \texttt{glVertex3f} para cada um dos seus pontos, pela ordem em que foram lidos, e, por fim, inicia-se o \textit{loop} do \textit{glut}. Desta forma os modelos são carregados apenas uma vez para memória.
 
@@ -98,6 +98,10 @@ O algoritmo de desenho é simples. Primeiro todos os modelos do ficheiro de conf
 Este módulo é composto pelo ficheiro \texttt{generator.cpp/hpp} que disponibiliza métodos para gerar os pontos necessários para desenhar as 4 primitivas geométricas e a \texttt{main.cpp} que interpreta os argumentos da linha de comandos para chamar estes métodos e produzir um ficheiro com estes argumentos.
 
 O trabalho feito por este módulo é explicado em mais detalhe na secção~\ref{sec:primitivas}.
+
+\subsection{Dependencies}
+
+A nossa única dependência é o rapidxml (\url{http://rapidxml.sourceforge.net/manual.html}). Este permite-nos fazer rapidamente a interpretação do ficheiro de configuração onde estão definidos os objectos a desenhar.
 
 \section{Primitivas}\label{sec:primitivas}
 
@@ -111,7 +115,6 @@ Para esta fase do projeto foram desenhadas quatro figuras, contando com um plano
 \end{figure}
 
 O plano é uma figura de extrema simplicidade, composto apenas por 6 pontos que formam 2 triângulos, que por sua vez darão origem ao plano em XoZ.
-
 
 É recebido como parâmetro o comprimento do lado do quadrado em questão, que será usado para calcular os pontos. Sendo que este plano está centrado na origem, cada um dos pontos é calculado da seguinte forma:
 
@@ -222,7 +225,6 @@ Por fim, $stackSpacing$, tal como o nome indica, corresponde à distância entre
 
 
 \[stackSpacing = height / stacks\]
-
 
 O desenho do cone em si foi dividido em 3 fases: base, topo e a zona em volta, e tal como na esfera, são utilizadas coordenadas esféricas.
 
@@ -352,7 +354,7 @@ E para o motor foi testado todo o código à exceção das rotinas do OpenGl:
 
 Ao longo desta primeira fase foi possível perceber o modo de funcionamento de um motor gráfico 3D e como o OpenGL atua na criação das diferentes figuras geométricas.
 
-Conseguimos concluir que todas as primitivas são geradas corretamente e o motor gráfico é capaz de as representar genericamente.
+Conseguimos que todas as primitivas fossem geradas corretamente e o motor gráfico é capaz de as representar genericamente.
 
 Futuramente, em relação à câmera, esta será melhorada para que se possa utilizar o rato no modo \textit{FPS}.
 
