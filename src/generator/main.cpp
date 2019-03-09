@@ -123,7 +123,7 @@ bool parse_cone(int argc, char** args, double* radius, double* height, int* slic
 int main(int argc, char** argv)
 {
     PROGRAM_NAME = argv[0];
-    if (argc < 2) {
+    if (argc < 3 || "--help" == string(argv[1]) || "-h" == string(argv[1])) {
         printHelpPage();
         return 1;
     }
