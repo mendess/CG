@@ -1,0 +1,19 @@
+\begin{lstlisting}
+std::vector<Point*> draw_plane(double side_length){
+    vector<Point*> coordsPlane;
+    float axis = side_length / 2;
+
+    //first triangle
+    coordsPlane.push_back(Point(axis, 0, axis));
+    coordsPlane.push_back(Point(-axis, 0, -axis));
+    coordsPlane.push_back(Point(-axis, 0, axis));
+
+    //second triangle
+    coordsPlane.push_back(Point(-axis, 0, -axis));
+    coordsPlane.push_back(Point(axis, 0, axis));
+    coordsPlane.push_back(Point(axis, 0, -axis));
+
+    return coordsPlane;
+}
+
+\end{lstlisting}

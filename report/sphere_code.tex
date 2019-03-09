@@ -1,0 +1,43 @@
+\begin{lstlisting}
+std::vector<Point*> draw_sphere(double radius, double slices, double stacks){
+    vector<Point*> coordsSphere;
+
+    float phiMovement = M_PI * 2 / slices;
+
+    float thetaMovement = M_PI / stacks;
+
+    for (float phi = 0; phi < slices; phi++)
+    for (float theta = 0; theta < stacks; theta++) {
+
+        float currentStack = theta * thetaMovement;
+        float currentSlice = phi * phiMovement;
+
+        coordsSphere.push_back(Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
+        radius * cos(currentStack + thetaMovement),
+        radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
+
+        coordsSphere.push_back(Point(radius * sin(currentStack) * sin(currentSlice),
+        radius * cos(currentStack),
+        radius * sin(currentStack) * cos(currentSlice)));
+
+        coordsSphere.push_back(Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice),
+        radius * cos(currentStack + thetaMovement),
+        radius * sin(currentStack + thetaMovement) * cos(currentSlice)));
+
+        coordsSphere.push_back(Point(radius * sin(currentStack) * sin(currentSlice + phiMovement),
+        radius * cos(currentStack),
+        radius * sin(currentStack) * cos(currentSlice + phiMovement)));
+
+        coordsSphere.push_back(Point(radius * sin(currentStack) * sin(currentSlice),
+        radius * cos(currentStack),
+        radius * sin(currentStack) * cos(currentSlice)));
+
+        coordsSphere.push_back(Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
+        radius * cos(currentStack + thetaMovement),
+        radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
+    }
+
+    return coordsSphere;
+}
+
+\end{lstlisting}
