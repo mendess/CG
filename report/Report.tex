@@ -3,7 +3,7 @@
 \usepackage[portuguese]{babel}
 \usepackage{graphicx}
 \usepackage{a4wide}
-\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+\usepackage[pdftex,hidelinks]{hyperref}
 \usepackage{float}
 \usepackage{indentfirst}
 \usepackage{subcaption}
@@ -73,11 +73,11 @@ Este trabalho foi proposto no âmbito da unidade curricular de Computação Grá
 O projeto está dividido em várias fases, sendo que nesta primeira, serão implementadas algumas primitivas gráficas, como o plano, o paralelepípedo, a esfera e o cone e também uma primeira implementação de dois modos de Câmera.
 
 \section{Arquitetura do Projecto}
-Após analisar o problema, foi decidido que o projeto está dividido em dois executáveis, o \texttt{generator} e o \texttt{engine}. Para além destes, temos também na nossa arquitetura uma biblioteca comum aos dois, \texttt{common}, e as nossas dependencias em \texttt{dependencies}.
+Após analisar o problema, foi decidido que o projeto estaria dividido em dois executáveis, o \texttt{generator} e o \texttt{engine}. Para além destes, temos também na nossa arquitetura, uma biblioteca comum aos dois.
 
 \subsection{Common}
 
-Aqui está apenas definido um \texttt{Point.cpp/hpp} que representa um ponto no espaço 3D.
+Aqui está apenas definido um ficheiro \texttt{Point.cpp/hpp} que representa um ponto no espaço 3D.
 
 \begin{minted}{C++}
     class Point {
@@ -91,7 +91,7 @@ Aqui está apenas definido um \texttt{Point.cpp/hpp} que representa um ponto no 
 
 Este módulo é composto pelos \texttt{model.cpp/hpp} que representa cada modelo, ou seja, o conjunto de pontos que define cada um dos modelos, e disponibilizando também um método para os desenhar, e a \texttt{main.cpp} que carrega todos os ficheiros especificados no ficheiro \texttt{config.xml} (ou o ficheiro passado como argumento do programa) e desenha-os no ecrã. Esta define também a lógica que controla a câmera.
 
-O algoritmo de desenho é simples. Primeiro todos os modelos do ficheiro de configuração são carregados para memoria sobre a forma de \texttt{Model}s. De seguida cada um destes modelos é renderizado no ecrã, chamando \texttt{glVertex3f} para cada um dos seus pontos, pela ordem em que foram lidos, e, por fim, inicia-se o \textit{loop} do \textit{glut}. Desta forma os modelos são carregados apenas uma vez para memória.
+O algoritmo de desenho é simples. Primeiro todos os modelos do ficheiro de configuração são carregados para memoria sobre a forma de \texttt{Model}s. De seguida cada um destes modelos é renderizado no ecrã, chamando \texttt{glVertex3f} para cada um dos seus pontos, pela ordem em que foram lidos, e, por fim, inicia-se o \textit{loop} do \textit{glut}. Desta forma, os modelos são carregados apenas uma vez para memória.
 
 \subsection{Generator}
 
@@ -99,9 +99,9 @@ Este módulo é composto pelo ficheiro \texttt{generator.cpp/hpp} que disponibil
 
 O trabalho feito por este módulo é explicado em mais detalhe na secção~\ref{sec:primitivas}.
 
-\subsection{Dependencies}
+\subsection{Dependências}
 
-A nossa única dependência é o rapidxml (\url{http://rapidxml.sourceforge.net/manual.html}). Este permite-nos fazer rapidamente a interpretação do ficheiro de configuração onde estão definidos os objectos a desenhar.
+A nossa única dependência é o rapidxml (\url{http://rapidxml.sourceforge.net/manual.html}). Este permite-nos fazer rapidamente a interpretação do ficheiro de configuração, onde estão definidos os objetos a desenhar.
 
 \section{Primitivas}\label{sec:primitivas}
 
@@ -136,7 +136,6 @@ Para definir o triângulo inferior:
 \[(h/2, \quad  0, \quad  h/2)\]
 \[(h/2, \quad  0, \quad -h/2)\]
 
-
 \subsection{Paralelepípedo}
 \begin{figure}[H]
     \centering
@@ -146,7 +145,7 @@ Para definir o triângulo inferior:
 
 Um paralelepípedo é formado por 6 faces, sendo cada face formada por $divisions^2$ quadrados, sendo cada um desses quadrados formado por dois triângulos. Estas divisões são utilizadas para iterar sobre todas as superfícies do paralelepípedo, sendo esta distância entre divisões usada para calcular o próximo ponto baseado no ponto `atual'.
 
-Tendo o paralelepípedo centrado na origem por motivos de facilidade de cálculos, calculamos:
+Tendo o paralelepípedo centrado na origem, por motivos de facilidade de cálculos, calculamos:
 
 \[X_{axis} = x / 2\]
 \[Y_{axis} = y / 2\]
@@ -160,6 +159,7 @@ como `valores máximos' que podem ser tomados por cada uma das coordenadas dos p
 
 como sendo os valores que, tal como o nome indica, correspondem ao espaçamento entre divisões para cada eixo.
 
+Assim, usando como exemplo a face frontal de um paralelepípedo, 
 
 \subsection{Esfera}
 
@@ -169,10 +169,9 @@ como sendo os valores que, tal como o nome indica, correspondem ao espaçamento 
     \caption{Esfera: Raio: 3, \textit{Slices}: 10, \textit{Stacks}: 7}
 \end{figure}
 
-Uma esfera é dividida em stacks e slices, que serão usadas para iterar a toda a volta da mesma. A interseção entre as slices e as stacks forma retângulos, e cada um desses retângulos será formado por dois triângulos.
+Uma esfera é dividida em stacks e slices, que serão usadas para iterar a toda a volta da mesma. A interseção entre as slices e as stacks forma retângulos, e cada um destes será constituído por dois triângulos.
 
-
-Para a criação da esfera serão usadas coordenadas esféricas devido à facilidade que proporcionam no caso em questão. Assim sendo, são necessárias duas variáveis para representar os dois ângulos que constituem este tipo de coordenadas, \texttt{Phi} e \texttt{Theta}, utilizadas na iteração.
+Para a criação da esfera serão usadas coordenadas esféricas devido à facilidade que proporcionam, no caso em questão. Assim sendo, são necessárias duas variáveis para representar os dois ângulos que constituem este tipo de coordenadas, $\phi$ e $\theta$, utilizadas na iteração.
 
 \begin{figure}[H]
     \centering
@@ -185,21 +184,16 @@ Para o cálculo das coordenadas de cada ponto será também necessário calcular
 \[currentStack = \theta \x \theta_{Movement}\]
 \[currentSlice = \phi \x \phi_{Movement}\]
 
-
 As variáveis $\theta_{Movement}$ e $\phi_{Movement}$ correspondem, respetivamente, à distância entre Stacks e à distância entre Slices.
 
 \[\phi_{Movement} = 2\pi / slices\]
 \[\theta_{Movement} = \pi / stacks\]
 
-
 Para utilizar coordenadas esféricas, o X, Y e Z devem ser alterados, passando a ser:
 
-\[x = radius \x \sin(theta) \x \sin(\phi)\]
-\[y = radius \x \cos(theta)\]
-\[z = radius \x \sin(theta) \x \cos(\phi)\]
-
-O algoritmo de cálculo dos pontos para desenhar uma esfera é a seguir apresentado.
-
+\[x = radius \x \sin(\theta) \x \sin(\phi)\]
+\[y = radius \x \cos(\theta)\]
+\[z = radius \x \sin(\theta) \x \cos(\phi)\]
 
 \subsection{Cone}
 
@@ -221,8 +215,7 @@ A segunda, $\theta$, é calculada dividindo o raio da base pelo número de stack
 
 \[\theta = radius / stacks\]
 
-Por fim, $stackSpacing$, tal como o nome indica, corresponde à distância entre cada stack, o *  `stack shift', e é calculado dividindo a altura pelo número de stacks.
-
+Por fim, $stackSpacing$, tal como o nome indica, corresponde à distância entre cada stack, o ``stack shift'', e é calculado dividindo a altura pelo número de stacks.
 
 \[stackSpacing = height / stacks\]
 
@@ -234,15 +227,15 @@ O desenho do cone em si foi dividido em 3 fases: base, topo e a zona em volta, e
     \caption{Esquema do cone.}
 \end{figure}
 
-Para a base, quando estamos na primeira stack, em cada iteração é desenhado um triângulo, e conjunto destes triângulos desenhados formarão a base concêntrica na origem quando tiverem sido executadas todas as iterações. Utilizando coordenadas esféricas chegamos às seguintes coordenadas:
+Para a base, quando estamos na primeira stack, em cada iteração é desenhado um triângulo, e o conjunto destes triângulos desenhados formarão a base concêntrica na origem quando tiverem sido executadas todas as iterações. Utilizando coordenadas esféricas chegamos às seguintes coordenadas:
 
  \[\Big(0,\quad 0,\quad 0\Big)\]
  \[\Big(radius \x \sin(\phi (k+1)),\quad 0,\quad radius \x \cos(\phi (k+1))\Big)\]
  \[\Big(radius \x \sin(\phi k),\quad 0,\quad radius \x \cos(\phi k)\Big)\]
 
-sendo que $k$ toma valores entre $0$ e $slices-1$. Quando temos $\phi (k+1)$ representa o próximo valor de $\phi$.
+sendo que $k$ toma valores entre $0$ e $slices-1$ e $\phi (k+1)$ representa o próximo valor de $\phi$.
 
-O topo é desenhado no fim, para completar a "ponta" do cone, então, quando estamos na penúltima stack (a última é o vértice do cone), são desenhados triângulos a toda a volta que partilham um ponto em comum (o vértice), um por cada slice. Utilizando coordenadas esféricas chegamos às seguintes coordenadas:
+O topo é desenhado no fim, para completar a ``ponta'' do cone, então, quando estamos na penúltima stack (a última é o vértice do cone), são desenhados triângulos a toda a volta que partilham um ponto em comum (o vértice), um por cada slice. Utilizando coordenadas esféricas chegamos às seguintes coordenadas:
 
 \[\Big((radius - \theta i) \x \sin(\phi k),\quad i \x stackSpacing,\quad (radius - \theta i) \x \cos(\phi k)\Big)\]
 \[\Big((radius - \theta i) \x \sin(\phi (k + 1)),\quad i \x stackSpacing,\quad (radius - \theta i) \x \cos(\phi (k + 1))\Big)\]
@@ -255,11 +248,11 @@ Para os lados, com exceção do topo, serão desenhados retângulos formados por
 \[\Big((radius - \theta (i + 1)) \x \sin(\phi k),\quad (i + 1) \x stackSpacing,\quad (radius - \theta (i + 1)) \x \cos(\phi k)\Big)\]
 
 \section{Câmera}
-A câmera pode ser utilizada em dois modos diferentes, o modo \textit{Explorer mode} e o modo \textit{FPS mode}, que podem ser alternados durante a execução do engine.
+A câmera pode ser utilizada em dois modos diferentes, o modo \textit{Explorer mode} e o modo \textit{FPS mode}, que podem ser alternados durante a execução do \texttt{engine}.
 
 \subsection{Explorer Mode}
 
-Neste modo o movimento da câmera é descrito por uma superfície esférica, na qual o utilizador se movimenta enquanto mantém, sempre, o seu olhar fixo na origem do referêncial. O raio desta superfície esférica é que define a distância até ao centro, podendo ser aumentado para afastar o utilizador do centro do espaço 3d, ou diminuído para o aproximar.
+Neste modo, o movimento da câmera é descrito por uma superfície esférica, na qual o utilizador se movimenta enquanto mantém, sempre, o seu olhar fixo na origem do referencial. O raio desta superfície esférica é que define a distância até ao centro, podendo ser aumentado para afastar o utilizador do centro do espaço 3d, ou diminuído para o aproximar.
 
 \subsubsection{Controlos \textit{(key bindings)}}
 
@@ -346,7 +339,7 @@ Para o gerador foram testadas todas as primitivas:
 
 \input{valgrind_generator.tex}
 
-E para o motor foi testado todo o código à exceção das rotinas do OpenGl:
+E para o motor, foi testado todo o código à exceção das rotinas do OpenGl:
 
 \input{valgrind_engine.tex}
 
@@ -354,7 +347,7 @@ E para o motor foi testado todo o código à exceção das rotinas do OpenGl:
 
 Ao longo desta primeira fase foi possível perceber o modo de funcionamento de um motor gráfico 3D e como o OpenGL atua na criação das diferentes figuras geométricas.
 
-Conseguimos que todas as primitivas fossem geradas corretamente e o motor gráfico é capaz de as representar genericamente.
+Conseguimos fazer com que todas as primitivas sejam geradas corretamente e que o motor gráfico seja capaz de as representar genericamente.
 
 Futuramente, em relação à câmera, esta será melhorada para que se possa utilizar o rato no modo \textit{FPS}.
 
