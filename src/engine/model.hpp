@@ -14,7 +14,7 @@ private:
 public:
     Model(char*);
     Model(const Model& other);
-    bool draw_model() const;
+    bool draw() const;
     char* name() const { return modelName; };
     ~Model() { free(modelName); };
 };

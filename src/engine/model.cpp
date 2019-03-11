@@ -44,7 +44,7 @@ void drawTriangle(const Point* a, const Point* b, const Point* c, float r, float
     glEnd();
 }
 
-bool Model::draw_model() const
+bool Model::draw() const
 {
     default_random_engine generator(42);
     uniform_int_distribution<int> distribution(0, 100);

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 # Project Name
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_executable(engine main.cpp model.cpp)
+add_executable(engine main.cpp model.cpp camera.cpp)
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})
