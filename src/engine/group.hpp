@@ -3,6 +3,7 @@
 
 #include "model.hpp"
 #include "transformations.hpp"
+#include "../dependencies/rapidxml.hpp"
 #include <vector>
 
 class Group {
@@ -12,6 +13,7 @@ private:
     std::vector<Group> subgroups;
 
 public:
+    Group(rapidxml::xml_node<char> *);
     void draw() const;
     void draw(int max_depth) const;
 };

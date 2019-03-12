@@ -6,7 +6,7 @@ public:
     virtual void transform() const = 0;
 };
 
-class Rotate : Transformation {
+class Rotate : public Transformation {
 private:
     float angle, x, y, z;
 
@@ -21,7 +21,7 @@ public:
     void transform() const override;
 };
 
-class Translate : Transformation {
+class Translate : public Transformation {
 private:
     float x, y, z;
 
@@ -35,7 +35,7 @@ public:
     void transform() const override;
 };
 
-class Scale : Transformation {
+class Scale : public Transformation {
 private:
     float x, y, z;
 
@@ -49,7 +49,7 @@ public:
     void transform() const override;
 };
 
-class Color : Transformation {
+class Color : public Transformation {
 private:
     float r, g, b;
 

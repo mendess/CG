@@ -19,21 +19,4 @@ public:
     ~Model() { free(modelName); };
 };
 
-class Models {
-private:
-    std::vector<Model> models;
-    Models() {};
-
-public:
-    static Models* get()
-    {
-        static Models m;
-        return &m;
-    }
-    int num_models() { return models.size(); }
-    const Model* get_model(int i) { return &models[i]; };
-    void add_model(Model m) { models.push_back(m); }
-    static bool load(std::string config);
-};
-
 #endif //MODEL_H

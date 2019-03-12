@@ -16,6 +16,7 @@ using namespace std;
 namespace Render {
 
 static float SCALE = 1;
+static Group * SCENE;
 
 void changeSize(int w, int h)
 {
@@ -68,13 +69,8 @@ void renderScene()
     glEnd();
     glScalef(SCALE, SCALE, SCALE);
 
-    Models* models = Models::get();
-    for (int i = 0; i < models->num_models(); ++i) {
-        const Model* m = models->get_model(i);
-        if (!m->draw()) {
-            cerr << m->name() << ": Invalid number of control points" << endl;
-        }
-    }
+    SCENE->draw();
+
     glutSwapBuffers();
 }
 
@@ -97,18 +93,8 @@ void key_bindings(unsigned char key, int _x, int _y)
     renderScene();
 }
 
-int render(int argc, char** argv, Group& scene)
+int render(int argc, char** argv, Group * scene)
 {
-    if (argc < 2) {
-        if (!Models::load("config.xml"))
-            return 1;
-    } else if ("--help" == string(argv[1]) || "-h" == string(argv[1])) {
-        cerr << argv[0] << " [config.xml]" << endl;
-        return 2;
-    } else {
-        if (!Models::load(string(argv[1])))
-            return 1;
-    }
     // init GLUT and the window
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -116,6 +102,7 @@ int render(int argc, char** argv, Group& scene)
     glutInitWindowSize(800, 800);
     glutCreateWindow("CG-Engine");
     // Required callback registry
+    SCENE = scene;
     glutDisplayFunc(renderScene);
     glutReshapeFunc(changeSize);
     glutKeyboardFunc(key_bindings);
