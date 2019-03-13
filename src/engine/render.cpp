@@ -111,8 +111,8 @@ int render(int argc, char** argv, Group* scene)
     // init GLUT and the window
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowPosition(100, 100);
-    glutInitWindowSize(800, 800);
+    glutInitWindowPosition(10, 25);
+    glutInitWindowSize(1200, 1050);
     glutCreateWindow("CG-Engine");
     // Required callback registry
     SCENE = scene;

@@ -117,7 +117,7 @@ Rotate* parse_rotate(xml_node<char>* node)
     angle = x = y = z = 0.0f;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
         string name = string(attr->name());
-        if ("Angle" == name) {
+        if ("angle" == name) {
             angle = stof(attr->value());
         } else if ("axisX" == name) {
             x = stof(attr->value());
