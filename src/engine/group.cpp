@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <string>
 #include <vector>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -52,8 +53,8 @@ Group::Group(xml_node<char>* group)
         }
     }
     int max_level = 0;
-    for(const auto& subgroup : subgroups) {
-        if(subgroup.levels() > max_level)
+    for (const auto& subgroup : subgroups) {
+        if (subgroup.levels() > max_level)
             max_level = subgroup.levels();
     }
     _levels = max_level + 1;
@@ -161,4 +162,39 @@ Color* parse_color(xml_node<char>* node)
         }
     }
     return new Color(r, g, b);
+}
+
+string Group::internal_to_string(const int level) const
+{
+    stringstream gstr;
+    const auto tab = [=, &gstr](const string t) {
+        for (int i = 0; i < level; i++)
+            gstr << "\t";
+        gstr << t << endl;
+    };
+    tab("---");
+    tab("Transformations [");
+    for (const auto& t : transformations) {
+        gstr << "\t";
+        tab(t->to_string());
+    }
+    tab("]");
+    tab("Models [");
+    for (const auto& m : models) {
+        gstr << "\t";
+        tab(m.name());
+    }
+    tab("]");
+    tab("SubGroups {");
+    for (const auto& g : subgroups) {
+        gstr << g.internal_to_string(level + 1);
+    }
+    tab("}");
+    tab("---");
+    return gstr.str();
+}
+
+string Group::to_string() const
+{
+    return internal_to_string(0);
 }

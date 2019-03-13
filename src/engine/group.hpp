@@ -13,11 +13,14 @@ private:
     std::vector<Group> subgroups;
     int _levels;
 
+    std::string internal_to_string(int) const;
+
 public:
     Group(rapidxml::xml_node<char> *);
     int levels() const { return _levels; };
     void draw() const;
-    void draw(int max_depth) const;
+    void draw(int) const;
+    std::string to_string() const;
 };
 
 #endif // __GROUP_HPP__
