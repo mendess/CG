@@ -24,3 +24,4 @@ Both programs support a `--help` flag to provide some guidance on how to use the
 ## Duvidas
 - A ordem dos models e das transformacoes dentro dos grupos interessa?
 - O quanto podemos mudar o formato do xml. Quero por coisas a mexer
+- VBO's
