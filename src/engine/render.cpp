@@ -16,7 +16,7 @@ using namespace std;
 namespace Render {
 
 static float SCALE = 1;
-static Group * SCENE;
+static Group* SCENE;
 static int DRAW_LEVEL = -1;
 
 void changeSize(int w, int h)
@@ -72,9 +72,9 @@ void renderScene()
 
     SCENE->draw(DRAW_LEVEL);
 
-    char title[1024];
-    sprintf(title, "CG-Engine - Draw Level: %d", DRAW_LEVEL);
-    glutSetWindowTitle(title);
+    stringstream title;
+    title << "CG-Engine | Draw Level: " << DRAW_LEVEL << " | Camera Mode: " << Camera::to_string(Camera::current_camera());
+    glutSetWindowTitle(title.str().data());
 
     glutSwapBuffers();
 }
@@ -93,10 +93,12 @@ void key_bindings(unsigned char key, int _x, int _y)
         SCALE -= 0.1;
         break;
     case '[':
-        if(DRAW_LEVEL > 1) DRAW_LEVEL--;
+        if (DRAW_LEVEL > 1)
+            DRAW_LEVEL--;
         break;
     case ']':
-        if(DRAW_LEVEL < SCENE->levels()) DRAW_LEVEL++;
+        if (DRAW_LEVEL < SCENE->levels())
+            DRAW_LEVEL++;
         break;
     case 'q':
         exit(0);
@@ -104,7 +106,7 @@ void key_bindings(unsigned char key, int _x, int _y)
     renderScene();
 }
 
-int render(int argc, char** argv, Group * scene)
+int render(int argc, char** argv, Group* scene)
 {
     // init GLUT and the window
     glutInit(&argc, argv);

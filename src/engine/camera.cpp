@@ -227,7 +227,8 @@ void fps_cam(unsigned char key)
 
 auto current_cam = explorer_cam;
 
-void process_key_bind(unsigned char key) {
+void process_key_bind(unsigned char key)
+{
     current_cam(key);
 }
 
@@ -243,6 +244,15 @@ void toggle_cam()
         Camera::set_explorer();
         break;
     }
+}
+
+CameraType current_camera() {
+    return mode;
+}
+
+std::string to_string(CameraType c)
+{
+    return (std::string[]) { "Explorer", "FPS" }[(int)c];
 }
 
 }
