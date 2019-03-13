@@ -29,7 +29,7 @@ Group* load(string config)
         doc.parse<0>(t);
         group = new Group(doc.first_node("scene"));
     } catch (rapidxml::parse_error& e) {
-        cout << config << ": " << e.what() << " " << endl;
+        cerr << config << ": " << e.what() << " " << endl;
         group = NULL;
     }
     doc.clear();

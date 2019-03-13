@@ -14,9 +14,10 @@ private:
 public:
     Model(char*);
     Model(const Model& other);
+    bool loaded();
     bool draw() const;
     char* name() const { return modelName; };
-    ~Model() { free(modelName); };
+    ~Model() { if(modelName) free(modelName); };
 };
 
 #endif //MODEL_H

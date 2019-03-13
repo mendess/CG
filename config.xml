@@ -5,15 +5,15 @@
             <model file="sphere.3d" />
         </models>
         <group>
-            <translate Y="1" />
+            <translate axisY="1" />
             <models>
                 <model file="cone.3d" />
             </models>
         </group>
     </group>
     <group>
-        <translate X="5" Y="0" Z="2" />
-        <rotate angle="45" X="0" Y="1" Z="0" />
+        <translate X="5" axisY="0" axisZ="2" />
+        <rotate angle="45" axisX="0" axisY="1" axisZ="0" />
         <models>
             <model file="box.3d" />
         </models>

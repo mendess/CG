@@ -17,6 +17,7 @@ namespace Render {
 
 static float SCALE = 1;
 static Group * SCENE;
+static int DRAW_LEVEL = -1;
 
 void changeSize(int w, int h)
 {
@@ -69,7 +70,11 @@ void renderScene()
     glEnd();
     glScalef(SCALE, SCALE, SCALE);
 
-    SCENE->draw();
+    SCENE->draw(DRAW_LEVEL);
+
+    char title[1024];
+    sprintf(title, "CG-Engine - Draw Level: %d", DRAW_LEVEL);
+    glutSetWindowTitle(title);
 
     glutSwapBuffers();
 }
@@ -87,6 +92,12 @@ void key_bindings(unsigned char key, int _x, int _y)
     case '-':
         SCALE -= 0.1;
         break;
+    case '[':
+        if(DRAW_LEVEL > 1) DRAW_LEVEL--;
+        break;
+    case ']':
+        if(DRAW_LEVEL < SCENE->levels()) DRAW_LEVEL++;
+        break;
     case 'q':
         exit(0);
     }
@@ -103,6 +114,7 @@ int render(int argc, char** argv, Group * scene)
     glutCreateWindow("CG-Engine");
     // Required callback registry
     SCENE = scene;
+    DRAW_LEVEL = SCENE->levels();
     glutDisplayFunc(renderScene);
     glutReshapeFunc(changeSize);
     glutKeyboardFunc(key_bindings);

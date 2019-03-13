@@ -19,6 +19,10 @@ Model::Model(char* modelFile)
 {
     float x, y, z;
     ifstream infile(modelFile);
+    if(!infile.good()) {
+        modelName = NULL;
+        return;
+    }
     while (infile >> x >> y >> z) {
         points.push_back(Point(x, y, z));
     }
@@ -30,6 +34,10 @@ Model::Model(const Model& other)
     : points(other.points)
     , modelName(strdup(other.modelName))
 {
+}
+
+bool Model::loaded() {
+    return modelName != NULL;
 }
 
 void drawTriangle(const Point* a, const Point* b, const Point* c, float r, float g, float u)

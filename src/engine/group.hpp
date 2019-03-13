@@ -11,9 +11,11 @@ private:
     std::vector<Transformation *> transformations; // unique_ptr
     std::vector<Model> models;
     std::vector<Group> subgroups;
+    int _levels;
 
 public:
     Group(rapidxml::xml_node<char> *);
+    int levels() const { return _levels; };
     void draw() const;
     void draw(int max_depth) const;
 };

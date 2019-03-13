@@ -25,14 +25,19 @@ Color* parse_color(xml_node<char>* node);
 
 Group::Group(xml_node<char>* group)
 {
+    _levels = 1;
     for (auto node = group->first_node(); node != NULL; node = node->next_sibling()) {
         string name = string(node->name());
-        cerr << "loading: " << name << endl;
         std::transform(name.begin(), name.end(), name.begin(), ::tolower);
         if ("models" == name) {
             for (auto model = node->first_node(); model != NULL; model = model->next_sibling()) {
-                cerr << "\tloading model: " << model->first_attribute()->value() << endl;
-                models.push_back(Model(model->first_attribute()->value()));
+                char* file = model->first_attribute()->value();
+                Model m = Model(file);
+                if (m.loaded()) {
+                    models.push_back(m);
+                } else {
+                    cerr << "\t" << file << ": No such file or directory" << endl;
+                }
             }
         } else if ("group" == name) {
             subgroups.push_back(Group(node));
@@ -46,6 +51,12 @@ Group::Group(xml_node<char>* group)
             transformations.push_back(parse_color(node));
         }
     }
+    int max_level = 0;
+    for(const auto& subgroup : subgroups) {
+        if(subgroup.levels() > max_level)
+            max_level = subgroup.levels();
+    }
+    _levels = max_level + 1;
 }
 
 void Group::draw() const
@@ -87,13 +98,13 @@ Translate* parse_translate(xml_node<char>* node)
     float x, y, z;
     x = y = z = 0.0f;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
-        string value = string(attr->value());
-        if ("X" == value) {
-            x = stof(value);
-        } else if ("Y" == value) {
-            y = stof(value);
-        } else if ("Z" == value) {
-            z = stof(value);
+        string name = string(attr->name());
+        if ("X" == name) {
+            x = stof(attr->value());
+        } else if ("Y" == name) {
+            y = stof(attr->value());
+        } else if ("Z" == name) {
+            z = stof(attr->value());
         }
     }
     return new Translate(x, y, z);
@@ -104,15 +115,15 @@ Rotate* parse_rotate(xml_node<char>* node)
     float angle, x, y, z;
     angle = x = y = z = 0.0f;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
-        string value = string(attr->value());
-        if ("Angle" == value) {
-            angle = stof(value);
-        } else if ("X" == value) {
-            x = stof(value);
-        } else if ("Y" == value) {
-            y = stof(value);
-        } else if ("Z" == value) {
-            z = stof(value);
+        string name = string(attr->name());
+        if ("Angle" == name) {
+            angle = stof(attr->value());
+        } else if ("axisX" == name) {
+            x = stof(attr->value());
+        } else if ("axisY" == name) {
+            y = stof(attr->value());
+        } else if ("axisZ" == name) {
+            z = stof(attr->value());
         }
     }
     return new Rotate(angle, x, y, z);
@@ -123,13 +134,13 @@ Scale* parse_scale(xml_node<char>* node)
     float x, y, z;
     x = y = z = 0.0f;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
-        string value = string(attr->value());
-        if ("X" == value) {
-            x = stof(value);
-        } else if ("Y" == value) {
-            y = stof(value);
-        } else if ("Z" == value) {
-            z = stof(value);
+        string name = string(attr->name());
+        if ("X" == name) {
+            x = stof(attr->value());
+        } else if ("Y" == name) {
+            y = stof(attr->value());
+        } else if ("Z" == name) {
+            z = stof(attr->value());
         }
     }
     return new Scale(x, y, z);
@@ -140,13 +151,13 @@ Color* parse_color(xml_node<char>* node)
     float r, g, b;
     r = g = b = 0.0f;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
-        string value = string(attr->value());
-        if ("R" == value) {
-            r = stof(value);
-        } else if ("G" == value) {
-            g = stof(value);
-        } else if ("B" == value) {
-            b = stof(value);
+        string name = string(attr->name());
+        if ("R" == name) {
+            r = stof(attr->value());
+        } else if ("G" == name) {
+            g = stof(attr->value());
+        } else if ("B" == name) {
+            b = stof(attr->value());
         }
     }
     return new Color(r, g, b);
