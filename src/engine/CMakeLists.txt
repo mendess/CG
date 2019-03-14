@@ -11,6 +11,8 @@ include_directories(${globalProject_SOURCE_DIR}/src/common/)
 link_directories(${OpenGL_LIBRARY_DIRS})
 add_definitions(${OpenGL_DEFINITIONS})
 
+SET(OpenGL_GL_PREFERENCE "LEGACY")
+
 if(NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif(NOT OPENGL_FOUND)

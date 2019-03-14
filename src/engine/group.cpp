@@ -133,7 +133,7 @@ Rotate* parse_rotate(xml_node<char>* node)
 Scale* parse_scale(xml_node<char>* node)
 {
     float x, y, z;
-    x = y = z = 0.0f;
+    x = y = z = 1.0f;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
         string name = string(attr->name());
         if ("X" == name) {
@@ -149,8 +149,9 @@ Scale* parse_scale(xml_node<char>* node)
 
 Color* parse_color(xml_node<char>* node)
 {
-    float r, g, b;
+    float r, g, b, a;
     r = g = b = 0.0f;
+    a = 1.0f;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
         string name = string(attr->name());
         if ("R" == name) {
@@ -159,9 +160,11 @@ Color* parse_color(xml_node<char>* node)
             g = stof(attr->value());
         } else if ("B" == name) {
             b = stof(attr->value());
+        } else if ("A" == name) {
+            a = stof(attr->value());
         }
     }
-    return new Color(r, g, b);
+    return new Color(r, g, b, a);
 }
 
 string Group::internal_to_string(const int level) const

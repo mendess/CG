@@ -18,6 +18,7 @@ namespace Render {
 static float SCALE = 1;
 static Group* SCENE;
 static int DRAW_LEVEL = -1;
+static bool SHOW_AXIS = false;
 
 void changeSize(int w, int h)
 {
@@ -44,36 +45,41 @@ void renderScene()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     Camera::place_camera();
-    // x axis
-    glColor3f(1, 0, 0);
-    glBegin(GL_LINES);
-    {
-        glVertex3f(-10000, 0, 0);
-        glVertex3f(10000, 0, 0);
+    if (SHOW_AXIS) {
+        // x axis
+        glColor3f(1, 0, 0);
+        glBegin(GL_LINES);
+        {
+            glVertex3f(-10000, 0, 0);
+            glVertex3f(10000, 0, 0);
+        }
+        glEnd();
+        // y axis
+        glColor3f(0, 1, 0);
+        glBegin(GL_LINES);
+        {
+            glVertex3f(0, -10000, 0);
+            glVertex3f(0, 10000, 0);
+        }
+        glEnd();
+        // z axis
+        glColor3f(0, 0, 1);
+        glBegin(GL_LINES);
+        {
+            glVertex3f(0, 0, -10000);
+            glVertex3f(0, 0, 10000);
+        }
+        glEnd();
     }
-    glEnd();
-    // y axis
-    glColor3f(0, 1, 0);
-    glBegin(GL_LINES);
-    {
-        glVertex3f(0, -10000, 0);
-        glVertex3f(0, 10000, 0);
-    }
-    glEnd();
-    // z axis
-    glColor3f(0, 0, 1);
-    glBegin(GL_LINES);
-    {
-        glVertex3f(0, 0, -10000);
-        glVertex3f(0, 0, 10000);
-    }
-    glEnd();
     glScalef(SCALE, SCALE, SCALE);
 
     SCENE->draw(DRAW_LEVEL);
 
     stringstream title;
-    title << "CG-Engine | Draw Level: " << DRAW_LEVEL << " | Camera Mode: " << Camera::to_string(Camera::current_camera());
+    title << "CG-Engine | Draw Level: "
+          << DRAW_LEVEL
+          << " | Camera Mode: "
+          << Camera::to_string(Camera::current_camera());
     glutSetWindowTitle(title.str().data());
 
     glutSwapBuffers();
@@ -100,6 +106,9 @@ void key_bindings(unsigned char key, int _x, int _y)
         if (DRAW_LEVEL < SCENE->levels())
             DRAW_LEVEL++;
         break;
+    case '.':
+        SHOW_AXIS = !SHOW_AXIS;
+        break;
     case 'q':
         exit(0);
     }
@@ -114,6 +123,8 @@ int render(int argc, char** argv, Group* scene)
     glutInitWindowPosition(10, 25);
     glutInitWindowSize(1200, 1050);
     glutCreateWindow("CG-Engine");
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
     // Required callback registry
     SCENE = scene;
     DRAW_LEVEL = SCENE->levels();

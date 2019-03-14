@@ -57,13 +57,14 @@ public:
 
 class Color : public Transformation {
 private:
-    float r, g, b;
+    float r, g, b, a;
 
 public:
-    Color(float r, float g, float b)
+    Color(float r, float g, float b, float a)
         : r(r)
         , g(g)
         , b(b)
+        , a(a)
     {
     }
     void transform() const override;

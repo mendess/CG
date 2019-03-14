@@ -5,7 +5,6 @@
 #include <fstream>
 #include <functional>
 #include <iostream>
-#include <random>
 #include <string>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -40,9 +39,8 @@ bool Model::loaded() {
     return modelName != NULL;
 }
 
-void drawTriangle(const Point* a, const Point* b, const Point* c, float r, float g, float u)
+void drawTriangle(const Point* a, const Point* b, const Point* c)
 {
-    glColor3f(r, g, u);
     glBegin(GL_TRIANGLES);
     {
         glVertex3f(a->x(), a->y(), a->z());
@@ -54,9 +52,6 @@ void drawTriangle(const Point* a, const Point* b, const Point* c, float r, float
 
 bool Model::draw() const
 {
-    default_random_engine generator(42);
-    uniform_int_distribution<int> distribution(0, 100);
-    auto rng = bind(distribution, generator);
     if (points.size() % 3 != 0) {
         return false;
     }
@@ -65,10 +60,7 @@ bool Model::draw() const
         const Point* a = &*it++;
         const Point* b = &*it++;
         const Point* c = &*it++;
-        float r = rng() / 100.0f;
-        float g = rng() / 100.0f;
-        float u = rng() / 100.0f;
-        drawTriangle(a, b, c, r, g, u);
+        drawTriangle(a, b, c);
     }
     return true;
 }
