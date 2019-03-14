@@ -25,7 +25,3 @@ void Scale::transform() const
     glScalef(x, y, z);
 }
 
-void Color::transform() const
-{
-    glColor4f(r, g, b, a);
-}

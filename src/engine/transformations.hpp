@@ -55,20 +55,4 @@ public:
     std::string to_string() const override { return "Scale"; }
 };
 
-class Color : public Transformation {
-private:
-    float r, g, b, a;
-
-public:
-    Color(float r, float g, float b, float a)
-        : r(r)
-        , g(g)
-        , b(b)
-        , a(a)
-    {
-    }
-    void transform() const override;
-    std::string to_string() const override { return "Color"; }
-};
-
 #endif // __TRANSFORMATIONS_HPP__

@@ -22,11 +22,31 @@ Rotate* parse_rotate(xml_node<char>* node);
 
 Scale* parse_scale(xml_node<char>* node);
 
-Color* parse_color(xml_node<char>* node);
-
-Group::Group(xml_node<char>* group)
+Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 {
     _levels = 1;
+    if (group->first_attribute()) { // if there are color attributes, override them
+        this->r = this->g = this->b = 0.0f;
+        this->a = 1.0f;
+    } else {
+        this->r = r;
+        this->g = g;
+        this->b = b;
+        this->a = a;
+    }
+    for (auto attr = group->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
+        string name = attr->name();
+        string value = attr->value();
+        if (name == "R") {
+            this->r = stof(value);
+        } else if (name == "G") {
+            this->g = stof(value);
+        } else if (name == "B") {
+            this->b = stof(value);
+        } else if ("A" == name) {
+            this->a = stof(attr->value());
+        }
+    }
     for (auto node = group->first_node(); node != NULL; node = node->next_sibling()) {
         string name = string(node->name());
         std::transform(name.begin(), name.end(), name.begin(), ::tolower);
@@ -41,15 +61,13 @@ Group::Group(xml_node<char>* group)
                 }
             }
         } else if ("group" == name) {
-            subgroups.push_back(Group(node));
+            subgroups.push_back(Group(node, this->r, this->g, this->b, this->a));
         } else if ("translate" == name) {
             transformations.push_back(parse_translate(node));
         } else if ("rotate" == name) {
             transformations.push_back(parse_rotate(node));
         } else if ("scale" == name) {
             transformations.push_back(parse_scale(node));
-        } else if ("color" == name) {
-            transformations.push_back(parse_color(node));
         }
     }
     int max_level = 0;
@@ -60,23 +78,6 @@ Group::Group(xml_node<char>* group)
     _levels = max_level + 1;
 }
 
-void Group::draw() const
-{
-    glPushMatrix();
-    for (const auto& transformation : transformations) {
-        transformation->transform();
-    }
-    for (const auto& model : models) {
-        if (!model.draw()) {
-            cerr << "model: " << model.name() << " failed to draw" << endl;
-        }
-    }
-    for (const auto& subgroup : subgroups) {
-        subgroup.draw();
-    }
-    glPopMatrix();
-}
-
 void Group::draw(int max_depth) const
 {
     glPushMatrix();
@@ -85,7 +86,10 @@ void Group::draw(int max_depth) const
             transformation->transform();
         }
         for (const auto& model : models) {
-            model.draw();
+            glColor4f(r, g, b, a);
+            if (!model.draw()) {
+                cerr << "model: " << model.name() << " failed to draw" << endl;
+            }
         }
         for (const auto subgroup : subgroups) {
             subgroup.draw(max_depth - 1);
@@ -145,26 +149,6 @@ Scale* parse_scale(xml_node<char>* node)
         }
     }
     return new Scale(x, y, z);
-}
-
-Color* parse_color(xml_node<char>* node)
-{
-    float r, g, b, a;
-    r = g = b = 0.0f;
-    a = 1.0f;
-    for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
-        string name = string(attr->name());
-        if ("R" == name) {
-            r = stof(attr->value());
-        } else if ("G" == name) {
-            g = stof(attr->value());
-        } else if ("B" == name) {
-            b = stof(attr->value());
-        } else if ("A" == name) {
-            a = stof(attr->value());
-        }
-    }
-    return new Color(r, g, b, a);
 }
 
 string Group::internal_to_string(const int level) const
