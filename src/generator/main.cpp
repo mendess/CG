@@ -33,6 +33,11 @@ void printHelpCone()
     cerr << "Invalid args, cone requires: radius height slices stacks" << endl;
 }
 
+void printHelpCylinder()
+{
+    cerr << "Invalid args, cylinder requires: radius height slices" << endl;
+}
+
 void printHelpPage()
 {
     cerr << "Usage: " << PROGRAM_NAME << " fileName Option [Params ...]" << endl
@@ -41,6 +46,7 @@ void printHelpPage()
          << "\tbox" << endl
          << "\tsphere" << endl
          << "\tcone" << endl
+         << "\tcylinder" << endl
          << "\nUse --help Option to learn what params to pass to the options" << endl;
 }
 
@@ -106,7 +112,7 @@ bool parse_cone(int argc, char** args, double* radius, double* height, int* slic
 {
     if (argc < 4) {
         printHelpCone();
-        return 1;
+        return false;
     }
     char* test;
     *radius = strtod(args[0], &test);
@@ -117,6 +123,22 @@ bool parse_cone(int argc, char** args, double* radius, double* height, int* slic
     PARSE_OR_RETURN(args[2], test, printHelpCone);
     *stacks = strtol(args[3], &test, 10);
     PARSE_OR_RETURN(args[3], test, printHelpCone);
+    return true;
+}
+
+bool parse_cylinder(int argc, char** args, double* radius, double* height, int* slices)
+{
+    if (argc < 3) {
+        printHelpCylinder();
+        return false;
+    }
+    char* test;
+    *radius = strtod(args[0], &test);
+    PARSE_OR_RETURN(args[0], test, printHelpCone);
+    *height = strtod(args[1], &test);
+    PARSE_OR_RETURN(args[1], test, printHelpCone);
+    *slices = strtol(args[2], &test, 10);
+    PARSE_OR_RETURN(args[2], test, printHelpCone);
     return true;
 }
 
@@ -155,6 +177,14 @@ int main(int argc, char** argv)
         int slices = 0, stacks = 0;
         if (parse_cone(argc - 3, argv + 3, &radius, &height, &slices, &stacks)) {
             points = draw_cone(radius, height, slices, stacks);
+        } else {
+            return 1;
+        }
+    } else if (!strcmp("cylinder", argv[2])) {
+        double radius = 0, height = 0;
+        int slices = 0;
+        if(parse_cylinder(argc - 3, argv + 3, &radius, &height, &slices)) {
+            points = draw_cylinder(radius, height, slices);
         } else {
             return 1;
         }

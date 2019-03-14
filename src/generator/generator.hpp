@@ -11,4 +11,6 @@ std::vector<Point> draw_sphere(double radius, double slices, double stacks);
 
 std::vector<Point> draw_cone(double radius, double height, int slices, int stacks);
 
+std::vector<Point> draw_cylinder(double radius, double height, int slices);
+
 #endif // GENERATOR_H
