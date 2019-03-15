@@ -1,0 +1,107 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{graphicx}
+\usepackage{a4wide}
+\usepackage[pdftex,hidelinks]{hyperref}
+\usepackage{float}
+\usepackage{indentfirst}
+\usepackage{subcaption}
+\usepackage[cache=false]{minted}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+language=C++,
+aboveskip=3mm,
+belowskip=3mm,
+showstringspaces=false,
+columns=flexible,
+basicstyle={\small\ttfamily},
+numbers=none,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=true,
+breakatwhitespace=true,
+tabsize=4
+}
+
+\newcommand{\x}{\times}
+
+\begin{document}
+
+\title{Computação Gráfica\\ Transformações Geométricas}
+\author{Bárbara Cardoso (a80453) \and Márcio Sousa (a82400) \and Pedro Mendes (a79003)}
+\date{\today}
+
+\begin{titlepage}
+
+    %título
+    \thispagestyle{empty}
+    \begin{center}
+        \begin{minipage}{0.75\linewidth}
+            \centering
+            %engenharia logo
+            \includegraphics[width=0.4\textwidth]{eng.jpeg}\par\vspace{1cm}
+            \vspace{1.5cm}
+            %títulos
+            \href{https://www.uminho.pt/PT}{\scshape\LARGE Universidade do Minho} \par
+            \vspace{1cm}
+            \href{https://www.di.uminho.pt/}{\scshape\Large Departamento de Informática} \par
+            \vspace{1.5cm}
+
+            \maketitle
+        \end{minipage}
+    \end{center}
+
+\end{titlepage}
+
+\tableofcontents
+
+\pagebreak
+
+\section{Introdução}
+
+\section{Estrutura dos ficheiros usados pelo programa}
+
+Os ficheiros utilizados pelo programa são definidos em formato \texttt{xml} com as seguintes tags:
+\begin{itemize}
+    \item \texttt{<scene>} Define o inicio de uma cena. Serve o papel de um
+        super grupo e não tem atributos
+    \item \texttt{<group>} Define um grupo de transformações, modelos e
+        subgrupos, e aceita como atributos as cores com que devem ser pintados
+        os modelos, por exemplo,
+        \texttt{<group R=``1''> \ldots </group>} pinta os modelos de vermelho.
+        Para além disso os subgrupos deste irão herdar estas cores a não ser
+        que definam as suas próprias cores.
+    \item \texttt{<models>} e \texttt{<model>} Definem os modelos a desenhar
+        num grupo. O primeiro contem uma lista do segundo e este tem o atributo
+        \texttt{file} que indica o ficheiro \texttt{.3d} a usar.
+    \item \texttt{<translate>}, \texttt{<rotate>} e \texttt{<scale>} Definem as
+        transformações geométricas que podem ser usadas para transformar os
+        modelos e subgrupos. Atributos de cada um destes:
+        \begin{itemize}
+            \item \textbf{Translate:} X, Y, Z.
+            \item \textbf{Rotate:} angle, X, Y, Z
+            \item \textbf{Scale:} X, Y, Z
+        \end{itemize}
+\end{itemize}
+
+Exemplo de uma ficheiro de input:
+\input{example_xml.tex}
+
+\section{Arquitetura do Projecto}
+
+\section{Gestão de memória}
+
+\section{Conclusões e Trabalho Futuro}
+
+\end{document}
+
