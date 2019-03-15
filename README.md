@@ -8,12 +8,12 @@
 ## Running
 ### Generator
 ```bash
-target/generator/generator FILENAME OPTION [PARAMS...]
+target/release/generator/generator FILENAME OPTION [PARAMS...]
 ```
 
 ### Engine
 ```bash
-target/engine/engine [SCENE]
+target/release/engine/engine [SCENE]
 ```
 If no scene is provided `config.xml` will be used.
 
