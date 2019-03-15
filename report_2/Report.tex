@@ -78,9 +78,11 @@ Os ficheiros utilizados pelo programa são definidos em formato \texttt{xml} com
     \item \texttt{<group>} Define um grupo de transformações, modelos e
         subgrupos, e aceita como atributos as cores com que devem ser pintados
         os modelos, por exemplo,
-        \texttt{<group R=``1''> \ldots </group>} pinta os modelos de vermelho.
+        \texttt{<group R='1'> \ldots </group>} pinta os modelos de vermelho.
         Para além disso os subgrupos deste irão herdar estas cores a não ser
-        que definam as suas próprias cores.
+        que definam as suas próprias cores. Os atributos que podem ser usados
+        para isto sao R, G, B e A, que correspondem a \textit{Red},
+        \textit{Green}, \textit{Blue} e \textit{Alpha}.
     \item \texttt{<models>} e \texttt{<model>} Definem os modelos a desenhar
         num grupo. O primeiro contem uma lista do segundo e este tem o atributo
         \texttt{file} que indica o ficheiro \texttt{.3d} a usar.
