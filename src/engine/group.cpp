@@ -25,6 +25,7 @@ Scale* parse_scale(xml_node<char>* node);
 Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 {
     _levels = 1;
+    random_color = false;
     if (group->first_attribute()) { // if there are color attributes, override them
         this->r = this->g = this->b = 0.0f;
         this->a = 1.0f;
@@ -45,6 +46,8 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
             this->b = stof(value);
         } else if ("A" == name) {
             this->a = stof(attr->value());
+        } else if ("RAND" == name) {
+            random_color = true;
         }
     }
     for (auto node = group->first_node(); node != NULL; node = node->next_sibling()) {
@@ -86,9 +89,15 @@ void Group::draw(int max_depth) const
             transformation->transform();
         }
         for (const auto& model : models) {
-            glColor4f(r, g, b, a);
-            if (!model.draw()) {
-                cerr << "model: " << model.name() << " failed to draw" << endl;
+            if (random_color) {
+                if (!model.draw_random()) {
+                    cerr << "model: " << model.name() << " failed to draw" << endl;
+                }
+            } else {
+                glColor4f(r, g, b, a);
+                if (!model.draw()) {
+                    cerr << "model: " << model.name() << " failed to draw" << endl;
+                }
             }
         }
         for (const auto subgroup : subgroups) {

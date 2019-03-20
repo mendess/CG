@@ -13,6 +13,7 @@ private:
     std::vector<Group> subgroups;
     int _levels;
     float r, g, b, a;
+    bool random_color;
 
     Group(rapidxml::xml_node<char>*, float, float, float, float);
     std::string internal_to_string(int) const;

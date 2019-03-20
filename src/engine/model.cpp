@@ -6,6 +6,7 @@
 #include <functional>
 #include <iostream>
 #include <string>
+#include <random>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -18,7 +19,7 @@ Model::Model(char* modelFile)
 {
     float x, y, z;
     ifstream infile(modelFile);
-    if(!infile.good()) {
+    if (!infile.good()) {
         modelName = NULL;
         return;
     }
@@ -35,7 +36,8 @@ Model::Model(const Model& other)
 {
 }
 
-bool Model::loaded() {
+bool Model::loaded()
+{
     return modelName != NULL;
 }
 
@@ -60,6 +62,28 @@ bool Model::draw() const
         const Point* a = &*it++;
         const Point* b = &*it++;
         const Point* c = &*it++;
+        drawTriangle(a, b, c);
+    }
+    return true;
+}
+
+bool Model::draw_random() const
+{
+    if (points.size() % 3 != 0) {
+        return false;
+    }
+    default_random_engine generator(42);
+    uniform_int_distribution<int> distribution(0, 100);
+    auto rng = bind(distribution, generator);
+    vector<Point>::const_iterator it = points.begin();
+    while (it != points.end()) {
+        const Point* a = &*it++;
+        const Point* b = &*it++;
+        const Point* c = &*it++;
+        float r = rng() / 100.0f;
+        float g = rng() / 100.0f;
+        float u = rng() / 100.0f;
+        glColor3f(r, g, u);
         drawTriangle(a, b, c);
     }
     return true;
