@@ -13,4 +13,6 @@ std::vector<Point> draw_cone(double radius, double height, int slices, int stack
 
 std::vector<Point> draw_cylinder(double radius, double height, int slices);
 
+std::vector<Point> draw_torus(double innerRadius, double outerRadius, int sides, int rings);
+
 #endif // GENERATOR_H

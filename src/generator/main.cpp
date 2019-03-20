@@ -38,6 +38,11 @@ void printHelpCylinder()
     cerr << "Invalid args, cylinder requires: radius height slices" << endl;
 }
 
+void printHelpTorus()
+{
+    cerr << "Invalid args, torus requires: innerRadius outerRadius sides rings" << endl;
+}
+
 void printHelpPage()
 {
     cerr << "Usage: " << PROGRAM_NAME << " fileName Option [Params ...]" << endl
@@ -47,6 +52,7 @@ void printHelpPage()
          << "\tsphere" << endl
          << "\tcone" << endl
          << "\tcylinder" << endl
+         << "\ttorus" << endl
          << "\nUse --help Option to learn what params to pass to the options" << endl;
 }
 
@@ -142,6 +148,24 @@ bool parse_cylinder(int argc, char** args, double* radius, double* height, int* 
     return true;
 }
 
+bool parse_torus(int argc, char** args, double* innerRadius, double* outerRadius, int* sides, int* rings)
+{
+    if (argc < 4) {
+        printHelpTorus();
+        return false;
+    }
+    char* test;
+    *innerRadius = strtod(args[0], &test);
+    PARSE_OR_RETURN(args[0], test, printHelpCone);
+    *outerRadius = strtod(args[1], &test);
+    PARSE_OR_RETURN(args[1], test, printHelpCone);
+    *sides = strtol(args[2], &test, 10);
+    PARSE_OR_RETURN(args[2], test, printHelpCone);
+    *rings = strtol(args[3], &test, 10);
+    PARSE_OR_RETURN(args[3], test, printHelpCone);
+    return true;
+}
+
 int main(int argc, char** argv)
 {
     PROGRAM_NAME = argv[0];
@@ -183,8 +207,16 @@ int main(int argc, char** argv)
     } else if (!strcmp("cylinder", argv[2])) {
         double radius = 0, height = 0;
         int slices = 0;
-        if(parse_cylinder(argc - 3, argv + 3, &radius, &height, &slices)) {
+        if (parse_cylinder(argc - 3, argv + 3, &radius, &height, &slices)) {
             points = draw_cylinder(radius, height, slices);
+        } else {
+            return 1;
+        }
+    } else if (!strcmp("torus", argv[2])) {
+        double innerRadius = 0, outerRadius = 0;
+        int sides = 0, rings = 0;
+        if (parse_torus(argc - 3, argv + 3, &innerRadius, &outerRadius, &sides, &rings)) {
+            points = draw_torus(innerRadius, outerRadius, sides, rings);
         } else {
             return 1;
         }

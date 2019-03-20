@@ -208,3 +208,54 @@ std::vector<Point> draw_cylinder(double radius, double height, int slices)
 
     return coords;
 }
+
+std::vector<Point> draw_torus(double innerRadius, double outerRadius, int sides, int rings)
+{
+    vector<Point> coords;
+    const double alpha_step = (2 * M_PI) / rings;
+    const double beta_step = (2 * M_PI) / sides;
+    double alpha = 0;
+    double radius = outerRadius - innerRadius;
+    for (int r = 0; r < rings; r++) {
+        double beta = 0;
+        double ring_x = radius * cos(beta) * sin(alpha);
+        double ring_y = radius * cos(beta) * cos(alpha);
+        double ring_z = 0;
+        double next_ring_x = radius * cos(beta) * sin(alpha + alpha_step);
+        double next_ring_y = radius * cos(beta) * cos(alpha + alpha_step);
+        double next_ring_z = 0;
+        for (int s = 0; s < sides; s++) {
+            Point p0 = Point(
+                    ring_x + (innerRadius * cos(beta) * sin(alpha)),
+                    ring_y + (innerRadius * cos(beta) * cos(alpha)),
+                    ring_z + (innerRadius * sin(beta))
+                    );
+            Point p1 = Point(
+                    next_ring_x + (innerRadius * cos(beta) * sin(alpha + alpha_step)),
+                    next_ring_y + (innerRadius * cos(beta) * cos(alpha + alpha_step)),
+                    next_ring_z + (innerRadius * sin(beta))
+                    );
+            Point p2 = Point(
+                    ring_x + (innerRadius * cos(beta + beta_step) * sin(alpha)),
+                    ring_y + (innerRadius * cos(beta + beta_step) * cos(alpha)),
+                    ring_z + (innerRadius * sin(beta + beta_step))
+                    );
+            Point p3 = Point(
+                    next_ring_x + (innerRadius * cos(beta + beta_step) * sin(alpha + alpha_step)),
+                    next_ring_y + (innerRadius * cos(beta + beta_step) * cos(alpha + alpha_step)),
+                    next_ring_z + (innerRadius * sin(beta + beta_step))
+                    );
+            // T1
+            coords.push_back(p1);
+            coords.push_back(p0);
+            coords.push_back(p2);
+            // T2
+            coords.push_back(p2);
+            coords.push_back(p3);
+            coords.push_back(p1);
+            beta += beta_step;
+        }
+        alpha += alpha_step;
+    }
+    return coords;
+}
