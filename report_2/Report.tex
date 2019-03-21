@@ -105,25 +105,50 @@ Exemplo de uma ficheiro de input:
 
 \subsection{Camera}
 
-A camera não sofreu grandes alterações desde a fase anterior, foi apenas movida para um \textit{namespace} à parte.
+A camera não sofreu grandes alterações desde a fase anterior, foi apenas movida
+para um \textit{namespace} à parte.
 
 \subsection{Model}
 
-O Model não sofreu grandes alterações, para além da separação de o desenho ser usando cores aleatórias ou sem cores (``herdando'' a ultima cor que tenha sido seleccionada).
+O Model não sofreu grandes alterações, para além da separação de o desenho ser
+usando cores aleatórias ou sem cores (``herdando'' a ultima cor que tenha sido
+seleccionada).
 
 \subsection{Render}
 
-O render foi criado para mover a lógica de desenho para um \textit{namespace} à parte, e alterado para acomodar o resto das modificações.
+O render foi criado para mover a lógica de desenho para um \textit{namespace} à
+parte, e alterado para acomodar o resto das modificações.
 
 \subsection{Group}
 
-O \texttt{Group} é a classe principal desta fase do projecto, esta foi desenhada para imitar o formato do xml, possuindo então uma sequência de transformações, um conjunto de modelos e por fim os seus subgrupos, ficando assim com uma definição recursiva. Este é construído directamente a partir do xml, e disponibiliza uma função de desenho que pede o a profundidade da arvore de grupos e subgrupos que se pretende desenhar. Esta função funciona da seguinte forma:
+O \texttt{Group} é a classe principal desta fase do projecto, esta foi
+desenhada para imitar o formato do xml, possuindo então uma sequência de
+transformações, um conjunto de modelos e por fim os seus subgrupos, ficando
+assim com uma definição recursiva. Este é construído directamente a partir do
+xml, e disponibiliza uma função de desenho que pede o a profundidade da arvore
+de grupos e subgrupos que se pretende desenhar. Esta função funciona da
+seguinte forma:
 
-Caso o numero passado seja maior do que 0, então começa por aplicar todas as suas transformações, de seguida desenha todos os modelos, neste passo tem em atenção de aplicar as cores que tenha, ou por passagem directa ou por herança, ou então de desenhar o modelo com cores aleatórias (ver~\ref{sec:estrutura-ficheiros}). Por fim, chama recursivamente o método de desenho dos subgrupos passando menos um do que a profundidade que recebeu como parâmetro.
+Caso o numero passado seja maior do que 0, então começa por aplicar todas as
+suas transformações, de seguida desenha todos os modelos, neste passo tem em
+atenção de aplicar as cores que tenha, ou por passagem directa ou por herança,
+ou então de desenhar o modelo com cores aleatórias
+(ver~\ref{sec:estrutura-ficheiros}). Por fim, chama recursivamente o método de
+desenho dos subgrupos passando menos um do que a profundidade que recebeu como
+parâmetro.
 
 \subsection{Transformations}
 
-Foram tem definas as transformações como uma interface que obriga a implementação do metodo \texttt{transform}. Acompanhado desta interface foram definidas as 3 implementações da mesma correspondentes as traformações pedidas: \texttt{Rotate}, \texttt{Translate} e \texttt{Scale}.
+Foram tem definas as transformações como uma interface que obriga a
+implementação do metodo \texttt{transform}. Acompanhado desta interface foram
+definidas as 3 implementações da mesma correspondentes as traformações pedidas:
+\texttt{Rotate}, \texttt{Translate} e \texttt{Scale}.
+
+\section{Novas Primitivas}
+
+\subsection{Cilindro}
+
+\subsection{Torus}
 
 \section{Gestão de memória}
 
