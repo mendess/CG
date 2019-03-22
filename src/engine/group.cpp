@@ -113,11 +113,12 @@ Translate* parse_translate(xml_node<char>* node)
     x = y = z = 0.0f;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
         string name = string(attr->name());
-        if ("X" == name) {
+        std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+        if ("X" == name || "AXISX" == name) {
             x = stof(attr->value());
-        } else if ("Y" == name) {
+        } else if ("Y" == name || "AXISY" == name) {
             y = stof(attr->value());
-        } else if ("Z" == name) {
+        } else if ("Z" == name || "AXISZ" == name) {
             z = stof(attr->value());
         }
     }
@@ -130,13 +131,14 @@ Rotate* parse_rotate(xml_node<char>* node)
     angle = x = y = z = 0.0f;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
         string name = string(attr->name());
-        if ("angle" == name) {
+        std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+        if ("ANGLE" == name) {
             angle = stof(attr->value());
-        } else if ("axisX" == name) {
+        } else if ("X" == name || "AXISX" == name) {
             x = stof(attr->value());
-        } else if ("axisY" == name) {
+        } else if ("Y" == name || "AXISY" == name) {
             y = stof(attr->value());
-        } else if ("axisZ" == name) {
+        } else if ("Z" == name || "AXISZ" == name) {
             z = stof(attr->value());
         }
     }
@@ -149,11 +151,12 @@ Scale* parse_scale(xml_node<char>* node)
     x = y = z = 1.0f;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
         string name = string(attr->name());
-        if ("X" == name) {
+        std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+        if ("X" == name || "AXISX" == name) {
             x = stof(attr->value());
-        } else if ("Y" == name) {
+        } else if ("Y" == name || "AXISY" == name) {
             y = stof(attr->value());
-        } else if ("Z" == name) {
+        } else if ("Z" == name || "AXISZ" == name) {
             z = stof(attr->value());
         }
     }
