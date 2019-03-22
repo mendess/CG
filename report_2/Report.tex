@@ -101,6 +101,8 @@ Os ficheiros utilizados pelo programa são definidos em formato \texttt{xml} com
 Exemplo de uma ficheiro de input:
 \input{example_xml.tex}
 
+\pagebreak
+
 \section{Arquitetura do Projecto}
 
 \subsection{Camera}
@@ -110,7 +112,7 @@ para um \textit{namespace} à parte.
 
 \subsection{Model}
 
-O Model não sofreu grandes alterações, para além da separação de o desenho ser
+O Model não sofreu grandes alterações, para além de poder ser desenhado com cores aleatórias ou
 usando cores aleatórias ou sem cores (``herdando'' a ultima cor que tenha sido
 seleccionada).
 
@@ -139,16 +141,76 @@ parâmetro.
 
 \subsection{Transformations}
 
-Foram tem definas as transformações como uma interface que obriga a
-implementação do metodo \texttt{transform}. Acompanhado desta interface foram
-definidas as 3 implementações da mesma correspondentes as traformações pedidas:
-\texttt{Rotate}, \texttt{Translate} e \texttt{Scale}.
+As transformações foram definidas como uma interface que obriga a
+implementação do método \texttt{transform}. Foram definidas também 3 implementações
+da mesma, \texttt{Rotate}, \texttt{Translate} e \texttt{Scale}, correspondentes
+às 3 transformações possíveis.
 
 \section{Novas Primitivas}
 
-\subsection{Cilindro}
-
 \subsection{Torus}
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{torus.png}
+    \caption{Torus: \textit{innerRadius}: 1, \textit{outerRadius}: 3, \textit{sides}: 10, \textit{rings}: 20}
+\end{figure}
+
+Um torus é definido por duas circunferências, uma interior e outra exterior, em
+que a exterior tem um raio de $outerRadius$ e a circunferência interior um raio
+de $outerRadius - 2 \x innerRadius$.
+O $innerRadius$ é o raio de cada anel situado entre as duas circunferências. Os
+centros destes anéis estão distanciados segundo um ângulo de $\alpha_{step}$,
+usando coordenadas polares.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics{}
+    \caption{Torus completo}
+\end{figure}
+
+Para cada par de anéis, são desenhados uma série de rectângulos a ligar um anel para cada para fazer a ``parede'' do torus. Estes têm como vértices os pontos $p_0$, $p_1$, $p_2$ e $p_3$ que são calculados por coordenadas polares, que têm como centro de aplicação o centro do anel a que pertencem (ponto $B$). O espaçamento destes pontos segue, por sua vez, um ângulo de $\beta_{step}$.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics{}
+    \caption{Corte do torus com um par de anéis}
+\end{figure}
+
+\[B =  ((outerRadius - innerRadius) \x \sin \alpha, \quad (outerRadius - innerRadius) \x \cos \alpha, \quad 0)\]
+\[B' = ((outerRadius - innerRadius) \x \sin (\alpha + \alpha_{step}), \quad (outerRadius - innerRadius)  \x \cos (\alpha + \alpha_{step}), \quad 0)\]
+
+\[p_0 =
+\begin{pmatrix}
+    B_x + (innerRadius \x \cos \beta \x \sin \alpha)\\
+    B_y + (innerRadius \x \cos \beta \x \cos \alpha)\\
+    B_z + (innerRadius \x \sin \beta)\\
+\end{pmatrix}
+\]
+\[p_1 =
+\begin{pmatrix}
+    B'_x + (innerRadius \x \cos \beta \x \sin(\alpha + \alpha_{step}))\\
+    B'_y + (innerRadius \x \cos \beta \x \cos(\alpha + \alpha_{step}))\\
+    B'_z + (innerRadius \x \sin \beta)\\
+\end{pmatrix}
+\]
+\[p_2 =
+\begin{pmatrix}
+    B_x + (innerRadius \x \cos(\beta + \beta_{step}) \x \sin \alpha)\\
+    B_y + (innerRadius \x \cos(\beta + \beta_{step}) \x \cos \alpha)\\
+    B_z + (innerRadius \x \sin(\beta + \beta_{step})) \\
+\end{pmatrix}
+\]
+\[p_3 =
+\begin{pmatrix}
+    B'_x + (innerRadius \x \cos(\beta + \beta_{step}) \x \sin(\alpha + \alpha_{step}))\\
+    B'_y + (innerRadius \x \cos(\beta + \beta_{step}) \x \cos(\alpha + \alpha_{step}))\\
+    B'_z + (innerRadius \x \sin(\beta + \beta_{step}))\\
+\end{pmatrix}
+\]
+
+Para cada rectângulo desenhado, o $\beta$ avança $\beta_{step}$ e para cada anel terminado $\alpha$ avança $\alpha_{step}$.
+
+\section{Sistema Solar}
 
 \section{Gestão de memória}
 
