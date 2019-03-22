@@ -32,7 +32,7 @@ xml_document<char>* merge_docs(vector<string> configs)
         try {
             doc->parse<0>(strdup(text.data()));
         } catch (rapidxml::parse_error& e) {
-            cerr << configs[0] << ": " << e.what() << " " << endl;
+            cerr << configs[0] << ": " << e.what() << ": " << e.where<char>() << endl;
         }
     }
     for (size_t i = 1; i < configs.size(); i++) {
@@ -45,7 +45,7 @@ xml_document<char>* merge_docs(vector<string> configs)
                 doc->first_node()->append_node(memory_pool<>().clone_node(g));
             }
         } catch (rapidxml::parse_error& e) {
-            cerr << config << ": " << e.what() << " " << endl;
+            cerr << config << ": " << e.what() << ": " << e.where<char>() << endl;
         }
     }
     return doc;
