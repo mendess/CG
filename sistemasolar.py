@@ -71,10 +71,10 @@ venus = Planet("Venus", 2.2, 0.05310, 0, 1, 0)
 earth = Planet("Earth", 2.5, 0.0555, 0, 0, 1, [Planet("Moon", 2.0514, 0.25, 0.8, 0.8, 0.8)])
 mars = Planet("Mars", 3.4, 0.0333, 0.5, 0, 0)
 jupiter_moons = [
-        Planet("Europa", 2.0896, 0.0222, 1, 0, 0),
-        Planet("Io", 2.0468, 0.03181, 0, 0.8, 0),
-        Planet("Ganymede", 2.1432, 0.03704, 0, 0, 0.8),
-        Planet("Callisto", 2.2514, 0.03448, 0.5, 0.5, 0)
+        Planet("Europa", 2.0896, 0.0222, 0.8, 0.8, 0.8),
+        Planet("Io", 2.0468, 0.03181, 0.8, 0.8, 0.8),
+        Planet("Ganymede", 2.1432, 0.03704, 0.8, 0.8, 0.8),
+        Planet("Callisto", 2.2514, 0.03448, 0.8, 0.8, 0.8)
         ]
 jupiter = Planet("Jupiter", 6.8, 0.6111, 0.603, 0.490, 0.373, jupiter_moons)
 saturn_rings = [Ring(0.803, 0.702, 0.503, 1, 0, 0.5, 90, 1.5, 1.5, 0)]

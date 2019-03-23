@@ -38,6 +38,8 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
     for (auto attr = group->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
         string name = attr->name();
         string value = attr->value();
+        std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+        std::transform(value.begin(), value.end(), value.begin(), ::toupper);
         if (name == "R") {
             this->r = stof(value);
         } else if (name == "G") {
@@ -46,7 +48,7 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
             this->b = stof(value);
         } else if ("A" == name) {
             this->a = stof(attr->value());
-        } else if ("RAND" == name) {
+        } else if ("RAND" == name && value != "FALSE") {
             random_color = true;
         }
     }
