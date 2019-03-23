@@ -11,9 +11,9 @@
 namespace Camera {
 
 float speed = 1.0;
-float radius = 10;
-float alpha = 0.0;
-float beta = 0.0;
+float radius = 100;
+float alpha = M_PI;
+float beta = M_PI / 5;
 float x = Camera::radius * cos(Camera::beta) * sin(Camera::alpha);
 float y = Camera::radius * sin(Camera::beta);
 float z = Camera::radius * cos(Camera::beta) * cos(Camera::alpha);

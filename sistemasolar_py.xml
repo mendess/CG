@@ -1,0 +1,184 @@
+<scene>
+    <!--Sun-->
+    <group R="1" G="1" B="0" A="1">
+        <scale X="20" Y="20" Z="20" />
+        <models>
+            <model file="sphere.3d" />
+        </models>
+         <!-- Mercury -->
+         <group R="1" G="0" B="0" >
+             <translate X="-0.36232480642725756" Z="1.7631564691335397" /> <!-- alpha: -0.20267629057950654 | radius: 1.8 -->
+             <scale X="0.0216" Y="0.0216" Z="0.0216" />
+             <models>
+                 <model file="sphere.3d"/>
+             </models>
+         </group>
+         <!-- Venus -->
+         <group R="0" G="1" B="0" >
+             <translate X="-0.8005449610240837" Z="2.0491773386847094" /> <!-- alpha: -0.37243446151767484 | radius: 2.2 -->
+             <scale X="0.0531" Y="0.0531" Z="0.0531" />
+             <models>
+                 <model file="sphere.3d"/>
+             </models>
+         </group>
+         <!-- Earth -->
+         <group R="0" G="0" B="1" >
+             <translate X="-0.5116426823159264" Z="2.447084339705635" /> <!-- alpha: -0.20611335190564817 | radius: 2.5 -->
+             <scale X="0.0555" Y="0.0555" Z="0.0555" />
+             <models>
+                 <model file="sphere.3d"/>
+             </models>
+             <!-- Moon -->
+             <group R="0.8" G="0.8" B="0.8">
+                 <translate X="1.8572308172681276" Y="0.34617642897506695" Z="-0.7994357581517316" /> <!-- alpha: -4.305915405882974 | radius: 2.0514 -->
+                 <scale X="0.25" Y="0.25" Z="0.25" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+         </group>
+         <!-- Mars -->
+         <group R="0.5" G="0" B="0" >
+             <translate X="-1.8010308265511716" Z="2.883797489736823" /> <!-- alpha: -0.5582644546408125 | radius: 3.4 -->
+             <scale X="0.0333" Y="0.0333" Z="0.0333" />
+             <models>
+                 <model file="sphere.3d"/>
+             </models>
+         </group>
+         <!-- Jupiter -->
+         <group R="0.603" G="0.49" B="0.373" >
+             <translate X="0.9081257515637731" Z="6.739088040628845" /> <!-- alpha: 0.13394809698711974 | radius: 6.8 -->
+             <scale X="0.6111" Y="0.6111" Z="0.6111" />
+             <models>
+                 <model file="sphere.3d"/>
+             </models>
+             <!-- Europa -->
+             <group R="1" G="0" B="0">
+                 <translate X="2.0018556815576" Y="-0.5524420383836786" Z="0.23196936099847856" /> <!-- alpha: 1.4554336705752444 | radius: 2.0896 -->
+                 <scale X="0.0222" Y="0.0222" Z="0.0222" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+             <!-- Io -->
+             <group R="0" G="0.8" B="0">
+                 <translate X="0.9286565572539807" Y="0.49007441606234964" Z="1.7569332102815782" /> <!-- alpha: 0.4862390119339617 | radius: 2.0468 -->
+                 <scale X="0.03181" Y="0.03181" Z="0.03181" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+             <!-- Ganymede -->
+             <group R="0" G="0" B="0.8">
+                 <translate X="1.9704190377121937" Y="0.2524573130905959" Z="-0.8043757585161497" /> <!-- alpha: 1.9583736794285507 | radius: 2.1432 -->
+                 <scale X="0.03704" Y="0.03704" Z="0.03704" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+             <!-- Callisto -->
+             <group R="0.5" G="0.5" B="0">
+                 <translate X="-0.6639960180529568" Y="-1.0314804441163774" Z="-1.8878451582201592" /> <!-- alpha: 3.479800414699712 | radius: 2.2514 -->
+                 <scale X="0.03448" Y="0.03448" Z="0.03448" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+         </group>
+         <!-- Saturn -->
+         <group R="0.9294" G="0.8" B="0.6588" >
+             <translate X="-4.4206013650713585" Z="12.861503938930673" /> <!-- alpha: -0.33105848469274607 | radius: 13.6 -->
+             <scale X="0.4888" Y="0.4888" Z="0.4888" />
+             <models>
+                 <model file="sphere.3d"/>
+             </models>
+             <!-- Titan -->
+             <group R="0.8" G="0.8" B="0.8">
+                 <translate X="-2.118277702270285" Y="-0.25425507211257925" Z="0.3399736671707815" /> <!-- alpha: 4.871527165905533 | radius: 2.1604 -->
+                 <scale X="0.04425" Y="0.04425" Z="0.04425" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+             <group R="0.803" G="0.702" B="0.503" A="0.5">
+                 <rotate X="1" Y="0" Z="0.5" angle="90" />
+                 <scale X="1.5" Y="1.5" Z="0" />
+                 <models>
+                     <model file="torus_1.3d" />
+                 </models>
+             </group>
+         </group>
+         <!-- Uranus -->
+         <group R="0.5882" G="0.7215" B="0.7647" >
+             <translate X="-5.9198005924629244" Z="26.547993538975327" /> <!-- alpha: -0.21939557625608153 | radius: 27.2 -->
+             <scale X="0.2052" Y="0.2052" Z="0.2052" />
+             <models>
+                 <model file="sphere.3d"/>
+             </models>
+             <!-- Miranda -->
+             <group R="0.8" G="0.8" B="0.8">
+                 <translate X="-0.8105378133786821" Y="-0.008445033708959793" Z="0.6437628048349479" /> <!-- alpha: 5.38360879294952 | radius: 1.03512 -->
+                 <scale X="0.0037728" Y="0.0037728" Z="0.0037728" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+             <!-- Ariel -->
+             <group R="0.8" G="0.8" B="0.8">
+                 <translate X="-0.5037195209469961" Y="-0.8957708614375613" Z="1.130988149193588" /> <!-- alpha: -0.41900530943192305 | radius: 1.52816 -->
+                 <scale X="0.0092624" Y="0.0092624" Z="0.0092624" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+             <!-- Umbriel -->
+             <group R="0.8" G="0.8" B="0.8">
+                 <translate X="-0.5737476826934913" Y="1.1141987856670914" Z="1.7227822911272992" /> <!-- alpha: 5.961702815768485 | radius: 2.1304 -->
+                 <scale X="0.0093552" Y="0.0093552" Z="0.0093552" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+             <!-- Titania -->
+             <group R="0.8" G="0.8" B="0.8">
+                 <translate X="0.49173748698462594" Y="1.6411061630540265" Z="3.037447382899025" /> <!-- alpha: 0.16049918645338312 | radius: 3.48728 -->
+                 <scale X="0.0126144" Y="0.0126144" Z="0.0126144" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+             <!-- Oberon -->
+             <group R="0.8" G="0.8" B="0.8">
+                 <translate X="0.2644466278671204" Y="0.42842069702059504" Z="4.640931099787423" /> <!-- alpha: 0.05691982275053675 | radius: 4.66816 -->
+                 <scale X="0.0121824" Y="0.0121824" Z="0.0121824" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+         </group>
+         <!-- Neptune -->
+         <group R="0.2352" G="0.4627" B="0.6588" >
+             <translate X="-13.985010874141325" Z="37.475584996770216" /> <!-- alpha: -0.35717110335032576 | radius: 40 -->
+             <scale X="0.1887" Y="0.1887" Z="0.1887" />
+             <models>
+                 <model file="sphere.3d"/>
+             </models>
+             <!-- Triton -->
+             <group R="0.8" G="0.8" B="0.8">
+                 <translate X="-15.657404105958882" Y="-4.271951510365128" Z="-1.1441271589255413" /> <!-- alpha: 4.639446029232834 | radius: 16.27 -->
+                 <scale X="2.05e-05" Y="2.05e-05" Z="2.05e-05" />
+                 <models>
+                     <model file="sphere.3d"/>
+                 </models>
+             </group>
+         </group>
+         <!-- Pluto -->
+         <group R="0.5607" G="0.5294" B="0.5058" >
+             <translate X="5.349127989639721" Z="53.33241818772568" /> <!-- alpha: 0.09996356538392293 | radius: 53.6 -->
+             <scale X="0.01" Y="0.01" Z="0.01" />
+             <models>
+                 <model file="sphere.3d"/>
+             </models>
+         </group>
+    </group>
+</scene>
