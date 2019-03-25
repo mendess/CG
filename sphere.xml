@@ -1,5 +1,5 @@
 <scene>
-    <group>
+    <group RAND="">
         <models>
             <model file="sphere.3d" />
         </models>
