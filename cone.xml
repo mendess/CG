@@ -1,7 +1,7 @@
 <scene>
     <group>
         <models>
-            <model file="cone_1.3d" />
+            <model file="cone.3d" />
         </models>
     </group>
 </scene>
