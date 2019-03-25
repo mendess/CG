@@ -68,29 +68,34 @@ tabsize=4
 \pagebreak
 
 \section{Introdução}
+Este trabalho foi proposto no âmbito da unidade curricular de Computação Gráfica, e tem como objetivo desenvolver um motor gráfico genérico para representar objetos a 3 dimensões.
+
+Nesta segunda fase do projeto estendemos as capacidades do motor gráfico anteriormente definido com a adição de transformações geométricas, para aplicar as antes definidas primitivas.
+
+Para alem disto, também foi adicionada a definição de um torus ao gerador, especificamnente para suportar o anel de Saturno.
+
+Com o intuito de demonstrar as capacidades do motor gráfico desenvolvido até ao presente, procedemos à criação de um modelo do Sistema Solar.
 
 \section{Estrutura dos ficheiros usados pelo programa}\label{sec:estrutura-ficheiros}
 
-Os ficheiros utilizados pelo programa são definidos em formato \texttt{xml} com as seguintes tags:
+Os ficheiros utilizados pelo programa estão definidos em formato \texttt{xml} com as seguintes tags:
 \begin{itemize}
-    \item \texttt{<scene>} Define o inicio de uma cena. Serve o papel de um
-        super grupo e não tem atributos
+    \item \texttt{<scene>} Define o início de uma cena. Este funciona como se fosse um super grupo e não tem nenhum atributo.
     \item \texttt{<group>} Define um grupo de transformações, modelos e
-        subgrupos, e aceita como atributos as cores com que devem ser pintados
-        os modelos, por exemplo,
-        \texttt{<group R='1'> \ldots </group>} pinta os modelos de vermelho.
-        Para além disso os subgrupos deste irão herdar estas cores a não ser
-        que definam as suas próprias cores. Os atributos que podem ser usados
-        para isto sao R, G, B e A, que correspondem a \textit{Red},
-        \textit{Green}, \textit{Blue} e \textit{Alpha}. Alternativamente, pode ser passado
-        o parametro \textit{RAND} para que a cor de cada triangulo ser
-        escolhida aleatoriamente.
+        subgrupos, e aceita como atributos as cores com que os modelos devem ser pintados.
+        Por exemplo,
+        \texttt{<group R='1'> \ldots </group>} pinta todos os modelos de vermelho.
+        Para além disto, os subgrupos deste irão herdar também estas cores a não ser
+        que definam as suas próprias cores. Os atributos que podem ser usados 
+        são R, G, B e A, que correspondem, respetivamente, a \textit{Red},
+        \textit{Green}, \textit{Blue} e \textit{Alpha}. Alternativamente, pode também ser passado
+        o parâmetro \textit{RAND} para que as cores sejam escolhidas aleatoriamente.
     \item \texttt{<models>} e \texttt{<model>} Definem os modelos a desenhar
-        num grupo. O primeiro contem uma lista do segundo e este tem o atributo
-        \texttt{file} que indica o ficheiro \texttt{.3d} a usar.
+        num grupo. O \texttt{<models>} contém uma lista do \texttt{<model>} e este tem o atributo
+        \texttt{file} que indica qual o ficheiro \texttt{.3d} que vai ser usado.
     \item \texttt{<translate>}, \texttt{<rotate>} e \texttt{<scale>} Definem as
-        transformações geométricas que podem ser usadas para transformar os
-        modelos e subgrupos. Atributos de cada um destes:
+        transformações geométricas possíveis que podem ser usadas para transformar os
+        modelos e os subgrupos. Os atributos de cada uma destas transformações são:
         \begin{itemize}
             \item \textbf{Translate:} X, Y, Z.
             \item \textbf{Rotate:} angle, X, Y, Z
@@ -98,6 +103,7 @@ Os ficheiros utilizados pelo programa são definidos em formato \texttt{xml} com
         \end{itemize}
 \end{itemize}
 
+\pagebreak
 Exemplo de uma ficheiro de input:
 \input{example_xml.tex}
 
@@ -105,39 +111,35 @@ Exemplo de uma ficheiro de input:
 
 \section{Arquitetura do Projecto}
 
-\subsection{Camera}
+\subsection{Câmera}
 
-A camera não sofreu grandes alterações desde a fase anterior, foi apenas movida
-para um \textit{namespace} à parte.
+A câmera não sofreu grandes alterações nesta segunda fase, em relação à fase anterior. Esta, apenas, foi movida para um \textit{namespace}, à parte.
 
 \subsection{Model}
 
-O Model não sofreu grandes alterações, para além de poder ser desenhado com cores aleatórias ou
-usando cores aleatórias ou sem cores (``herdando'' a ultima cor que tenha sido
-seleccionada).
+O model também não sofreu grandes alterações. Agora, para além de poder ser desenhado com cores aleatórias pode também ser desenhado sem cores (``herdando'' a última cor que tenha sido seleccionada).
 
 \subsection{Render}
 
-O render foi criado para mover a lógica de desenho para um \textit{namespace} à
+O render foi criado para mover a lógica de desenho para um \textit{namespace}, à
 parte, e alterado para acomodar o resto das modificações.
 
 \subsection{Group}
 
-O \texttt{Group} é a classe principal desta fase do projecto, esta foi
+O \texttt{Group} é a nossa classe principal desta fase do projeto. Esta foi
 desenhada para imitar o formato do xml, possuindo então uma sequência de
 transformações, um conjunto de modelos e por fim os seus subgrupos, ficando
-assim com uma definição recursiva. Este é construído directamente a partir do
-xml, e disponibiliza uma função de desenho que pede o a profundidade da arvore
+assim, com uma definição recursiva. Este é construído diretamente a partir do
+xml, e disponibiliza uma função de desenho que pede a profundidade da árvore
 de grupos e subgrupos que se pretende desenhar. Esta função funciona da
 seguinte forma:
 
-Caso o numero passado seja maior do que 0, então começa por aplicar todas as
-suas transformações, de seguida desenha todos os modelos, neste passo tem em
-atenção de aplicar as cores que tenha, ou por passagem directa ou por herança,
-ou então de desenhar o modelo com cores aleatórias
+Caso o número passado como argumento seja maior do que 0, então esta começa por realizar todas
+suas transformações, e de seguida desenha todos os modelos. Este passo tem a
+atenção de aplicar as cores que possui, por passagem direta, ou por herança,
+ou então desenha o modelo com cores aleatórias
 (ver~\ref{sec:estrutura-ficheiros}). Por fim, chama recursivamente o método de
-desenho dos subgrupos passando menos um do que a profundidade que recebeu como
-parâmetro.
+desenho sobre os subgrupos passando como argumento a profundidade recebida menos um.
 
 \subsection{Transformations}
 
@@ -151,28 +153,29 @@ da mesma, \texttt{Rotate}, \texttt{Translate} e \texttt{Scale}, correspondentes
 \subsection{Torus}
 
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{torus.png}
+    \centering 
+    \includegraphics[width=0.5\textwidth]{torus.png}
     \caption{Torus: \textit{innerRadius}: 1, \textit{outerRadius}: 3, \textit{sides}: 10, \textit{rings}: 20}
 \end{figure}
 
 Um torus é definido por duas circunferências, uma interior e outra exterior, em
-que a exterior tem um raio de $outerRadius$ e a circunferência interior um raio
+que a circunferência exterior tem um raio de $outerRadius$ e a circunferência interior um raio
 de $outerRadius - 2 \x innerRadius$.
-O $innerRadius$ é o raio de cada anel situado entre as duas circunferências. Os
+O $innerRadius$ é o raio de cada um dos anéis, que estão situado entre as duas circunferências. Os
 centros destes anéis estão distanciados segundo um ângulo de $\alpha_{step}$,
 usando coordenadas polares.
 
 \begin{figure}[H]
     \centering
-    % \includegraphics{}
+    \includegraphics{torus_diagram_full.png}
     \caption{Torus completo}
 \end{figure}
 
-Para cada par de anéis, são desenhados uma série de rectângulos a ligar um anel para cada para fazer a ``parede'' do torus. Estes têm como vértices os pontos $p_0$, $p_1$, $p_2$ e $p_3$ que são calculados por coordenadas polares, que têm como centro de aplicação o centro do anel a que pertencem (ponto $B$). O espaçamento destes pontos segue, por sua vez, um ângulo de $\beta_{step}$.
+Para cada par de anéis, são desenhados uma série de retângulos, que os interligam ambos, para fazer a ``parede'' do torus. Estes retângulos têm como vértices os pontos $p_0$, $p_1$, $p_2$ e $p_3$ que são calculados por coordenadas polares, e têm como centro de aplicação o centro do anel a que pertencem (ponto $B$). O espaçamento destes pontos segue, por sua vez, um ângulo de $\beta_{step}$.
 
 \begin{figure}[H]
     \centering
-    % \includegraphics{}
+    \includegraphics{torus_diagram_slice.png}
     \caption{Corte do torus com um par de anéis}
 \end{figure}
 
@@ -208,13 +211,31 @@ Para cada par de anéis, são desenhados uma série de rectângulos a ligar um a
 \end{pmatrix}
 \]
 
-Para cada rectângulo desenhado, o $\beta$ avança $\beta_{step}$ e para cada anel terminado $\alpha$ avança $\alpha_{step}$.
+Para cada retângulo desenhado, o $\beta$ avança $\beta_{step}$ e para cada anel terminado $\alpha$ avança $\alpha_{step}$.
 
 \section{Sistema Solar}
 
-\section{Gestão de memória}
+O sistema solar é constituído pelo Sol, que está no centro, 8 planetas e as respetivas luas.
+
+Cada um destes astros é representado por uma esfera de raio 1 que depois é escalada para o tamanho pretendido. O sol é o astro que está situado no centro do sistema solar e por isto todas as transformações dependem deste.
+
+Os planetas pertencem ao grupo do sol e que por sua vez têm o seu próprio subgrupo que contem as suas luas. Logo, os planetas herdam todas as caraterísticas do sol e as luas herdam as caraterísticas do seu respetivo planeta.
+O planeta Saturno tem um anel que foi representado por um torus com a escala Z = 0.
+
+Para colocar os planetas nas suas coordenadas foi escrito um curto \textit{script} em \textit{python} de forma a situar os planetas em torno do sol. Este usa raios predefinidos para cada planeta, que são as distâncias destes ao sol, e coordenadas polares para escolher uma posição aleatória.
+Para as luas de cada planeta decidimos utilizar a mesma estratégia mas com a pequena diferença de que estas têm também uma componente vertical, ou seja, as suas posições podem ficar acima do equador.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{solar2.png}
+    \caption{Um dos sistemas solares gerados}
+\end{figure}
 
 \section{Conclusões e Trabalho Futuro}
+Esta fase do projeto possibilitou uma melhor compreensão do funcionamento das transformações geométricas do OpenGL e como estas podem ser usadas, sozinhas ou combinadas entre elas, de forma a criar cenários compostos por várias primitivas  gráficas previamente definidas.
 
+Fazendo uma análise geral ao trabalho desenvolvido ao longo desta fase do projeto, podemos concluir que foram cumpridos todos os objetivos que nos foram propostos.
+
+Como trabalho futuro, serão animados todos os astros do modelo do sistema solar representado, com o objetivo de obter a representação mais fidedigna possível.
 \end{document}
 
