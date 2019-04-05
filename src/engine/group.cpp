@@ -83,27 +83,21 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
     _levels = max_level + 1;
 }
 
-void Group::draw(int max_depth) const
+void Group::draw(int max_depth)
 {
     glPushMatrix();
     if (max_depth > 0) {
         for (const auto& transformation : transformations) {
             transformation->transform();
         }
-        for (const auto& model : models) {
-            if (random_color) {
-                if (!model.draw_random()) {
-                    cerr << "model: " << model.name() << " failed to draw" << endl;
-                }
-            } else {
-                glColor4f(r, g, b, a);
-                if (!model.draw()) {
-                    cerr << "model: " << model.name() << " failed to draw" << endl;
-                }
+        for (size_t i = 0; i < models.size(); i++) {
+            glColor4f(r, g, b, a);
+            if (!models[i].draw()) {
+                cerr << "model: " << models[i].name() << " failed to draw" << endl;
             }
         }
-        for (const auto subgroup : subgroups) {
-            subgroup.draw(max_depth - 1);
+        for (size_t i = 0; i < subgroups.size(); i++) {
+            subgroups[i].draw(max_depth - 1);
         }
     }
     glPopMatrix();

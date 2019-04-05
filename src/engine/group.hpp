@@ -25,7 +25,7 @@ public:
     }
 
     int levels() const { return _levels; };
-    void draw(int) const;
+    void draw(int);
     std::string to_string() const;
 };
 
