@@ -14,22 +14,17 @@
 
 class Model {
 private:
-    GLuint buffer[1];
+    GLuint buffer;
     std::vector<float> vbo;
-    char* modelName;
     size_t n_vertices;
     bool prepared;
 
-    void prepare();
     void push(float, float, float);
 
 public:
     Model(char*);
-    Model(const Model& other);
-    bool loaded();
-    bool draw();
-    char* name() const { return modelName; };
-    ~Model() { free(modelName); };
+    bool loaded() const;
+    void draw();
 };
 
 #endif //MODEL_H

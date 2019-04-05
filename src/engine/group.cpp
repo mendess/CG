@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 #ifdef __APPLE__
@@ -16,11 +17,11 @@
 using namespace std;
 using namespace rapidxml;
 
-Translate* parse_translate(xml_node<char>* node);
+unique_ptr<Translate> parse_translate(xml_node<char>* node);
 
-Rotate* parse_rotate(xml_node<char>* node);
+unique_ptr<Rotate> parse_rotate(xml_node<char>* node);
 
-Scale* parse_scale(xml_node<char>* node);
+unique_ptr<Scale> parse_scale(xml_node<char>* node);
 
 Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 {
@@ -62,7 +63,7 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
                 if (m.loaded()) {
                     models.push_back(m);
                 } else {
-                    cerr << "\t" << file << ": No such file or directory" << endl;
+                    cerr << "Couldn't load '" << file << "': No such file or directory" << endl;
                 }
             }
         } else if ("group" == name) {
@@ -92,9 +93,7 @@ void Group::draw(int max_depth)
         }
         for (size_t i = 0; i < models.size(); i++) {
             glColor4f(r, g, b, a);
-            if (!models[i].draw()) {
-                cerr << "model: " << models[i].name() << " failed to draw" << endl;
-            }
+            models[i].draw();
         }
         for (size_t i = 0; i < subgroups.size(); i++) {
             subgroups[i].draw(max_depth - 1);
@@ -103,7 +102,7 @@ void Group::draw(int max_depth)
     glPopMatrix();
 }
 
-Translate* parse_translate(xml_node<char>* node)
+unique_ptr<Translate> parse_translate(xml_node<char>* node)
 {
     float x, y, z;
     x = y = z = 0.0f;
@@ -118,10 +117,10 @@ Translate* parse_translate(xml_node<char>* node)
             z = stof(attr->value());
         }
     }
-    return new Translate(x, y, z);
+    return make_unique<Translate>(x, y, z);
 }
 
-Rotate* parse_rotate(xml_node<char>* node)
+unique_ptr<Rotate> parse_rotate(xml_node<char>* node)
 {
     float angle, x, y, z;
     angle = x = y = z = 0.0f;
@@ -138,10 +137,10 @@ Rotate* parse_rotate(xml_node<char>* node)
             z = stof(attr->value());
         }
     }
-    return new Rotate(angle, x, y, z);
+    return make_unique<Rotate>(angle, x, y, z);
 }
 
-Scale* parse_scale(xml_node<char>* node)
+unique_ptr<Scale> parse_scale(xml_node<char>* node)
 {
     float x, y, z;
     x = y = z = 1.0f;
@@ -156,40 +155,5 @@ Scale* parse_scale(xml_node<char>* node)
             z = stof(attr->value());
         }
     }
-    return new Scale(x, y, z);
-}
-
-string Group::internal_to_string(const int level) const
-{
-    stringstream gstr;
-    const auto tab = [=, &gstr](const string t) {
-        for (int i = 0; i < level; i++)
-            gstr << "\t";
-        gstr << t << endl;
-    };
-    tab("---");
-    tab("Transformations [");
-    for (const auto& t : transformations) {
-        gstr << "\t";
-        tab(t->to_string());
-    }
-    tab("]");
-    tab("Models [");
-    for (const auto& m : models) {
-        gstr << "\t";
-        tab(m.name());
-    }
-    tab("]");
-    tab("SubGroups {");
-    for (const auto& g : subgroups) {
-        gstr << g.internal_to_string(level + 1);
-    }
-    tab("}");
-    tab("---");
-    return gstr.str();
-}
-
-string Group::to_string() const
-{
-    return internal_to_string(0);
+    return make_unique<Scale>(x, y, z);
 }

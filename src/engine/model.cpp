@@ -22,49 +22,31 @@ Model::Model(char* modelFile)
     float x, y, z;
     ifstream infile(modelFile);
     if (!infile.good()) {
-        modelName = NULL;
         return;
     }
-    modelName = strdup(modelFile);
     while (infile >> x >> y >> z) {
         push(x, y, z);
     }
     infile.close();
     n_vertices = vbo.size() / 3;
-    buffer[0] = 0;
 }
 
-Model::Model(const Model& other)
-    : vbo(other.vbo)
-    , modelName(strdup(other.modelName))
-    , n_vertices(other.n_vertices)
-    , prepared(other.prepared)
+bool Model::loaded() const
 {
-    this->buffer[0] = other.buffer[0];
+    return vbo.size() != 0;
 }
 
-bool Model::loaded()
-{
-    return modelName != NULL;
-}
-
-void Model::prepare()
-{
-    glGenBuffers(1, buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer[0]);
-    glBufferData(GL_ARRAY_BUFFER, vbo.size() * sizeof(float), vbo.data(), GL_STATIC_DRAW);
-    prepared = true;
-}
-
-bool Model::draw()
+void Model::draw()
 {
     if (!prepared) {
-        prepare();
+        glGenBuffers(1, &buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        glBufferData(GL_ARRAY_BUFFER, vbo.size() * sizeof(float), vbo.data(), GL_STATIC_DRAW);
+        prepared = true;
     }
-    glBindBuffer(GL_ARRAY_BUFFER, buffer[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glVertexPointer(3, GL_FLOAT, 0, 0);
     glDrawArrays(GL_TRIANGLES, 0, n_vertices);
-    return true;
 }
 
 void Model::push(float x, float y, float z)

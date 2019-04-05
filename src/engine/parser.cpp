@@ -1,8 +1,10 @@
 #include "../dependencies/rapidxml.hpp"
 #include "group.hpp"
 #include "render.hpp"
+#include <algorithm>
 #include <cstring>
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <vector>
 
@@ -26,39 +28,34 @@ string read_file(string config)
     return text;
 }
 
-xml_document<char>* merge_docs(vector<string> configs)
+Group* load(vector<string> configs)
 {
+    vector<string> texts;
+    transform(configs.begin(), configs.end(),
+            std::back_inserter(texts), [](string x) { return read_file(x); });
     xml_document<char>* doc = new xml_document<char>();
     if (configs.size() > 0) {
-        string text = read_file(configs[0]);
         try {
-            doc->parse<0>(strdup(text.data()));
+            doc->parse<0>((char*)texts[0].data());
         } catch (rapidxml::parse_error& e) {
             cerr << configs[0] << ": " << e.what() << ": " << e.where<char>() << endl;
         }
     }
     for (size_t i = 1; i < configs.size(); i++) {
-        string config = configs[i];
-        string text = read_file(config);
         xml_document<char> group;
         try {
-            group.parse<0>(strdup(text.data()));
+            group.parse<0>((char*)texts[i].data());
             for (auto g = group.first_node()->first_node(); g != NULL; g = g->next_sibling()) {
                 doc->first_node()->append_node(memory_pool<>().clone_node(g));
             }
         } catch (rapidxml::parse_error& e) {
-            cerr << config << ": " << e.what() << ": " << e.where<char>() << endl;
+            cerr << configs[i] << ": " << e.what() << ": " << e.where<char>() << endl;
         }
     }
-    return doc;
-}
-
-Group* load(vector<string> configs)
-{
-    xml_document<>* doc = merge_docs(configs);
     Group* group;
     group = new Group(doc->first_node("scene"));
     doc->clear();
+    delete doc;
     return group;
 }
 
