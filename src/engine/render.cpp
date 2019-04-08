@@ -131,9 +131,12 @@ int render(int argc, char** argv, Group* scene)
     glutDisplayFunc(renderScene);
     glutReshapeFunc(changeSize);
     glutKeyboardFunc(key_bindings);
+
+    glewInit();
     //  OpenGL settings
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnableClientState(GL_VERTEX_ARRAY);
     // enter GLUT's main cycle
     glutMainLoop();
     return 1;
