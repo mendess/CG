@@ -1,7 +1,10 @@
-#ifndef __TRANSFORMATIONS_HPP__
-#define __TRANSFORMATIONS_HPP__
+#ifndef TRANSFORMATIONS_HPP
+#define TRANSFORMATIONS_HPP
 
+#include "../common/point.hpp"
 #include <string>
+#include <vector>
+#include <iostream>
 
 class Transformation {
 public:
@@ -31,7 +34,7 @@ private:
 
 public:
     RotateAnimated(float dur, float x, float y, float z)
-        : dur(dur)
+        : dur(dur * 1000)
         , x(x)
         , y(y)
         , z(z)
@@ -41,18 +44,33 @@ public:
     void transform(double) const override;
 };
 
-class Translate : public Transformation {
+class TranslateStatic : public Transformation {
 private:
     float x, y, z;
 
 public:
-    Translate(float x, float y, float z)
+    TranslateStatic(float x, float y, float z)
         : x(x)
         , y(y)
         , z(z)
     {
     }
-    ~Translate() override {};
+    ~TranslateStatic() override {};
+    void transform(double) const override;
+};
+
+class TranslateAnimated : public Transformation {
+private:
+    std::vector<Point> points;
+    float dur;
+
+public:
+    TranslateAnimated(std::vector<Point> points, float dur)
+        : points(points)
+        , dur(dur * 1000)
+    {
+    }
+    ~TranslateAnimated() override {};
     void transform(double) const override;
 };
 
@@ -71,4 +89,4 @@ public:
     void transform(double) const override;
 };
 
-#endif // __TRANSFORMATIONS_HPP__
+#endif // TRANSFORMATIONS_HPP
