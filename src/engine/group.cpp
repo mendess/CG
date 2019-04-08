@@ -19,7 +19,7 @@ using namespace rapidxml;
 
 unique_ptr<Translate> parse_translate(xml_node<char>* node);
 
-unique_ptr<Rotate> parse_rotate(xml_node<char>* node);
+unique_ptr<Transformation> parse_rotate(xml_node<char>* node);
 
 unique_ptr<Scale> parse_scale(xml_node<char>* node);
 
@@ -86,10 +86,11 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 
 void Group::draw(int max_depth)
 {
+    float elapsed = glutGet(GLUT_ELAPSED_TIME);
     glPushMatrix();
     if (max_depth > 0) {
         for (const auto& transformation : transformations) {
-            transformation->transform();
+            transformation->transform(elapsed);
         }
         for (size_t i = 0; i < models.size(); i++) {
             glColor4f(r, g, b, a);
@@ -120,24 +121,32 @@ unique_ptr<Translate> parse_translate(xml_node<char>* node)
     return make_unique<Translate>(x, y, z);
 }
 
-unique_ptr<Rotate> parse_rotate(xml_node<char>* node)
+unique_ptr<Transformation> parse_rotate(xml_node<char>* node)
 {
-    float angle, x, y, z;
+    float angle, x, y, z, dur;
     angle = x = y = z = 0.0f;
+    bool staticR = true;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
         string name = string(attr->name());
         std::transform(name.begin(), name.end(), name.begin(), ::toupper);
         if ("ANGLE" == name) {
             angle = stof(attr->value());
+            staticR = true;
         } else if ("X" == name || "AXISX" == name) {
             x = stof(attr->value());
         } else if ("Y" == name || "AXISY" == name) {
             y = stof(attr->value());
         } else if ("Z" == name || "AXISZ" == name) {
             z = stof(attr->value());
+        } else if ("TIME" == name) {
+            dur = stof(attr->value());
+            staticR = false;
         }
     }
-    return make_unique<Rotate>(angle, x, y, z);
+    if (staticR)
+        return make_unique<RotateStatic>(angle, x, y, z);
+    else
+        return make_unique<RotateAnimated>(dur, x, y, z);
 }
 
 unique_ptr<Scale> parse_scale(xml_node<char>* node)

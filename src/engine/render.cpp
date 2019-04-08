@@ -130,6 +130,7 @@ int render(int argc, char** argv, Group* scene)
     DRAW_LEVEL = SCENE->levels();
     glutDisplayFunc(renderScene);
     glutReshapeFunc(changeSize);
+    glutIdleFunc(renderScene);
     glutKeyboardFunc(key_bindings);
 
     glewInit();

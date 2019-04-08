@@ -10,18 +10,23 @@
 
 using namespace std;
 
-void Rotate::transform() const
+void RotateStatic::transform(double elapsed) const
 {
     glRotatef(angle, x, y, z);
 }
 
-void Translate::transform() const
+void RotateAnimated::transform(double elapsed) const
+{
+    float angle = (elapsed * 360 / dur);
+    glRotatef(angle, x, y, z);
+}
+
+void Translate::transform(double elapsed) const
 {
     glTranslatef(x, y, z);
 }
 
-void Scale::transform() const
+void Scale::transform(double elapsed) const
 {
     glScalef(x, y, z);
 }
-

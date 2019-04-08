@@ -5,26 +5,40 @@
 
 class Transformation {
 public:
-    virtual void transform() const = 0;
-    virtual std::string to_string() const = 0;
     virtual ~Transformation() {};
+    virtual void transform(double elapsed) const = 0;
 };
 
-class Rotate : public Transformation {
+class RotateStatic : public Transformation {
 private:
     float angle, x, y, z;
 
 public:
-    Rotate(float angle, float x, float y, float z)
+    RotateStatic(float angle, float x, float y, float z)
         : angle(angle)
         , x(x)
         , y(y)
         , z(z)
     {
     }
-    void transform() const override;
-    std::string to_string() const override { return "Rotate"; }
-    ~Rotate() override {};
+    ~RotateStatic() override {};
+    void transform(double) const override;
+};
+
+class RotateAnimated : public Transformation {
+private:
+    float dur, x, y, z;
+
+public:
+    RotateAnimated(float dur, float x, float y, float z)
+        : dur(dur)
+        , x(x)
+        , y(y)
+        , z(z)
+    {
+    }
+    ~RotateAnimated() override {};
+    void transform(double) const override;
 };
 
 class Translate : public Transformation {
@@ -38,9 +52,8 @@ public:
         , z(z)
     {
     }
-    void transform() const override;
-    std::string to_string() const override { return "Translate"; }
     ~Translate() override {};
+    void transform(double) const override;
 };
 
 class Scale : public Transformation {
@@ -54,9 +67,8 @@ public:
         , z(z)
     {
     }
-    void transform() const override;
-    std::string to_string() const override { return "Scale"; }
     ~Scale() override {};
+    void transform(double) const override;
 };
 
 #endif // __TRANSFORMATIONS_HPP__
