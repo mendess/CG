@@ -7,6 +7,8 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <tuple>
+#include <unordered_map>
 #include <vector>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -17,7 +19,7 @@
 using namespace std;
 using namespace rapidxml;
 
-unique_ptr<Translate> parse_translate(xml_node<char>* node);
+unique_ptr<Transformation> parse_translate(xml_node<char>* node);
 
 unique_ptr<Transformation> parse_rotate(xml_node<char>* node);
 
@@ -103,22 +105,40 @@ void Group::draw(int max_depth)
     glPopMatrix();
 }
 
-unique_ptr<Translate> parse_translate(xml_node<char>* node)
+unique_ptr<Transformation> parse_translate(xml_node<char>* node)
 {
     float x, y, z;
-    x = y = z = 0.0f;
+    unordered_map<string, string> params;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
-        string name = string(attr->name());
+        string name = attr->name();
         std::transform(name.begin(), name.end(), name.begin(), ::toupper);
-        if ("X" == name || "AXISX" == name) {
-            x = stof(attr->value());
-        } else if ("Y" == name || "AXISY" == name) {
-            y = stof(attr->value());
-        } else if ("Z" == name || "AXISZ" == name) {
-            z = stof(attr->value());
-        }
+        params[name] = attr->value();
     }
-    return make_unique<Translate>(x, y, z);
+    if (params["TIME"] != "") {
+        float dur = stof(params["TIME"]);
+        vector<Point> points;
+        for (auto point = node->first_node(); point != NULL; point = point->next_sibling()) {
+            x = y = z = 0.0f;
+            for (auto attr = point->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
+                string name = attr->name();
+                std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+                if ("X" == name || "AXISX" == name) {
+                    x = stof(attr->value());
+                } else if ("Y" == name || "AXISY" == name) {
+                    y = stof(attr->value());
+                } else if ("Z" == name || "AXISZ" == name) {
+                    z = stof(attr->value());
+                }
+            }
+            points.push_back(Point(x, y, z));
+        }
+        return make_unique<TranslateAnimated>(points, dur);
+    } else {
+        x = params["X"] != "" ? stof(params["X"]) : 0;
+        y = params["Y"] != "" ? stof(params["Y"]) : 0;
+        z = params["Z"] != "" ? stof(params["Z"]) : 0;
+        return make_unique<TranslateStatic>(x, y, z);
+    }
 }
 
 unique_ptr<Transformation> parse_rotate(xml_node<char>* node)

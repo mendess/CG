@@ -140,6 +140,15 @@ void explorer_move_out()
     radius += 0.1;
 }
 
+void explorer_move_in_fast()
+{
+    radius -= 1;
+}
+
+void explorer_move_out_fast()
+{
+    radius += 1;
+}
 void set_explorer()
 {
     mode = CameraType::EXPLORER;
@@ -183,6 +192,12 @@ void explorer_cam(unsigned char key)
         break;
     case 'o':
         Camera::explorer_move_out();
+        break;
+    case 'I':
+        Camera::explorer_move_in_fast();
+        break;
+    case 'O':
+        Camera::explorer_move_out_fast();
         break;
     }
     Camera::update_cam_pos();
