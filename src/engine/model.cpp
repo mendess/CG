@@ -5,86 +5,53 @@
 #include <fstream>
 #include <functional>
 #include <iostream>
-#include <string>
 #include <random>
+#include <string>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
+#include <GL/glew.h>
 #include <GL/glut.h>
 #endif
 
 using namespace std;
 
 Model::Model(char* modelFile)
+    : prepared(false)
 {
     float x, y, z;
     ifstream infile(modelFile);
     if (!infile.good()) {
-        modelName = NULL;
         return;
     }
     while (infile >> x >> y >> z) {
-        points.push_back(Point(x, y, z));
+        push(x, y, z);
     }
-    modelName = strdup(modelFile);
     infile.close();
+    n_vertices = vbo.size() / 3;
 }
 
-Model::Model(const Model& other)
-    : points(other.points)
-    , modelName(strdup(other.modelName))
+bool Model::loaded() const
 {
+    return vbo.size() != 0;
 }
 
-bool Model::loaded()
+void Model::draw()
 {
-    return modelName != NULL;
+    if (!prepared) {
+        glGenBuffers(1, &buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        glBufferData(GL_ARRAY_BUFFER, vbo.size() * sizeof(float), vbo.data(), GL_STATIC_DRAW);
+        prepared = true;
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glVertexPointer(3, GL_FLOAT, 0, 0);
+    glDrawArrays(GL_TRIANGLES, 0, n_vertices);
 }
 
-void drawTriangle(const Point* a, const Point* b, const Point* c)
+void Model::push(float x, float y, float z)
 {
-    glBegin(GL_TRIANGLES);
-    {
-        glVertex3f(a->x(), a->y(), a->z());
-        glVertex3f(b->x(), b->y(), b->z());
-        glVertex3f(c->x(), c->y(), c->z());
-    }
-    glEnd();
-}
-
-bool Model::draw() const
-{
-    if (points.size() % 3 != 0) {
-        return false;
-    }
-    vector<Point>::const_iterator it = points.begin();
-    while (it != points.end()) {
-        const Point* a = &*it++;
-        const Point* b = &*it++;
-        const Point* c = &*it++;
-        drawTriangle(a, b, c);
-    }
-    return true;
-}
-
-bool Model::draw_random() const
-{
-    if (points.size() % 3 != 0) {
-        return false;
-    }
-    default_random_engine generator(42);
-    uniform_int_distribution<int> distribution(0, 100);
-    auto rng = bind(distribution, generator);
-    vector<Point>::const_iterator it = points.begin();
-    while (it != points.end()) {
-        const Point* a = &*it++;
-        const Point* b = &*it++;
-        const Point* c = &*it++;
-        float r = rng() / 100.0f;
-        float g = rng() / 100.0f;
-        float u = rng() / 100.0f;
-        glColor3f(r, g, u);
-        drawTriangle(a, b, c);
-    }
-    return true;
+    vbo.push_back(x);
+    vbo.push_back(y);
+    vbo.push_back(z);
 }

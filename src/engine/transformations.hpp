@@ -7,6 +7,7 @@ class Transformation {
 public:
     virtual void transform() const = 0;
     virtual std::string to_string() const = 0;
+    virtual ~Transformation() {};
 };
 
 class Rotate : public Transformation {
@@ -23,6 +24,7 @@ public:
     }
     void transform() const override;
     std::string to_string() const override { return "Rotate"; }
+    ~Rotate() override {};
 };
 
 class Translate : public Transformation {
@@ -38,6 +40,7 @@ public:
     }
     void transform() const override;
     std::string to_string() const override { return "Translate"; }
+    ~Translate() override {};
 };
 
 class Scale : public Transformation {
@@ -53,6 +56,7 @@ public:
     }
     void transform() const override;
     std::string to_string() const override { return "Scale"; }
+    ~Scale() override {};
 };
 
 #endif // __TRANSFORMATIONS_HPP__

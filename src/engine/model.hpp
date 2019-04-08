@@ -5,20 +5,26 @@
 
 #include <string>
 #include <vector>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glew.h>
+#include <GL/glut.h>
+#endif
 
 class Model {
 private:
-    std::vector<Point> points;
-    char* modelName;
+    GLuint buffer;
+    std::vector<float> vbo;
+    size_t n_vertices;
+    bool prepared;
+
+    void push(float, float, float);
 
 public:
     Model(char*);
-    Model(const Model& other);
-    bool loaded();
-    bool draw() const;
-    bool draw_random() const;
-    char* name() const { return modelName; };
-    ~Model() { if(modelName) free(modelName); };
+    bool loaded() const;
+    void draw();
 };
 
 #endif //MODEL_H
