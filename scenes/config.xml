@@ -2,12 +2,12 @@
     <group R='1'>
         <translate X='1' />
         <models>
-            <model file="sphere.3d" />
+            <model file="scenes/sphere.3d" />
         </models>
         <group>
             <translate axisY="1" />
             <models>
-                <model file="cone.3d" />
+                <model file="scenes/cone.3d" />
             </models>
         </group>
     </group>
@@ -15,7 +15,7 @@
         <translate X="5" axisY="0" axisZ="2" />
         <rotate angle="45" axisX="0" axisY="1" axisZ="0" />
         <models>
-            <model file="box.3d" />
+            <model file="scenes/box.3d" />
         </models>
     </group>
 </scene>
