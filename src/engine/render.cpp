@@ -14,6 +14,8 @@
 
 using namespace std;
 
+bool SHOW_ROUTES = false;
+
 namespace Render {
 
 static float SCALE = 1;

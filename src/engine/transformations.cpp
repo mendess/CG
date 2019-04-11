@@ -54,7 +54,8 @@ bool TranslateAnimated::show_routes = false;
 
 void TranslateAnimated::transform(double elapsed) const
 {
-    if(TranslateAnimated::show_routes) draw_routes();
+    if (TranslateAnimated::show_routes)
+        draw_routes();
     float elapsed_b = elapsed;
     while (elapsed_b > dur)
         elapsed_b -= dur;
@@ -73,7 +74,8 @@ Matrix TranslateAnimated::matrix(double elapsed) const
     return translate_matrix(pos.x(), pos.y(), pos.z());
 }
 
-void TranslateAnimated::draw_routes() const {
+void TranslateAnimated::draw_routes() const
+{
     float gt = 0.0;
     const float NUM_STEPS = 100;
     const float gt_step = 1.0 / NUM_STEPS;
