@@ -31,6 +31,7 @@ public:
     int model_count() const { return _model_count; }
     std::optional<Point> get_model_position(size_t) const;
     void draw(int);
+    void draw_with_routes(int);
 };
 
 #endif // GROUP_HPP

@@ -79,6 +79,7 @@ public:
     ~TranslateAnimated() override {};
     void transform(double) const override;
     Matrix matrix(double elapsed) const override;
+    void draw_routes() const;
 };
 
 class Scale : public Transformation {

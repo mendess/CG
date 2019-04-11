@@ -50,8 +50,10 @@ Matrix TranslateStatic::matrix(double elapsed) const
     return translate_matrix(x, y, z);
 }
 
+extern bool SHOW_ROUTES;
 void TranslateAnimated::transform(double elapsed) const
 {
+    if(SHOW_ROUTES) draw_routes();
     float elapsed_b = elapsed;
     while (elapsed_b > dur)
         elapsed_b -= dur;
@@ -68,6 +70,20 @@ Matrix TranslateAnimated::matrix(double elapsed) const
     tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed_b / dur);
     Point pos = get<0>(pos_deriv);
     return translate_matrix(pos.x(), pos.y(), pos.z());
+}
+
+void TranslateAnimated::draw_routes() const {
+    float gt = 0.0;
+    const float NUM_STEPS = 100;
+    const float gt_step = 1.0 / NUM_STEPS;
+    glBegin(GL_LINE_LOOP);
+    for (int i = 0; i < NUM_STEPS; i++) {
+        tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, gt);
+        Point pos = get<0>(pos_deriv);
+        glVertex3f(pos.x(), pos.y(), pos.z());
+        gt += gt_step;
+    }
+    glEnd();
 }
 
 void Scale::transform(double elapsed) const

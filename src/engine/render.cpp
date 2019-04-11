@@ -14,6 +14,8 @@
 
 using namespace std;
 
+bool SHOW_ROUTES = false;
+
 namespace Render {
 
 static float SCALE = 1;
@@ -149,6 +151,9 @@ void key_bindings(unsigned char key, int _x, int _y)
         }
         break;
     }
+    case ',':
+        SHOW_ROUTES = !SHOW_ROUTES;
+        break;
     case 'q':
         exit(0);
     }
