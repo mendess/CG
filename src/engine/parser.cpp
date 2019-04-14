@@ -38,7 +38,7 @@ Group* load(vector<string> configs)
         try {
             doc->parse<0>((char*)texts[0].data());
         } catch (rapidxml::parse_error& e) {
-            cerr << configs[0] << ": " << e.what() << ": " << e.where<char>() << endl;
+            cerr << configs[0] << ": " << e.what() << " in " << e.where<char>() << endl;
         }
     }
     for (size_t i = 1; i < configs.size(); i++) {
