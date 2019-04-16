@@ -10,6 +10,7 @@ class Transformation {
 public:
     virtual ~Transformation() {};
     virtual void transform(double elapsed) const = 0;
+    virtual void matrix(double elapsed) const = 0;
 };
 
 class RotateStatic : public Transformation {

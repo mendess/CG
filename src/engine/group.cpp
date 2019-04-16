@@ -6,6 +6,7 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <string>
 #include <tuple>
 #include <unordered_map>
@@ -23,7 +24,7 @@ unique_ptr<Transformation> parse_translate(xml_node<char>* node);
 
 unique_ptr<Transformation> parse_rotate(xml_node<char>* node);
 
-unique_ptr<Scale> parse_scale(xml_node<char>* node);
+unique_ptr<Transformation> parse_scale(xml_node<char>* node);
 
 Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 {
@@ -79,7 +80,9 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         }
     }
     int max_level = 0;
+    _model_count = models.size();
     for (const auto& subgroup : subgroups) {
+        _model_count += subgroup.model_count();
         if (subgroup.levels() > max_level)
             max_level = subgroup.levels();
     }
@@ -103,6 +106,86 @@ void Group::draw(int max_depth)
         }
     }
     glPopMatrix();
+}
+
+optional<Point> Group::get_model_position(size_t index) const
+{
+    float position[4][4] = {
+        {1, 0, 0, 0},
+        {0, 1, 0, 0},
+        {0, 0, 1, 0},
+        {0, 0, 0, 1}
+    };
+    if (index < models.size()) {
+        // return models[index]
+    } else {
+        size_t models_skiped = models.size();
+        for (const auto& sg : subgroups) {
+            if (index < models_skiped + sg.model_count()) {
+                return sg.get_model_position(index - models_skiped);
+            }
+            models_skiped += sg.model_count();
+        }
+    }
+    return nullopt;
+}
+
+void mutl_matrix(float a[4][4], float b[4][4])
+{
+    float tmp[4][4];
+    for (size_t i = 0; i < 4; i++) {
+        for (size_t j = 0; j < 4; j++) {
+            float op = 0;
+            for (size_t k = 0; k < 4; k++) {
+                op += a[i][k] * b[k][j];
+            }
+            tmp[i][j] = op;
+        }
+    }
+    for (size_t i = 0; i < 4; i++) {
+        for (size_t j = 0; j < 4; j++) {
+            a[i][j] = tmp[i][j];
+        }
+    }
+}
+
+void mult_translate_matrix(float x, float y, float z, float matrix[4][4])
+{
+    float t[4][4] = {
+        { 1, 0, 0, x },
+        { 0, 1, 0, y },
+        { 0, 0, 1, z },
+        { 0, 0, 0, 1 }
+    };
+    mutl_matrix(t, matrix);
+}
+
+void mutl_scale_matrix(float x, float y, float z, float matrix[4][4])
+{
+    float s[4][4] = {
+        { x, 0, 0, 0 },
+        { 0, y, 0, 0 },
+        { 0, 0, z, 0 },
+        { 0, 0, 0, 1 }
+    };
+    mutl_matrix(s, matrix);
+}
+
+void mutl_rotation_matrix(float angle, float x, float y, float z, float matrix[4][4])
+{
+    /* float r[4][4] = { */
+    /*     { x * x + (1 - (x * x)) * cos(angle)       , x * y * (1 - cos(angle)) - z * sin(angle), x * z * (1 - cos(angle)) + y * sin(angle), 0 }, */
+    /*     { y * x * (1 - cos(angle)) + z * sin(angle), y * y + (1 - y * y) * cos(angle)         , y * z * (1 - cos(angle)) - x * sin(angle), 0 }, */
+    /*     { z * x * (1 - cos(angle)) - y * sin(angle), z * y * (1 - cos(angle)) + x * sin(angle), z * z + (1 - z * z) * cos(angle)         , 0 }, */
+    /*     { 0                                        , 0                                        , 0                                        , 1 } */
+    /* }; */
+    float r[4][4] = {
+        { x * x + (1 - (x * x)) * cos(angle)       , x * y * (1 - cos(angle)) - z * sin(angle), x * z * (1 - cos(angle)) + y * sin(angle), 0 },
+        { y * x * (1 - cos(angle)) + z * sin(angle), y * y + (1 - y * y) * cos(angle)         , y * z * (1 - cos(angle)) - x * sin(angle), 0 },
+        { z * x * (1 - cos(angle)) - y * sin(angle), z * y * (1 - cos(angle)) + x * sin(angle), z * z + (1 - z * z) * cos(angle)         , 0 },
+        { 0                                        , 0                                        , 0                                        , 1 }
+    };
+    mutl_matrix(r, matrix);
 }
 
 unique_ptr<Transformation> parse_translate(xml_node<char>* node)
@@ -169,7 +252,7 @@ unique_ptr<Transformation> parse_rotate(xml_node<char>* node)
         return make_unique<RotateAnimated>(dur, x, y, z);
 }
 
-unique_ptr<Scale> parse_scale(xml_node<char>* node)
+unique_ptr<Transformation> parse_scale(xml_node<char>* node)
 {
     float x, y, z;
     x = y = z = 1.0f;
