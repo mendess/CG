@@ -6,10 +6,10 @@
 #include <GL/glut.h>
 #endif
 
+#include <cmath>
+#include <cstring>
 #include <iostream>
 #include <tuple>
-#include <cstring>
-#include <cmath>
 
 using namespace std;
 
@@ -23,7 +23,8 @@ void RotateStatic::transform(double elapsed) const
     glRotatef(angle, x, y, z);
 }
 
-Matrix RotateStatic::matrix(double elapsed) const {
+Matrix RotateStatic::matrix(double elapsed) const
+{
     return rotation_matrix(angle, x, y, z);
 }
 
@@ -33,7 +34,8 @@ void RotateAnimated::transform(double elapsed) const
     glRotatef(angle, x, y, z);
 }
 
-Matrix RotateAnimated::matrix(double elapsed) const {
+Matrix RotateAnimated::matrix(double elapsed) const
+{
     float angle = (elapsed * 360 / dur);
     return rotation_matrix(angle, x, y, z);
 }
@@ -43,7 +45,8 @@ void TranslateStatic::transform(double elapsed) const
     glTranslatef(x, y, z);
 }
 
-Matrix TranslateStatic::matrix(double elapsed) const {
+Matrix TranslateStatic::matrix(double elapsed) const
+{
     return translate_matrix(x, y, z);
 }
 
@@ -57,7 +60,8 @@ void TranslateAnimated::transform(double elapsed) const
     glTranslatef(pos.x(), pos.y(), pos.z());
 }
 
-Matrix TranslateAnimated::matrix(double elapsed) const {
+Matrix TranslateAnimated::matrix(double elapsed) const
+{
     float elapsed_b = elapsed;
     while (elapsed_b > dur)
         elapsed_b -= dur;
@@ -71,38 +75,49 @@ void Scale::transform(double elapsed) const
     glScalef(x, y, z);
 }
 
-Matrix Scale::matrix(double elapsed) const {
+Matrix Scale::matrix(double elapsed) const
+{
     return scale_matrix(x, y, z);
 }
 
 Matrix translate_matrix(float x, float y, float z)
 {
-    return {.matrix = {
-        { 1, 0, 0, x },
-        { 0, 1, 0, y },
-        { 0, 0, 1, z },
-        { 0, 0, 0, 1 }
-    }};
+    return { .matrix = {
+                 { 1, 0, 0, x },
+                 { 0, 1, 0, y },
+                 { 0, 0, 1, z },
+                 { 0, 0, 0, 1 } } };
 }
 
 Matrix scale_matrix(float x, float y, float z)
 {
-    return {.matrix = {
-        { x, 0, 0, 0 },
-        { 0, y, 0, 0 },
-        { 0, 0, z, 0 },
-        { 0, 0, 0, 1 }
-    }};
+    return { .matrix = {
+                 { x, 0, 0, 0 },
+                 { 0, y, 0, 0 },
+                 { 0, 0, z, 0 },
+                 { 0, 0, 0, 1 } } };
 }
 
 Matrix rotation_matrix(float angle, float x, float y, float z)
 {
-    return {.matrix = {
-        { x * x + (1 - (x * x)) * cos(angle)       , x * y * (1 - cos(angle)) - z * sin(angle), x * z * (1 - cos(angle)) + y * sin(angle), 0 },
-        { y * x * (1 - cos(angle)) + z * sin(angle), y * y + (1 - y * y) * cos(angle)         , y * z * (1 - cos(angle)) - x * sin(angle), 0 },
-        { z * x * (1 - cos(angle)) - y * sin(angle), z * y * (1 - cos(angle)) + x * sin(angle), z * z + (1 - z * z) * cos(angle)         , 0 },
-        { 0                                        , 0                                        , 0                                        , 1 }
-    }};
+    Matrix m;
+    m.matrix[0][0] = x * x + (1 - (x * x)) * cos(angle);
+    m.matrix[0][1] = x * y * (1 - cos(angle)) - z * sin(angle);
+    m.matrix[0][2] = x * z * (1 - cos(angle)) + y * sin(angle);
+    m.matrix[0][3] = 0;
+    m.matrix[1][0] = y * x * (1 - cos(angle)) + z * sin(angle);
+    m.matrix[1][1] = y * y + (1 - y * y) * cos(angle);
+    m.matrix[1][2] = y * z * (1 - cos(angle)) - x * sin(angle);
+    m.matrix[1][3] = 0;
+    m.matrix[2][0] = z * x * (1 - cos(angle)) - y * sin(angle);
+    m.matrix[2][1] = z * y * (1 - cos(angle)) + x * sin(angle);
+    m.matrix[2][2] = z * z + (1 - z * z) * cos(angle);
+    m.matrix[2][3] = 0;
+    m.matrix[3][0] = 0;
+    m.matrix[3][1] = 0;
+    m.matrix[3][2] = 0;
+    m.matrix[3][3] = 1;
+    return m;
 }
 
 void buildRotMatrix(float* x, float* y, float* z, float* m)
