@@ -110,25 +110,6 @@ void Group::draw(int max_depth)
     }
 }
 
-void Group::draw_no_models(size_t index) const
-{
-    float elapsed = glutGet(GLUT_ELAPSED_TIME);
-    for (const auto& t : transformations) {
-        t->transform(elapsed);
-    }
-    if (index < models.size()) {
-        return;
-    } else {
-        size_t models_skiped = models.size();
-        for (const auto& sg : subgroups) {
-            if (index < models_skiped + sg.model_count()) {
-                sg.draw_no_models(index - models_skiped);
-            }
-            models_skiped += sg.model_count();
-        }
-    }
-}
-
 optional<Point> Group::get_model_position(size_t index) const
 {
     Matrix m = { .matrix = {
