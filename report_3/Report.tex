@@ -1,0 +1,125 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{graphicx}
+\usepackage{a4wide}
+\usepackage[pdftex,hidelinks]{hyperref}
+\usepackage{float}
+\usepackage{indentfirst}
+\usepackage{subcaption}
+\usepackage[cache=false]{minted}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+language=C++,
+aboveskip=3mm,
+belowskip=3mm,
+showstringspaces=false,
+columns=flexible,
+basicstyle={\small\ttfamily},
+numbers=none,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=true,
+breakatwhitespace=true,
+tabsize=4
+}
+
+\newcommand{\x}{\times}
+
+\begin{document}
+
+\title{Computação Gráfica\\ Animações}
+\author{Bárbara Cardoso (a80453) \and Márcio Sousa (a82400) \and Pedro Mendes (a79003)}
+\date{\today}
+
+\begin{titlepage}
+
+    %título
+    \thispagestyle{empty}
+    \begin{center}
+        \begin{minipage}{0.75\linewidth}
+            \centering
+            %engenharia logo
+            \includegraphics[width=0.4\textwidth]{eng.jpeg}\par\vspace{1cm}
+            \vspace{1.5cm}
+            %títulos
+            \href{https://www.uminho.pt/PT}{\scshape\LARGE Universidade do Minho} \par
+            \vspace{1cm}
+            \href{https://www.di.uminho.pt/}{\scshape\Large Departamento de Informática} \par
+            \vspace{1.5cm}
+
+            \maketitle
+        \end{minipage}
+    \end{center}
+
+\end{titlepage}
+
+\tableofcontents
+
+\pagebreak
+
+\section{Introdução}
+
+% Este relatorio assume que foi feita a leitura dos dois anteriores
+
+\section{Alterações dos ficheiros de input}\label{sec:estrutura-ficheiros}
+
+\section{Arquitetura do Projecto}
+
+\subsection{Model}
+% VBO
+
+\subsection{Transformations}
+% Versoes animadas das transformacoes
+
+\subsection{\textit{Follow mode}}
+Porque agora os models se deslocam e mais dificil de os ver, para resolver este problema
+foi implementado o \textit{Follow mode}. Neste o utilizador pode escolher um \textit{model}
+para a camera seguir. Sendo que o comportamento da camera neste modo e igual ao antigo
+\textit{explorer mode} apenas com o centro no objecto e nao na origem do referencial
+
+Para conseguir este efeito duas grandes alteracoes tiveram de ser feitas ao \textit{Group} e ao
+\textit{Camera}.
+
+\subsubsection{Group}
+
+Para poder focar a camera no objecto e necessario obter a sua posicao no espaco 3D. Mas os
+\textit{models} em si nao tem coordenadas proprias, sao transladados, rotacionados e escalados para as suas posicoes. Logo e necessario que o \textit{Group} tenha a capacidade de calcular as coordenadas de cada modelo.
+
+Para este fim, foi implementado um método que dado um índice vai multiplicando todas as matrizes de transformação ate chegar ao modelo, e por fim usa a matriz final para extrair as coordenadas do modelo.
+
+\subsubsection{Camera}
+
+A camera, por outro lado, sofreu uma grande re-estruturacao do antigo modo \textit{Explorer}.
+Foi concluido que o \textit{Follow mode} era o caso geral deste, ou seja, o \textit{Explorer mode}
+permitia ao utilizador focar-se na origem enquanto se deslocava na superficie de uma esfera (invisivel), podendo alterar o raio desta esfera. Por outro lado, o \textit{Follow mode} permite
+que o utilizador faca tudo isto mas focando-se em qualquer ponto do espaco 3D. Desta forma o \textit{Explorer mode} foi substituido pelo novo, \textit{Follow mode}.
+
+\section{Key Bindings}
+
+% I/O (move in fast)
+% { } (change follow target)
+% ,  (show orbits)
+
+\section{Sistema Solar}
+
+% Topicos
+% Todos os astros (tirando o sol) tem orbitas animadas
+% Os planetas tem orbitas elipticas, para imitar os sistema solar real
+% As luas dos planetas tem orbitas circulares
+% Foi adicionada tambem uma cintura de asteroides entre Marte e Jupiter
+% E foi adicionado um cometa que tem uma orbita muito alongada
+
+
+\section{Conclusões e Trabalho Futuro}
+
+\end{document}
