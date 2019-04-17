@@ -1,7 +1,5 @@
 #include "generator.hpp"
-//#include <cstdlib>
-//#include <point.hpp>
-//#include <math.h>
+#include <cmath>
 
 using namespace std;
 

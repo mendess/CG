@@ -6,6 +6,7 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <string>
 #include <tuple>
 #include <unordered_map>
@@ -23,7 +24,9 @@ unique_ptr<Transformation> parse_translate(xml_node<char>* node);
 
 unique_ptr<Transformation> parse_rotate(xml_node<char>* node);
 
-unique_ptr<Scale> parse_scale(xml_node<char>* node);
+unique_ptr<Transformation> parse_scale(xml_node<char>* node);
+
+void mutl_matrix(const float a[4][4], float b[4][4]);
 
 Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 {
@@ -79,7 +82,9 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         }
     }
     int max_level = 0;
+    _model_count = models.size();
     for (const auto& subgroup : subgroups) {
+        _model_count += subgroup.model_count();
         if (subgroup.levels() > max_level)
             max_level = subgroup.levels();
     }
@@ -88,9 +93,9 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 
 void Group::draw(int max_depth)
 {
-    float elapsed = glutGet(GLUT_ELAPSED_TIME);
-    glPushMatrix();
     if (max_depth > 0) {
+        float elapsed = glutGet(GLUT_ELAPSED_TIME);
+        glPushMatrix();
         for (const auto& transformation : transformations) {
             transformation->transform(elapsed);
         }
@@ -101,8 +106,80 @@ void Group::draw(int max_depth)
         for (size_t i = 0; i < subgroups.size(); i++) {
             subgroups[i].draw(max_depth - 1);
         }
+        glPopMatrix();
     }
-    glPopMatrix();
+}
+
+optional<Point> Group::get_model_position(size_t index) const
+{
+    Matrix m = { .matrix = {
+                     { 1, 0, 0, 0 },
+                     { 0, 1, 0, 0 },
+                     { 0, 0, 1, 0 },
+                     { 0, 0, 0, 1 } } };
+    auto p = get_model_position(index, m);
+    if (p.has_value()) {
+        const Matrix m = p.value();
+        float coords[4];
+        const float base[4] = { 0, 0, 0, 1 };
+        for (int i = 0; i < 4; ++i) {
+            coords[i] = 0;
+            for (int j = 0; j < 4; ++j) {
+                coords[i] += base[j] * m.matrix[i][j];
+            }
+        }
+        return Point(coords[0], coords[1], coords[2]);
+    } else {
+        return nullopt;
+    }
+}
+
+optional<Matrix> Group::get_model_position(size_t index, Matrix position) const
+{
+    float elapsed = glutGet(GLUT_ELAPSED_TIME);
+    if (index >= models.size()) {
+        size_t models_skiped = models.size();
+        for (const auto& sg : subgroups) {
+            if (index < models_skiped + sg.model_count()) {
+                auto p = sg.get_model_position(index - models_skiped, position);
+                if (!p.has_value()) {
+                    return nullopt;
+                } else {
+                    position = p.value();
+                }
+                for (size_t i = transformations.size(); i > 0; --i) {
+                    mutl_matrix(transformations[i - 1]->matrix(elapsed).matrix, position.matrix);
+                }
+                return position;
+            }
+            models_skiped += sg.model_count();
+        }
+    } else {
+        for (size_t i = transformations.size(); i > 0; --i) {
+            mutl_matrix(transformations[i - 1]->matrix(elapsed).matrix, position.matrix);
+        }
+        return position;
+    }
+    return nullopt;
+}
+
+void mutl_matrix(const float a[4][4], float b[4][4])
+{
+    float tmp[4][4];
+    for (size_t i = 0; i < 4; i++) {
+        for (size_t j = 0; j < 4; j++) {
+            float op = 0;
+            for (size_t k = 0; k < 4; k++) {
+                op += a[i][k] * b[k][j];
+            }
+            tmp[i][j] = op;
+        }
+    }
+    for (size_t i = 0; i < 4; i++) {
+        for (size_t j = 0; j < 4; j++) {
+            b[i][j] = tmp[i][j];
+        }
+    }
 }
 
 unique_ptr<Transformation> parse_translate(xml_node<char>* node)
@@ -169,7 +246,7 @@ unique_ptr<Transformation> parse_rotate(xml_node<char>* node)
         return make_unique<RotateAnimated>(dur, x, y, z);
 }
 
-unique_ptr<Scale> parse_scale(xml_node<char>* node)
+unique_ptr<Transformation> parse_scale(xml_node<char>* node)
 {
     float x, y, z;
     x = y = z = 1.0f;
