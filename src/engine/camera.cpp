@@ -32,10 +32,6 @@ void place_camera()
 {
     switch (mode) {
     case CameraType::FOLLOW:
-        /* std::cout */
-        /*     << "x: " << x << " y: " << y << " z: " << z */
-        /*     << " look_x: " << look_x << " look_y: " << look_y << " look_z: " << look_z */
-        /*     << std::endl; */
         gluLookAt(x, y, z,
             look_x, look_y, look_z,
             0.0f, 1.0f, 0.0f);
@@ -80,7 +76,6 @@ std::string to_string(CameraType c)
 // Calculations
 void update_cam_pos()
 {
-    /* std::cout << "(x,z): (" << x << "," << z << ") a: " << alpha << " b: " << beta << " | "; */
     x = look_x + radius * cos(beta) * sin(alpha);
     z = look_z + radius * cos(beta) * cos(alpha);
     y = look_y + radius * sin(beta);

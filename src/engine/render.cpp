@@ -48,22 +48,12 @@ void renderScene()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     if (FOLLOWING) {
-        cout << "START THINGS" << endl;
         auto p = SCENE->get_model_position(FOLLOW_TARGET);
         if (p.has_value()) {
             Camera::set_follow(p.value());
-            cout << p.value().to_string() << endl;
         }
-        cout << "END THINGS" << endl;
     }
-    /* if (FOLLOWING) { */
-    /*     glPushMatrix(); */
-    /*     SCENE->draw_no_models(FOLLOW_TARGET); */
-    /* } */
     Camera::place_camera();
-    /* if (FOLLOWING) { */
-    /*     glPopMatrix(); */
-    /* } */
     if (SHOW_AXIS) {
         // x axis
         glColor3f(1, 0, 0);
