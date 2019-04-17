@@ -3,13 +3,14 @@
 #include "model.hpp"
 
 #include <iostream>
+#include <sstream>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
 #endif
 
-#include <math.h>
+#include <cmath>
 
 using namespace std;
 
@@ -19,6 +20,8 @@ static float SCALE = 1;
 static Group* SCENE;
 static int DRAW_LEVEL = -1;
 static bool SHOW_AXIS = false;
+static size_t FOLLOW_TARGET = 0;
+static bool FOLLOWING = false;
 
 void changeSize(int w, int h)
 {
@@ -44,6 +47,13 @@ void renderScene()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+    if (FOLLOWING) {
+        auto p = SCENE->get_model_position(FOLLOW_TARGET);
+        if (p.has_value()) {
+            Camera::set_follow(p.value());
+            cout << p.value().to_string() << endl;
+        }
+    }
     Camera::place_camera();
     if (SHOW_AXIS) {
         // x axis
@@ -80,6 +90,10 @@ void renderScene()
           << DRAW_LEVEL
           << " | Camera Mode: "
           << Camera::to_string(Camera::current_camera());
+    if (FOLLOWING) {
+        title << " | FOLLOW TARGET: "
+              << FOLLOW_TARGET;
+    }
     glutSetWindowTitle(title.str().data());
 
     glutSwapBuffers();
@@ -90,6 +104,7 @@ void key_bindings(unsigned char key, int _x, int _y)
     Camera::process_key_bind(key);
     switch (key) {
     case 'v':
+        FOLLOWING = false;
         Camera::toggle_cam();
         break;
     case '+':
@@ -109,6 +124,24 @@ void key_bindings(unsigned char key, int _x, int _y)
     case '.':
         SHOW_AXIS = !SHOW_AXIS;
         break;
+    case '}': {
+        if (!FOLLOWING) {
+            FOLLOWING = true;
+            FOLLOW_TARGET = 0;
+        } else if (FOLLOW_TARGET < 150) {
+            FOLLOW_TARGET++;
+        }
+        break;
+    }
+    case '{': {
+        if (!FOLLOWING) {
+            FOLLOWING = true;
+            FOLLOW_TARGET = 1; //TODO: change this
+        } else if (FOLLOW_TARGET > 0) {
+            FOLLOW_TARGET--;
+        }
+        break;
+    }
     case 'q':
         exit(0);
     }

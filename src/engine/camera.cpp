@@ -6,7 +6,8 @@
 #include <GL/glut.h>
 #endif
 
-#include <math.h>
+#include <cmath>
+#include <iostream>
 
 namespace Camera {
 
@@ -14,20 +15,24 @@ float speed = 1.0;
 float radius = 100;
 float alpha = M_PI;
 float beta = M_PI / 5;
-float x = radius * cos(beta) * sin(alpha);
-float y = radius * sin(beta);
-float z = radius * cos(beta) * cos(alpha);
 float look_x = 0.0;
 float look_y = 0.0;
-float look_z = 1.0;
-CameraType mode = CameraType::EXPLORER;
+float look_z = 0.0;
+float x = look_x + radius * cos(beta) * sin(alpha);
+float z = look_z + radius * cos(beta) * cos(alpha);
+float y = look_y + radius * sin(beta);
+CameraType mode = CameraType::FOLLOW;
 
 void place_camera()
 {
     switch (mode) {
-    case CameraType::EXPLORER:
+    case CameraType::FOLLOW:
+        /* std::cout */
+        /*     << "x: " << x << " y: " << y << " z: " << z */
+        /*     << " look_x: " << look_x << " look_y: " << look_y << " look_z: " << look_z */
+        /*     << std::endl; */
         gluLookAt(x, y, z,
-            0.0, 0.0, 0.0,
+            look_x, look_y, look_z,
             0.0f, 1.0f, 0.0f);
         break;
     case CameraType::FPS:
@@ -40,9 +45,9 @@ void place_camera()
 
 void update_cam_pos()
 {
-    x = radius * cos(beta) * sin(alpha);
-    z = radius * cos(beta) * cos(alpha);
-    y = radius * sin(beta);
+    x = look_x + radius * cos(beta) * sin(alpha);
+    z = look_z + radius * cos(beta) * cos(alpha);
+    y = look_y + radius * sin(beta);
 }
 
 void update_cam_look()
@@ -149,15 +154,25 @@ void explorer_move_out_fast()
 {
     radius += 1;
 }
+
+void set_follow(Point p)
+{
+    mode = CameraType::FOLLOW;
+    alpha = atan(x / z);
+    if (z < 0.0) {
+        alpha += M_PI;
+    }
+    beta = asin(y / sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)));
+    radius = sqrt(pow(x - look_x, 2) + pow(y - look_y, 2) + pow(z - look_z, 2));
+    look_x = p.x();
+    look_y = p.y();
+    look_z = p.z();
+    update_cam_pos();
+}
+
 void set_explorer()
 {
-    mode = CameraType::EXPLORER;
-    alpha = atan(x / z);
-    if (z < 0.0)
-        alpha += M_PI;
-    beta = asin(y / sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)));
-    radius = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
-    update_cam_pos();
+    set_follow(Point());
 }
 
 void set_fps()
@@ -170,37 +185,6 @@ void set_fps()
     }
     beta = -beta;
     update_cam_look();
-}
-
-void explorer_cam(unsigned char key)
-{
-    switch (key) {
-    case 'k':
-        Camera::explorer_move_up();
-        break;
-    case 'j':
-        Camera::explorer_move_down();
-        break;
-    case 'l':
-        Camera::explorer_move_c_clockwise();
-        break;
-    case 'h':
-        Camera::explorer_move_clockwise();
-        break;
-    case 'i':
-        Camera::explorer_move_in();
-        break;
-    case 'o':
-        Camera::explorer_move_out();
-        break;
-    case 'I':
-        Camera::explorer_move_in_fast();
-        break;
-    case 'O':
-        Camera::explorer_move_out_fast();
-        break;
-    }
-    Camera::update_cam_pos();
 }
 
 void fps_cam(unsigned char key)
@@ -240,7 +224,38 @@ void fps_cam(unsigned char key)
     Camera::update_cam_look();
 }
 
-auto current_cam = explorer_cam;
+void follow_cam(unsigned char key)
+{
+    switch (key) {
+    case 'k':
+        Camera::explorer_move_up();
+        break;
+    case 'j':
+        Camera::explorer_move_down();
+        break;
+    case 'l':
+        Camera::explorer_move_c_clockwise();
+        break;
+    case 'h':
+        Camera::explorer_move_clockwise();
+        break;
+    case 'i':
+        Camera::explorer_move_in();
+        break;
+    case 'o':
+        Camera::explorer_move_out();
+        break;
+    case 'I':
+        Camera::explorer_move_in_fast();
+        break;
+    case 'O':
+        Camera::explorer_move_out_fast();
+        break;
+    }
+    Camera::update_cam_pos();
+}
+
+auto current_cam = follow_cam;
 
 void process_key_bind(unsigned char key)
 {
@@ -250,24 +265,25 @@ void process_key_bind(unsigned char key)
 void toggle_cam()
 {
     switch (mode) {
-    case CameraType::EXPLORER:
-        current_cam = fps_cam;
+    case CameraType::FOLLOW:
+        current_cam = Camera::fps_cam;
         Camera::set_fps();
         break;
     case CameraType::FPS:
-        current_cam = Camera::explorer_cam;
+        current_cam = Camera::follow_cam;
         Camera::set_explorer();
         break;
     }
 }
 
-CameraType current_camera() {
+CameraType current_camera()
+{
     return mode;
 }
 
 std::string to_string(CameraType c)
 {
-    return (std::string[]) { "Explorer", "FPS" }[(int)c];
+    return (std::string[]) { "Follow", "FPS" }[(int)c];
 }
 
 }

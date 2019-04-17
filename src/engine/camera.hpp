@@ -1,10 +1,11 @@
 #ifndef __CAMERA_HPP__
 #define __CAMERA_HPP__
 
+#include "../common/point.hpp"
 #include <string>
 
 enum class CameraType {
-    EXPLORER,
+    FOLLOW,
     FPS
 };
 
@@ -15,6 +16,8 @@ void place_camera();
 void process_key_bind(unsigned char key);
 
 void toggle_cam();
+
+void set_follow(Point);
 
 CameraType current_camera();
 

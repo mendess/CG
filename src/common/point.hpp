@@ -1,7 +1,5 @@
 #ifndef POINT_H
 #define POINT_H
-#include <math.h>
-#include <sstream>
 #include <string>
 
 class Point {

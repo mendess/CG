@@ -26,6 +26,8 @@ unique_ptr<Transformation> parse_rotate(xml_node<char>* node);
 
 unique_ptr<Transformation> parse_scale(xml_node<char>* node);
 
+void mutl_matrix(float a[4][4], float b[4][4]);
+
 Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 {
     _levels = 1;
@@ -110,19 +112,38 @@ void Group::draw(int max_depth)
 
 optional<Point> Group::get_model_position(size_t index) const
 {
-    float position[4][4] = {
-        {1, 0, 0, 0},
-        {0, 1, 0, 0},
-        {0, 0, 1, 0},
-        {0, 0, 0, 1}
-    };
+    float elapsed = glutGet(GLUT_ELAPSED_TIME);
     if (index < models.size()) {
-        // return models[index]
+        float position[4][4] = {
+            { 1, 0, 0, 0 },
+            { 0, 1, 0, 0 },
+            { 0, 0, 1, 0 },
+            { 0, 0, 0, 1 }
+        };
+        for (const auto& t : transformations) {
+            mutl_matrix(t->matrix(elapsed).matrix, position);
+        }
+        return Point(position[0][3], position[1][3], position[2][3]);
     } else {
         size_t models_skiped = models.size();
         for (const auto& sg : subgroups) {
             if (index < models_skiped + sg.model_count()) {
-                return sg.get_model_position(index - models_skiped);
+                optional<Point> op = sg.get_model_position(index - models_skiped);
+                if (op.has_value()) {
+                    Point p = op.value();
+                    float position[4][4] = {
+                        { 1, 0, 0, p.x() },
+                        { 0, 1, 0, p.y() },
+                        { 0, 0, 1, p.z() },
+                        { 0, 0, 0, 1 }
+                    };
+                    for (const auto& t : transformations) {
+                        mutl_matrix(t->matrix(elapsed).matrix, position);
+                    }
+                    return Point(position[0][3], position[1][3], position[2][3]);
+                } else {
+                    return op;
+                }
             }
             models_skiped += sg.model_count();
         }
@@ -142,50 +163,17 @@ void mutl_matrix(float a[4][4], float b[4][4])
             tmp[i][j] = op;
         }
     }
+    /* cout << "+---------+" << endl */
+    /*      << "| " << a[0][0] << " " << a[0][1] << " " << a[0][2] << " " << a[0][3] << " | " << b[0][0] << " " << b[0][1] << " " << b[0][2] << " " << b[0][3] << " | " << tmp[0][0] << " " << tmp[0][1] << " " << tmp[0][2] << " " << tmp[0][3] << " |" << endl */
+    /*      << "| " << a[1][0] << " " << a[1][1] << " " << a[1][2] << " " << a[1][3] << " | " << b[1][0] << " " << b[1][1] << " " << b[1][2] << " " << b[1][3] << " | " << tmp[1][0] << " " << tmp[1][1] << " " << tmp[1][2] << " " << tmp[1][3] << " |" << endl */
+    /*      << "| " << a[2][0] << " " << a[2][1] << " " << a[2][2] << " " << a[2][3] << " | " << b[2][0] << " " << b[2][1] << " " << b[2][2] << " " << b[2][3] << " | " << tmp[2][0] << " " << tmp[2][1] << " " << tmp[2][2] << " " << tmp[2][3] << " |" << endl */
+    /*      << "| " << a[3][0] << " " << a[3][1] << " " << a[3][2] << " " << a[3][3] << " | " << b[3][0] << " " << b[3][1] << " " << b[3][2] << " " << b[3][3] << " | " << tmp[3][0] << " " << tmp[3][1] << " " << tmp[3][2] << " " << tmp[3][3] << " |" << endl */
+    /*      << "+---------+" << endl; */
     for (size_t i = 0; i < 4; i++) {
         for (size_t j = 0; j < 4; j++) {
-            a[i][j] = tmp[i][j];
+            b[i][j] = tmp[i][j];
         }
     }
-}
-
-void mult_translate_matrix(float x, float y, float z, float matrix[4][4])
-{
-    float t[4][4] = {
-        { 1, 0, 0, x },
-        { 0, 1, 0, y },
-        { 0, 0, 1, z },
-        { 0, 0, 0, 1 }
-    };
-    mutl_matrix(t, matrix);
-}
-
-void mutl_scale_matrix(float x, float y, float z, float matrix[4][4])
-{
-    float s[4][4] = {
-        { x, 0, 0, 0 },
-        { 0, y, 0, 0 },
-        { 0, 0, z, 0 },
-        { 0, 0, 0, 1 }
-    };
-    mutl_matrix(s, matrix);
-}
-
-void mutl_rotation_matrix(float angle, float x, float y, float z, float matrix[4][4])
-{
-    /* float r[4][4] = { */
-    /*     { x * x + (1 - (x * x)) * cos(angle)       , x * y * (1 - cos(angle)) - z * sin(angle), x * z * (1 - cos(angle)) + y * sin(angle), 0 }, */
-    /*     { y * x * (1 - cos(angle)) + z * sin(angle), y * y + (1 - y * y) * cos(angle)         , y * z * (1 - cos(angle)) - x * sin(angle), 0 }, */
-    /*     { z * x * (1 - cos(angle)) - y * sin(angle), z * y * (1 - cos(angle)) + x * sin(angle), z * z + (1 - z * z) * cos(angle)         , 0 }, */
-    /*     { 0                                        , 0                                        , 0                                        , 1 } */
-    /* }; */
-    float r[4][4] = {
-        { x * x + (1 - (x * x)) * cos(angle)       , x * y * (1 - cos(angle)) - z * sin(angle), x * z * (1 - cos(angle)) + y * sin(angle), 0 },
-        { y * x * (1 - cos(angle)) + z * sin(angle), y * y + (1 - y * y) * cos(angle)         , y * z * (1 - cos(angle)) - x * sin(angle), 0 },
-        { z * x * (1 - cos(angle)) - y * sin(angle), z * y * (1 - cos(angle)) + x * sin(angle), z * z + (1 - z * z) * cos(angle)         , 0 },
-        { 0                                        , 0                                        , 0                                        , 1 }
-    };
-    mutl_matrix(r, matrix);
 }
 
 unique_ptr<Transformation> parse_translate(xml_node<char>* node)

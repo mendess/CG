@@ -8,14 +8,23 @@
 
 #include <iostream>
 #include <tuple>
+#include <cstring>
+#include <cmath>
 
 using namespace std;
 
 tuple<Point, Point> getGlobalCatmullRomPoint(vector<Point> points, float gt);
+struct matrix translate_matrix(float x, float y, float z);
+struct matrix scale_matrix(float x, float y, float z);
+struct matrix rotation_matrix(float angle, float x, float y, float z);
 
 void RotateStatic::transform(double elapsed) const
 {
     glRotatef(angle, x, y, z);
+}
+
+struct matrix RotateStatic::matrix(double elapsed) const {
+    return rotation_matrix(angle, x, y, z);
 }
 
 void RotateAnimated::transform(double elapsed) const
@@ -24,9 +33,18 @@ void RotateAnimated::transform(double elapsed) const
     glRotatef(angle, x, y, z);
 }
 
+struct matrix RotateAnimated::matrix(double elapsed) const {
+    float angle = (elapsed * 360 / dur);
+    return rotation_matrix(angle, x, y, z);
+}
+
 void TranslateStatic::transform(double elapsed) const
 {
     glTranslatef(x, y, z);
+}
+
+struct matrix TranslateStatic::matrix(double elapsed) const {
+    return translate_matrix(x, y, z);
 }
 
 void TranslateAnimated::transform(double elapsed) const
@@ -39,9 +57,58 @@ void TranslateAnimated::transform(double elapsed) const
     glTranslatef(pos.x(), pos.y(), pos.z());
 }
 
+struct matrix TranslateAnimated::matrix(double elapsed) const {
+    float elapsed_b = elapsed;
+    while (elapsed_b > dur)
+        elapsed_b -= dur;
+    tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed_b / dur);
+    Point pos = get<0>(pos_deriv);
+    return translate_matrix(pos.x(), pos.y(), pos.z());
+}
+
 void Scale::transform(double elapsed) const
 {
     glScalef(x, y, z);
+}
+
+struct matrix Scale::matrix(double elapsed) const {
+    return scale_matrix(x, y, z);
+}
+
+struct matrix translate_matrix(float x, float y, float z)
+{
+    return {.matrix = {
+        { 1, 0, 0, x },
+        { 0, 1, 0, y },
+        { 0, 0, 1, z },
+        { 0, 0, 0, 1 }
+    }};
+}
+
+struct matrix scale_matrix(float x, float y, float z)
+{
+    return {.matrix = {
+        { x, 0, 0, 0 },
+        { 0, y, 0, 0 },
+        { 0, 0, z, 0 },
+        { 0, 0, 0, 1 }
+    }};
+}
+
+struct matrix rotation_matrix(float angle, float x, float y, float z)
+{
+    /* float r[4][4] = { */
+    /*     { x * x + (1 - (x * x)) * cos(angle)       , x * y * (1 - cos(angle)) - z * sin(angle), x * z * (1 - cos(angle)) + y * sin(angle), 0 }, */
+    /*     { y * x * (1 - cos(angle)) + z * sin(angle), y * y + (1 - y * y) * cos(angle)         , y * z * (1 - cos(angle)) - x * sin(angle), 0 }, */
+    /*     { z * x * (1 - cos(angle)) - y * sin(angle), z * y * (1 - cos(angle)) + x * sin(angle), z * z + (1 - z * z) * cos(angle)         , 0 }, */
+    /*     { 0                                        , 0                                        , 0                                        , 1 } */
+    /* }; */
+    return {.matrix = {
+        { x * x + (1 - (x * x)) * cos(angle)       , x * y * (1 - cos(angle)) - z * sin(angle), x * z * (1 - cos(angle)) + y * sin(angle), 0 },
+        { y * x * (1 - cos(angle)) + z * sin(angle), y * y + (1 - y * y) * cos(angle)         , y * z * (1 - cos(angle)) - x * sin(angle), 0 },
+        { z * x * (1 - cos(angle)) - y * sin(angle), z * y * (1 - cos(angle)) + x * sin(angle), z * z + (1 - z * z) * cos(angle)         , 0 },
+        { 0                                        , 0                                        , 0                                        , 1 }
+    }};
 }
 
 void buildRotMatrix(float* x, float* y, float* z, float* m)

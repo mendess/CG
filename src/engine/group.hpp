@@ -28,7 +28,7 @@ public:
 
     int levels() const { return _levels; };
     int model_count() const { return _model_count; }
-    /* std::optional<Point> get_model_position(size_t) const; */
+    std::optional<Point> get_model_position(size_t) const;
     void draw(int);
 };
 

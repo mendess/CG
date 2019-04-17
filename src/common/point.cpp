@@ -1,4 +1,5 @@
 #include "point.hpp"
+#include <sstream>
 
 Point::Point(): _x(0), _y(0), _z(0){}
 
