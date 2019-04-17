@@ -2,10 +2,7 @@
 #define TRANSFORMATIONS_HPP
 
 #include "../common/point.hpp"
-#include <string>
 #include <vector>
-#include <iostream>
-#include <array>
 
 typedef struct matrix {
     float matrix[4][4];
