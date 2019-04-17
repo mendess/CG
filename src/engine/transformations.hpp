@@ -15,7 +15,7 @@ class Transformation {
 public:
     virtual ~Transformation() {};
     virtual void transform(double elapsed) const = 0;
-    virtual struct matrix matrix(double elapsed) const = 0;
+    virtual Matrix matrix(double elapsed) const = 0;
 };
 
 class RotateStatic : public Transformation {
@@ -32,7 +32,7 @@ public:
     }
     ~RotateStatic() override {};
     void transform(double) const override;
-    struct matrix matrix(double elapsed) const override;
+    Matrix matrix(double elapsed) const override;
 };
 
 class RotateAnimated : public Transformation {
@@ -49,7 +49,7 @@ public:
     }
     ~RotateAnimated() override {};
     void transform(double) const override;
-    struct matrix matrix(double elapsed) const override;
+    Matrix matrix(double elapsed) const override;
 };
 
 class TranslateStatic : public Transformation {
@@ -65,7 +65,7 @@ public:
     }
     ~TranslateStatic() override {};
     void transform(double) const override;
-    struct matrix matrix(double elapsed) const override;
+    Matrix matrix(double elapsed) const override;
 };
 
 class TranslateAnimated : public Transformation {
@@ -81,7 +81,7 @@ public:
     }
     ~TranslateAnimated() override {};
     void transform(double) const override;
-    struct matrix matrix(double elapsed) const override;
+    Matrix matrix(double elapsed) const override;
 };
 
 class Scale : public Transformation {
@@ -97,7 +97,7 @@ public:
     }
     ~Scale() override {};
     void transform(double) const override;
-    struct matrix matrix(double elapsed) const override;
+    Matrix matrix(double elapsed) const override;
 };
 
 #endif // TRANSFORMATIONS_HPP
