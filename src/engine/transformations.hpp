@@ -7,9 +7,9 @@
 #include <iostream>
 #include <array>
 
-struct matrix {
+typedef struct matrix {
     float matrix[4][4];
-};
+} Matrix;
 
 class Transformation {
 public:

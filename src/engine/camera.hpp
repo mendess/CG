@@ -15,9 +15,11 @@ void place_camera();
 
 void process_key_bind(unsigned char key);
 
-void toggle_cam();
+void set_fps();
 
 void set_follow(Point);
+
+void toggle_cam();
 
 CameraType current_camera();
 

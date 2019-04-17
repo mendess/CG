@@ -48,13 +48,22 @@ void renderScene()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     if (FOLLOWING) {
+        cout << "START THINGS" << endl;
         auto p = SCENE->get_model_position(FOLLOW_TARGET);
         if (p.has_value()) {
             Camera::set_follow(p.value());
             cout << p.value().to_string() << endl;
         }
+        cout << "END THINGS" << endl;
     }
+    /* if (FOLLOWING) { */
+    /*     glPushMatrix(); */
+    /*     SCENE->draw_no_models(FOLLOW_TARGET); */
+    /* } */
     Camera::place_camera();
+    /* if (FOLLOWING) { */
+    /*     glPopMatrix(); */
+    /* } */
     if (SHOW_AXIS) {
         // x axis
         glColor3f(1, 0, 0);
@@ -104,8 +113,12 @@ void key_bindings(unsigned char key, int _x, int _y)
     Camera::process_key_bind(key);
     switch (key) {
     case 'v':
-        FOLLOWING = false;
-        Camera::toggle_cam();
+        if (FOLLOWING) {
+            FOLLOWING = false;
+            Camera::set_follow(Point());
+        } else {
+            Camera::toggle_cam();
+        }
         break;
     case '+':
         SCALE += 0.1;
@@ -128,17 +141,21 @@ void key_bindings(unsigned char key, int _x, int _y)
         if (!FOLLOWING) {
             FOLLOWING = true;
             FOLLOW_TARGET = 0;
-        } else if (FOLLOW_TARGET < 150) {
+        } else if (FOLLOW_TARGET < SCENE->model_count() - 1) {
             FOLLOW_TARGET++;
+        } else {
+            FOLLOW_TARGET = 0;
         }
         break;
     }
     case '{': {
         if (!FOLLOWING) {
             FOLLOWING = true;
-            FOLLOW_TARGET = 1; //TODO: change this
+            FOLLOW_TARGET = SCENE->model_count() - 1;
         } else if (FOLLOW_TARGET > 0) {
             FOLLOW_TARGET--;
+        } else {
+            FOLLOW_TARGET = SCENE->model_count() - 1;
         }
         break;
     }

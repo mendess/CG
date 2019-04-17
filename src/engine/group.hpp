@@ -19,6 +19,7 @@ private:
     bool random_color;
 
     Group(rapidxml::xml_node<char>*, float, float, float, float);
+    std::optional<Matrix> get_model_position(size_t, Matrix) const;
 
 public:
     Group(rapidxml::xml_node<char>* group)
@@ -30,6 +31,7 @@ public:
     int model_count() const { return _model_count; }
     std::optional<Point> get_model_position(size_t) const;
     void draw(int);
+    void draw_no_models(size_t) const;
 };
 
 #endif // GROUP_HPP

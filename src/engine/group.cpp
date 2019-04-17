@@ -26,7 +26,7 @@ unique_ptr<Transformation> parse_rotate(xml_node<char>* node);
 
 unique_ptr<Transformation> parse_scale(xml_node<char>* node);
 
-void mutl_matrix(float a[4][4], float b[4][4]);
+void mutl_matrix(const float a[4][4], float b[4][4]);
 
 Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 {
@@ -93,9 +93,9 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 
 void Group::draw(int max_depth)
 {
-    float elapsed = glutGet(GLUT_ELAPSED_TIME);
-    glPushMatrix();
     if (max_depth > 0) {
+        float elapsed = glutGet(GLUT_ELAPSED_TIME);
+        glPushMatrix();
         for (const auto& transformation : transformations) {
             transformation->transform(elapsed);
         }
@@ -106,52 +106,83 @@ void Group::draw(int max_depth)
         for (size_t i = 0; i < subgroups.size(); i++) {
             subgroups[i].draw(max_depth - 1);
         }
+        glPopMatrix();
     }
-    glPopMatrix();
 }
 
-optional<Point> Group::get_model_position(size_t index) const
+void Group::draw_no_models(size_t index) const
 {
     float elapsed = glutGet(GLUT_ELAPSED_TIME);
+    for (const auto& t : transformations) {
+        t->transform(elapsed);
+    }
     if (index < models.size()) {
-        float position[4][4] = {
-            { 1, 0, 0, 0 },
-            { 0, 1, 0, 0 },
-            { 0, 0, 1, 0 },
-            { 0, 0, 0, 1 }
-        };
-        for (const auto& t : transformations) {
-            mutl_matrix(t->matrix(elapsed).matrix, position);
-        }
-        return Point(position[0][3], position[1][3], position[2][3]);
+        return;
     } else {
         size_t models_skiped = models.size();
         for (const auto& sg : subgroups) {
             if (index < models_skiped + sg.model_count()) {
-                optional<Point> op = sg.get_model_position(index - models_skiped);
-                if (op.has_value()) {
-                    Point p = op.value();
-                    float position[4][4] = {
-                        { 1, 0, 0, p.x() },
-                        { 0, 1, 0, p.y() },
-                        { 0, 0, 1, p.z() },
-                        { 0, 0, 0, 1 }
-                    };
-                    for (const auto& t : transformations) {
-                        mutl_matrix(t->matrix(elapsed).matrix, position);
-                    }
-                    return Point(position[0][3], position[1][3], position[2][3]);
-                } else {
-                    return op;
-                }
+                sg.draw_no_models(index - models_skiped);
             }
             models_skiped += sg.model_count();
         }
     }
+}
+
+optional<Point> Group::get_model_position(size_t index) const
+{
+    Matrix m = { .matrix = {
+                     { 1, 0, 0, 0 },
+                     { 0, 1, 0, 0 },
+                     { 0, 0, 1, 0 },
+                     { 0, 0, 0, 1 } } };
+    auto p = get_model_position(index, m);
+    if (p.has_value()) {
+        const Matrix m = p.value();
+        float coords[4];
+        const float base[4] = { 0, 0, 0, 1 };
+        for (int i = 0; i < 4; ++i) {
+            coords[i] = 0;
+            for (int j = 0; j < 4; ++j) {
+                coords[i] += base[j] * m.matrix[i][j];
+            }
+        }
+        return Point(coords[0], coords[1], coords[2]);
+    } else {
+        return nullopt;
+    }
+}
+
+optional<Matrix> Group::get_model_position(size_t index, Matrix position) const
+{
+    float elapsed = glutGet(GLUT_ELAPSED_TIME);
+    if (index >= models.size()) {
+        size_t models_skiped = models.size();
+        for (const auto& sg : subgroups) {
+            if (index < models_skiped + sg.model_count()) {
+                auto p = sg.get_model_position(index - models_skiped, position);
+                if (!p.has_value()) {
+                    return nullopt;
+                } else {
+                    position = p.value();
+                }
+                for (size_t i = transformations.size(); i > 0; --i) {
+                    mutl_matrix(transformations[i - 1]->matrix(elapsed).matrix, position.matrix);
+                }
+                return position;
+            }
+            models_skiped += sg.model_count();
+        }
+    } else {
+        for (size_t i = transformations.size(); i > 0; --i) {
+            mutl_matrix(transformations[i - 1]->matrix(elapsed).matrix, position.matrix);
+        }
+        return position;
+    }
     return nullopt;
 }
 
-void mutl_matrix(float a[4][4], float b[4][4])
+void mutl_matrix(const float a[4][4], float b[4][4])
 {
     float tmp[4][4];
     for (size_t i = 0; i < 4; i++) {
@@ -163,12 +194,12 @@ void mutl_matrix(float a[4][4], float b[4][4])
             tmp[i][j] = op;
         }
     }
-    /* cout << "+---------+" << endl */
-    /*      << "| " << a[0][0] << " " << a[0][1] << " " << a[0][2] << " " << a[0][3] << " | " << b[0][0] << " " << b[0][1] << " " << b[0][2] << " " << b[0][3] << " | " << tmp[0][0] << " " << tmp[0][1] << " " << tmp[0][2] << " " << tmp[0][3] << " |" << endl */
-    /*      << "| " << a[1][0] << " " << a[1][1] << " " << a[1][2] << " " << a[1][3] << " | " << b[1][0] << " " << b[1][1] << " " << b[1][2] << " " << b[1][3] << " | " << tmp[1][0] << " " << tmp[1][1] << " " << tmp[1][2] << " " << tmp[1][3] << " |" << endl */
-    /*      << "| " << a[2][0] << " " << a[2][1] << " " << a[2][2] << " " << a[2][3] << " | " << b[2][0] << " " << b[2][1] << " " << b[2][2] << " " << b[2][3] << " | " << tmp[2][0] << " " << tmp[2][1] << " " << tmp[2][2] << " " << tmp[2][3] << " |" << endl */
-    /*      << "| " << a[3][0] << " " << a[3][1] << " " << a[3][2] << " " << a[3][3] << " | " << b[3][0] << " " << b[3][1] << " " << b[3][2] << " " << b[3][3] << " | " << tmp[3][0] << " " << tmp[3][1] << " " << tmp[3][2] << " " << tmp[3][3] << " |" << endl */
-    /*      << "+---------+" << endl; */
+    cout << "+---------+" << endl
+         << "| " << a[0][0] << " " << a[0][1] << " " << a[0][2] << " " << a[0][3] << " | " << b[0][0] << " " << b[0][1] << " " << b[0][2] << " " << b[0][3] << " | " << tmp[0][0] << " " << tmp[0][1] << " " << tmp[0][2] << " " << tmp[0][3] << " |" << endl
+         << "| " << a[1][0] << " " << a[1][1] << " " << a[1][2] << " " << a[1][3] << " | " << b[1][0] << " " << b[1][1] << " " << b[1][2] << " " << b[1][3] << " | " << tmp[1][0] << " " << tmp[1][1] << " " << tmp[1][2] << " " << tmp[1][3] << " |" << endl
+         << "| " << a[2][0] << " " << a[2][1] << " " << a[2][2] << " " << a[2][3] << " | " << b[2][0] << " " << b[2][1] << " " << b[2][2] << " " << b[2][3] << " | " << tmp[2][0] << " " << tmp[2][1] << " " << tmp[2][2] << " " << tmp[2][3] << " |" << endl
+         << "| " << a[3][0] << " " << a[3][1] << " " << a[3][2] << " " << a[3][3] << " | " << b[3][0] << " " << b[3][1] << " " << b[3][2] << " " << b[3][3] << " | " << tmp[3][0] << " " << tmp[3][1] << " " << tmp[3][2] << " " << tmp[3][3] << " |" << endl
+         << "+---------+" << endl;
     for (size_t i = 0; i < 4; i++) {
         for (size_t j = 0; j < 4; j++) {
             b[i][j] = tmp[i][j];
