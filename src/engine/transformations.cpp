@@ -50,10 +50,11 @@ Matrix TranslateStatic::matrix(double elapsed) const
     return translate_matrix(x, y, z);
 }
 
-extern bool SHOW_ROUTES;
+bool TranslateAnimated::show_routes = false;
+
 void TranslateAnimated::transform(double elapsed) const
 {
-    if(SHOW_ROUTES) draw_routes();
+    if(TranslateAnimated::show_routes) draw_routes();
     float elapsed_b = elapsed;
     while (elapsed_b > dur)
         elapsed_b -= dur;
