@@ -6,16 +6,26 @@
 #include <GL/glut.h>
 #endif
 
+#include <cmath>
+#include <cstring>
 #include <iostream>
 #include <tuple>
 
 using namespace std;
 
 tuple<Point, Point> getGlobalCatmullRomPoint(vector<Point> points, float gt);
+Matrix translate_matrix(float x, float y, float z);
+Matrix scale_matrix(float x, float y, float z);
+Matrix rotation_matrix(float angle, float x, float y, float z);
 
 void RotateStatic::transform(double elapsed) const
 {
     glRotatef(angle, x, y, z);
+}
+
+Matrix RotateStatic::matrix(double elapsed) const
+{
+    return rotation_matrix(angle, x, y, z);
 }
 
 void RotateAnimated::transform(double elapsed) const
@@ -24,9 +34,20 @@ void RotateAnimated::transform(double elapsed) const
     glRotatef(angle, x, y, z);
 }
 
+Matrix RotateAnimated::matrix(double elapsed) const
+{
+    float angle = (elapsed * 360 / dur);
+    return rotation_matrix(angle, x, y, z);
+}
+
 void TranslateStatic::transform(double elapsed) const
 {
     glTranslatef(x, y, z);
+}
+
+Matrix TranslateStatic::matrix(double elapsed) const
+{
+    return translate_matrix(x, y, z);
 }
 
 void TranslateAnimated::transform(double elapsed) const
@@ -39,9 +60,64 @@ void TranslateAnimated::transform(double elapsed) const
     glTranslatef(pos.x(), pos.y(), pos.z());
 }
 
+Matrix TranslateAnimated::matrix(double elapsed) const
+{
+    float elapsed_b = elapsed;
+    while (elapsed_b > dur)
+        elapsed_b -= dur;
+    tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed_b / dur);
+    Point pos = get<0>(pos_deriv);
+    return translate_matrix(pos.x(), pos.y(), pos.z());
+}
+
 void Scale::transform(double elapsed) const
 {
     glScalef(x, y, z);
+}
+
+Matrix Scale::matrix(double elapsed) const
+{
+    return scale_matrix(x, y, z);
+}
+
+Matrix translate_matrix(float x, float y, float z)
+{
+    return { .matrix = {
+                 { 1, 0, 0, x },
+                 { 0, 1, 0, y },
+                 { 0, 0, 1, z },
+                 { 0, 0, 0, 1 } } };
+}
+
+Matrix scale_matrix(float x, float y, float z)
+{
+    return { .matrix = {
+                 { x, 0, 0, 0 },
+                 { 0, y, 0, 0 },
+                 { 0, 0, z, 0 },
+                 { 0, 0, 0, 1 } } };
+}
+
+Matrix rotation_matrix(float angle, float x, float y, float z)
+{
+    Matrix m;
+    m.matrix[0][0] = x * x + (1 - (x * x)) * cos(angle);
+    m.matrix[0][1] = x * y * (1 - cos(angle)) - z * sin(angle);
+    m.matrix[0][2] = x * z * (1 - cos(angle)) + y * sin(angle);
+    m.matrix[0][3] = 0;
+    m.matrix[1][0] = y * x * (1 - cos(angle)) + z * sin(angle);
+    m.matrix[1][1] = y * y + (1 - y * y) * cos(angle);
+    m.matrix[1][2] = y * z * (1 - cos(angle)) - x * sin(angle);
+    m.matrix[1][3] = 0;
+    m.matrix[2][0] = z * x * (1 - cos(angle)) - y * sin(angle);
+    m.matrix[2][1] = z * y * (1 - cos(angle)) + x * sin(angle);
+    m.matrix[2][2] = z * z + (1 - z * z) * cos(angle);
+    m.matrix[2][3] = 0;
+    m.matrix[3][0] = 0;
+    m.matrix[3][1] = 0;
+    m.matrix[3][2] = 0;
+    m.matrix[3][3] = 1;
+    return m;
 }
 
 void buildRotMatrix(float* x, float* y, float* z, float* m)
