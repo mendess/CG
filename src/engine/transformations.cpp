@@ -54,26 +54,26 @@ bool TranslateAnimated::show_routes = false;
 
 void TranslateAnimated::transform(double elapsed) const
 {
-    if(TranslateAnimated::show_routes) draw_routes();
-    float elapsed_b = elapsed;
-    while (elapsed_b > dur)
-        elapsed_b -= dur;
-    tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed_b / dur);
+    if (show_routes)
+        draw_routes();
+    while (elapsed > dur)
+        elapsed -= dur;
+    tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed / dur);
     Point pos = get<0>(pos_deriv);
     glTranslatef(pos.x(), pos.y(), pos.z());
 }
 
 Matrix TranslateAnimated::matrix(double elapsed) const
 {
-    float elapsed_b = elapsed;
-    while (elapsed_b > dur)
-        elapsed_b -= dur;
-    tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed_b / dur);
+    while (elapsed > dur)
+        elapsed -= dur;
+    tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed / dur);
     Point pos = get<0>(pos_deriv);
     return translate_matrix(pos.x(), pos.y(), pos.z());
 }
 
-void TranslateAnimated::draw_routes() const {
+void TranslateAnimated::draw_routes() const
+{
     float gt = 0.0;
     const float NUM_STEPS = 100;
     const float gt_step = 1.0 / NUM_STEPS;
@@ -87,14 +87,39 @@ void TranslateAnimated::draw_routes() const {
     glEnd();
 }
 
-void Scale::transform(double elapsed) const
+void ScaleStatic::transform(double elapsed) const
 {
     glScalef(x, y, z);
 }
 
-Matrix Scale::matrix(double elapsed) const
+Matrix ScaleStatic::matrix(double elapsed) const
 {
     return scale_matrix(x, y, z);
+}
+
+void ScaleAnimated::transform(double elapsed) const
+{
+    while (elapsed > dur)
+        elapsed -= dur;
+    float t = elapsed / dur;
+    t = abs(2 * t - 1);
+    float mx, my, mz;
+    mx = xi + t * (xf - xi);
+    my = yi + t * (yf - yi);
+    mz = zi + t * (zf - zi);
+    glScalef(mx, my, mz);
+}
+
+Matrix ScaleAnimated::matrix(double elapsed) const
+{
+    while (elapsed > dur)
+        elapsed -= dur;
+    const float t = elapsed / dur;
+    float mx, my, mz;
+    mx = xi + t * (xf - xi);
+    my = yi + t * (yf - yi);
+    mz = zi + t * (zf - zi);
+    return scale_matrix(mx, my, mz);
 }
 
 Matrix translate_matrix(float x, float y, float z)

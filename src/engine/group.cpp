@@ -257,6 +257,8 @@ unique_ptr<Transformation> parse_rotate(xml_node<char>* node)
         } else if ("TIME" == name) {
             dur = stof(attr->value());
             staticR = false;
+        } else {
+            cerr << "Invalid parameter in rotate: " << name << endl;
         }
     }
     if (staticR)
@@ -268,17 +270,51 @@ unique_ptr<Transformation> parse_rotate(xml_node<char>* node)
 unique_ptr<Transformation> parse_scale(xml_node<char>* node)
 {
     float x, y, z;
-    x = y = z = 1.0f;
+    float xi, yi, zi;
+    float xf, yf, zf;
+    float dur;
+    bool staticS = true;
+    x = y = z = xi = yi = zi = xf = yf = zf = dur = 1.0f;
     for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
         string name = string(attr->name());
         std::transform(name.begin(), name.end(), name.begin(), ::toupper);
         if ("X" == name || "AXISX" == name) {
             x = stof(attr->value());
+            staticS = true;
         } else if ("Y" == name || "AXISY" == name) {
             y = stof(attr->value());
+            staticS = true;
         } else if ("Z" == name || "AXISZ" == name) {
             z = stof(attr->value());
+            staticS = true;
+        } else if ("XI" == name || "AXISXI" == name) {
+            xi = stof(attr->value());
+            staticS = false;
+        } else if ("YI" == name || "AXISYI" == name) {
+            yi = stof(attr->value());
+            staticS = false;
+        } else if ("ZI" == name || "AXISZI" == name) {
+            zi = stof(attr->value());
+            staticS = false;
+        } else if ("XF" == name || "AXISXF" == name) {
+            xf = stof(attr->value());
+            staticS = false;
+        } else if ("YF" == name || "AXISYF" == name) {
+            yf = stof(attr->value());
+            staticS = false;
+        } else if ("ZF" == name || "AXISZF" == name) {
+            zf = stof(attr->value());
+            staticS = false;
+        } else if ("TIME" == name) {
+            dur = stof(attr->value());
+            staticS = false;
+        } else {
+            cerr << "Invalid parameter in scale: " << name << endl;
         }
     }
-    return make_unique<Scale>(x, y, z);
+    if (staticS) {
+        return make_unique<ScaleStatic>(x, y, z);
+    } else {
+        return make_unique<ScaleAnimated>(xi, yi, zi, xf, yf, zf, dur);
+    }
 }

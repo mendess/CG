@@ -1,5 +1,17 @@
 <scene>
     <group R="1">
+        <scale XF="2" YF="2" ZF="2" TIME="1" />
+        <models>
+            <model file="scenes/box.3d" />
+        </models>
+    </group>
+    <group B="1">
+        <translate TIME="1" >
+            <point X="1" />
+            <point X="3" />
+            <point X="2" />
+            <point X="4" />
+        </translate>
         <models>
             <model file="scenes/box.3d" />
         </models>
