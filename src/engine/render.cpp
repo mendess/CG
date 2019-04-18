@@ -149,6 +149,9 @@ void key_bindings(unsigned char key, int _x, int _y)
         }
         break;
     }
+    case ',':
+        TranslateAnimated::toggle_routes();
+        break;
     case 'q':
         exit(0);
     }
