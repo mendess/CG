@@ -1,4 +1,5 @@
 #include "generator.hpp"
+#include "patches.hpp"
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -43,6 +44,11 @@ void printHelpTorus()
     cerr << "Invalid args, torus requires: innerRadius outerRadius sides rings" << endl;
 }
 
+void printHelpPatchFile()
+{
+    cerr << "Invalid args, patch file requires: inputfile tessellation" << endl;
+}
+
 void printHelpPage()
 {
     cerr << "Usage: " << PROGRAM_NAME << " fileName Option [Params ...]" << endl
@@ -53,6 +59,7 @@ void printHelpPage()
          << "\tcone" << endl
          << "\tcylinder" << endl
          << "\ttorus" << endl
+         << "\tpatch" << endl
          << "\nUse --help Option to learn what params to pass to the options" << endl;
 }
 
@@ -166,6 +173,19 @@ bool parse_torus(int argc, char** args, double* innerRadius, double* outerRadius
     return true;
 }
 
+bool parse_patch(int argc, char** args, string* infile, int* tessellation)
+{
+    if (argc < 2) {
+        printHelpPatchFile();
+        return false;
+    }
+    infile->append(args[0]);
+    char* test;
+    *tessellation = strtol(args[1], &test, 10);
+    PARSE_OR_RETURN(args[1], test, printHelpPatchFile);
+    return true;
+}
+
 int main(int argc, char** argv)
 {
     PROGRAM_NAME = argv[0];
@@ -219,6 +239,18 @@ int main(int argc, char** argv)
             points = draw_torus(innerRadius, outerRadius, sides, rings);
         } else {
             return 1;
+        }
+    } else if (!strcmp("patch", argv[2])) {
+        string infile;
+        int tessellation;
+        if (!parse_patch(argc - 3, argv + 3, &infile, &tessellation)) {
+            return 1;
+        }
+        try {
+            Patches p(infile, tessellation);
+            points = p.draw();
+        } catch (string e) {
+            cerr << e << endl;
         }
     } else {
         printHelpPage();
