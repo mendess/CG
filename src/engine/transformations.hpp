@@ -86,20 +86,41 @@ public:
     static void toggle_routes() { show_routes = !show_routes; };
 };
 
-class Scale : public Transformation {
+class ScaleStatic : public Transformation {
 private:
     float x, y, z;
 
 public:
-    Scale(float x, float y, float z)
+    ScaleStatic(float x, float y, float z)
         : x(x)
         , y(y)
         , z(z)
     {
     }
-    ~Scale() override {};
+    ~ScaleStatic() override {};
     void transform(double) const override;
     Matrix matrix(double elapsed) const override;
 };
 
+class ScaleAnimated : public Transformation {
+private:
+    float xi, yi, zi, xf, yf, zf, dur;
+
+public:
+    ScaleAnimated(float xi, float yi, float zi,
+        float xf, float yf, float zf,
+        float dur)
+        : xi(xi)
+        , yi(yi)
+        , zi(zi)
+        , xf(xf)
+        , yf(yf)
+        , zf(zf)
+        , dur(dur * 1000)
+    {
+    }
+    ~ScaleAnimated() override {};
+    void transform(double) const override;
+    Matrix matrix(double elapsed) const override;
+};
 #endif // TRANSFORMATIONS_HPP
