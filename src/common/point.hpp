@@ -1,6 +1,7 @@
 #ifndef POINT_H
 #define POINT_H
 #include <string>
+#include <array>
 
 class Point {
 private:
@@ -13,6 +14,9 @@ public:
     float x() const { return _x; }
     float y() const { return _y; }
     float z() const { return _z; }
+    std::array<float, 3> as_array() const;
+    Point operator+(const Point) const;
+    Point operator*(float) const;
     ~Point() {}
 };
 
