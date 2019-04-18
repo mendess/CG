@@ -2,6 +2,8 @@
 #define TRANSFORMATIONS_HPP
 
 #include "../common/point.hpp"
+#include <iostream>
+#include <string>
 #include <vector>
 
 typedef struct matrix {
@@ -67,6 +69,7 @@ public:
 
 class TranslateAnimated : public Transformation {
 private:
+    static bool show_routes;
     std::vector<Point> points;
     float dur;
 
@@ -79,6 +82,8 @@ public:
     ~TranslateAnimated() override {};
     void transform(double) const override;
     Matrix matrix(double elapsed) const override;
+    void draw_routes() const;
+    static void toggle_routes() { show_routes = !show_routes; };
 };
 
 class Scale : public Transformation {

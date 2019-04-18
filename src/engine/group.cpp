@@ -96,11 +96,11 @@ void Group::draw(int max_depth)
     if (max_depth > 0) {
         float elapsed = glutGet(GLUT_ELAPSED_TIME);
         glPushMatrix();
+        glColor4f(r, g, b, a);
         for (const auto& transformation : transformations) {
             transformation->transform(elapsed);
         }
         for (size_t i = 0; i < models.size(); i++) {
-            glColor4f(r, g, b, a);
             models[i].draw();
         }
         for (size_t i = 0; i < subgroups.size(); i++) {
@@ -180,6 +180,25 @@ void mutl_matrix(const float a[4][4], float b[4][4])
             b[i][j] = tmp[i][j];
         }
     }
+}
+
+void Group::draw_with_routes(int max_depth)
+{
+    float elapsed = glutGet(GLUT_ELAPSED_TIME);
+    glPushMatrix();
+    if (max_depth > 0) {
+        for (const auto& transformation : transformations) {
+            transformation->transform(elapsed);
+        }
+        for (size_t i = 0; i < models.size(); i++) {
+            models[i].draw();
+        }
+        for (size_t i = 0; i < subgroups.size(); i++) {
+            subgroups[i].draw(max_depth - 1);
+        }
+        glColor4f(r, g, b, a);
+    }
+    glPopMatrix();
 }
 
 unique_ptr<Transformation> parse_translate(xml_node<char>* node)
