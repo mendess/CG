@@ -4,25 +4,36 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 using namespace std;
 
 template <typename T>
 static vector<T> parse_line(string, string);
 
-Patches::Patches(string filename, int t)
-    : tessellation(t)
+const string Patches::help_message = "patch file requires: inputfile tessellation";
+
+Patches::Patches(int argc, char** args)
+{
+    if (argc < 2) {
+        throw invalid_argument("Not enought arguments");
+    }
+    string infile = args[0];
+    tessellation = stoi(args[1]);
+    construct(infile, tessellation);
+}
+
+void Patches::construct(string filename, int t)
 {
     ifstream control_points(filename);
     if (!control_points.good()) {
         string error("File not found: ");
         error.append(filename);
-        throw error;
+        throw invalid_argument(error);
     }
     size_t patch_count;
     control_points >> patch_count;
-    string line;                   // TODO: Ugly
-    getline(control_points, line); // TODO: Ugly
+    control_points.ignore(numeric_limits<std::streamsize>::max(),'\n');
     for (size_t i = 0; i < patch_count; i++) {
         string line;
         getline(control_points, line);
@@ -31,7 +42,7 @@ Patches::Patches(string filename, int t)
     }
     size_t point_count;
     control_points >> point_count;
-    getline(control_points, line); // TODO: Ugly
+    control_points.ignore(numeric_limits<std::streamsize>::max(),'\n');
     for (size_t i = 0; i < point_count; i++) {
         string line;
         getline(control_points, line);
@@ -154,7 +165,7 @@ vector<T> parse_line(string line, string error)
         stringstream ss(token);
         ss >> n;
         if (ss.fail()) {
-            throw error;
+            throw invalid_argument(error);
         }
         elems.push_back(n);
     }

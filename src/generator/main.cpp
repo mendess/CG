@@ -1,53 +1,24 @@
-#include "generator.hpp"
+#include "box.hpp"
+#include "cone.hpp"
+#include "cylinder.hpp"
 #include "patches.hpp"
+#include "plane.hpp"
+#include "primitives.hpp"
+#include "sphere.hpp"
+#include "torus.hpp"
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
 static char* PROGRAM_NAME;
 
-#define PARSE_OR_RETURN(a, t, h) \
-    if (a == t) {                \
-        h();                     \
-        return false;            \
-    }
-
-void printHelpPlane()
-{
-    cerr << "Invalid args, plane requires: side_length" << endl;
-}
-
-void printHelpBox()
-{
-    cerr << "Invalid args, box requires: x y z [divisions]" << endl;
-}
-
-void printHelpSphere()
-{
-    cerr << "Invalid args, sphere requires: radius slices stacks" << endl;
-}
-
-void printHelpCone()
-{
-    cerr << "Invalid args, cone requires: radius height slices stacks" << endl;
-}
-
-void printHelpCylinder()
-{
-    cerr << "Invalid args, cylinder requires: radius height slices" << endl;
-}
-
-void printHelpTorus()
-{
-    cerr << "Invalid args, torus requires: innerRadius outerRadius sides rings" << endl;
-}
-
-void printHelpPatchFile()
-{
-    cerr << "Invalid args, patch file requires: inputfile tessellation" << endl;
-}
+#define perror_and_exit(e, help_message)               \
+    cerr << "Invalid args, " << help_message << endl; \
+    cerr << e.what() << endl;                         \
+    return 1;
 
 void printHelpPage()
 {
@@ -63,127 +34,12 @@ void printHelpPage()
          << "\nUse --help Option to learn what params to pass to the options" << endl;
 }
 
-void write_to_file(char* fileName, vector<Point>* points)
+void write_to_file(char* fileName, vector<Point> points)
 {
     ofstream file(fileName);
-    for (vector<Point>::const_iterator it = points->begin(); it != points->end(); ++it) {
+    for (vector<Point>::const_iterator it = points.begin(); it != points.end(); ++it) {
         file << (*it).to_string() << endl;
     }
-}
-
-bool parse_plane(int argc, char** args, double* side_length)
-{
-    if (argc < 1) {
-        printHelpPlane();
-        return false;
-    }
-    char* test;
-    *side_length = strtod(*args, &test);
-    PARSE_OR_RETURN(*args, test, printHelpPlane);
-    return true;
-}
-
-bool parse_box(int argc, char** args, double* x, double* y, double* z, int* divisions)
-{
-    if (argc < 3) {
-        printHelpBox();
-        return false;
-    }
-    char* test;
-    *x = strtod(args[0], &test);
-    PARSE_OR_RETURN(args[0], test, printHelpPlane)
-    *y = strtod(args[1], &test);
-    PARSE_OR_RETURN(args[1], test, printHelpPlane)
-    *z = strtod(args[2], &test);
-    PARSE_OR_RETURN(args[3], test, printHelpPlane)
-    test = NULL;
-    if (args[3])
-        *divisions = strtod(args[3], &test);
-    if (test == args[3]) {
-        *divisions = 1;
-    }
-    return true;
-}
-
-bool parse_sphere(int argc, char** args, double* radius, double* slices, double* stacks)
-{
-    if (argc < 3) {
-        printHelpSphere();
-        return false;
-    }
-    char* test;
-    *radius = strtod(args[0], &test);
-    PARSE_OR_RETURN(args[0], test, printHelpSphere);
-    *slices = strtod(args[1], &test);
-    PARSE_OR_RETURN(args[1], test, printHelpSphere);
-    *stacks = strtod(args[2], &test);
-    PARSE_OR_RETURN(args[2], test, printHelpSphere);
-    return true;
-}
-
-bool parse_cone(int argc, char** args, double* radius, double* height, int* slices, int* stacks)
-{
-    if (argc < 4) {
-        printHelpCone();
-        return false;
-    }
-    char* test;
-    *radius = strtod(args[0], &test);
-    PARSE_OR_RETURN(args[0], test, printHelpCone);
-    *height = strtod(args[1], &test);
-    PARSE_OR_RETURN(args[1], test, printHelpCone);
-    *slices = strtol(args[2], &test, 10);
-    PARSE_OR_RETURN(args[2], test, printHelpCone);
-    *stacks = strtol(args[3], &test, 10);
-    PARSE_OR_RETURN(args[3], test, printHelpCone);
-    return true;
-}
-
-bool parse_cylinder(int argc, char** args, double* radius, double* height, int* slices)
-{
-    if (argc < 3) {
-        printHelpCylinder();
-        return false;
-    }
-    char* test;
-    *radius = strtod(args[0], &test);
-    PARSE_OR_RETURN(args[0], test, printHelpCone);
-    *height = strtod(args[1], &test);
-    PARSE_OR_RETURN(args[1], test, printHelpCone);
-    *slices = strtol(args[2], &test, 10);
-    PARSE_OR_RETURN(args[2], test, printHelpCone);
-    return true;
-}
-
-bool parse_torus(int argc, char** args, double* innerRadius, double* outerRadius, int* sides, int* rings)
-{
-    if (argc < 4) {
-        printHelpTorus();
-        return false;
-    }
-    char* test;
-    *innerRadius = strtod(args[0], &test);
-    PARSE_OR_RETURN(args[0], test, printHelpCone);
-    *outerRadius = strtod(args[1], &test);
-    PARSE_OR_RETURN(args[1], test, printHelpCone);
-    *sides = strtol(args[2], &test, 10);
-    PARSE_OR_RETURN(args[2], test, printHelpCone);
-    *rings = strtol(args[3], &test, 10);
-    PARSE_OR_RETURN(args[3], test, printHelpCone);
-    return true;
-}
-
-bool parse_patch(int argc, char** args, string* infile, int* tessellation)
-{
-    if (argc < 2) {
-        printHelpPatchFile();
-        return false;
-    }
-    infile->append(args[0]);
-    char* test;
-    *tessellation = strtol(args[1], &test, 10);
-    PARSE_OR_RETURN(args[1], test, printHelpPatchFile);
-    return true;
 }
 
 int main(int argc, char** argv)
@@ -193,70 +49,55 @@ int main(int argc, char** argv)
         printHelpPage();
         return 1;
     }
-    vector<Point> points;
-    if (!strcmp("plane", argv[2])) {
-        double side_length;
-        if (parse_plane(argc - 3, argv + 3, &side_length)) {
-            points = draw_plane(side_length);
-        } else {
-            return 1;
-        }
-    } else if (!strcmp("box", argv[2])) {
-        double x, y, z;
-        int divisions;
-        if (parse_box(argc - 3, argv + 3, &x, &y, &z, &divisions)) {
-            points = draw_box(x, y, z, divisions);
-        } else {
-            return 1;
-        }
-    } else if (!strcmp("sphere", argv[2])) {
-        double radius, slices, stacks;
-        if (parse_sphere(argc - 3, argv + 3, &radius, &slices, &stacks)) {
-            points = draw_sphere(radius, slices, stacks);
-        } else {
-            return 1;
-        }
-    } else if (!strcmp("cone", argv[2])) {
-        double radius = 0, height = 0;
-        int slices = 0, stacks = 0;
-        if (parse_cone(argc - 3, argv + 3, &radius, &height, &slices, &stacks)) {
-            points = draw_cone(radius, height, slices, stacks);
-        } else {
-            return 1;
-        }
-    } else if (!strcmp("cylinder", argv[2])) {
-        double radius = 0, height = 0;
-        int slices = 0;
-        if (parse_cylinder(argc - 3, argv + 3, &radius, &height, &slices)) {
-            points = draw_cylinder(radius, height, slices);
-        } else {
-            return 1;
-        }
-    } else if (!strcmp("torus", argv[2])) {
-        double innerRadius = 0, outerRadius = 0;
-        int sides = 0, rings = 0;
-        if (parse_torus(argc - 3, argv + 3, &innerRadius, &outerRadius, &sides, &rings)) {
-            points = draw_torus(innerRadius, outerRadius, sides, rings);
-        } else {
-            return 1;
-        }
-    } else if (!strcmp("patch", argv[2])) {
-        string infile;
-        int tessellation;
-        if (!parse_patch(argc - 3, argv + 3, &infile, &tessellation)) {
-            return 1;
-        }
+    Primitive* p;
+    string kind(argv[2]);
+    if ("plane" == kind) {
         try {
-            Patches p(infile, tessellation);
-            points = p.draw();
-        } catch (string e) {
-            cerr << e << endl;
+            p = new Plane(argc - 3, argv + 3);
+        } catch (invalid_argument e) {
+            perror_and_exit(e, Plane::help_message)
+        }
+    } else if ("box" == kind) {
+        try {
+            p = new Box(argc - 3, argv + 3);
+        } catch (invalid_argument e) {
+            perror_and_exit(e, Box::help_message)
+        }
+    } else if ("sphere" == kind) {
+        try {
+            p = new Sphere(argc - 3, argv + 3);
+        } catch (invalid_argument e) {
+            perror_and_exit(e, Sphere::help_message)
+        }
+    } else if ("cone" == kind) {
+        try {
+            p = new Cone(argc - 3, argv + 3);
+        } catch (invalid_argument e) {
+            perror_and_exit(e, Cone::help_message)
+        }
+    } else if ("cylinder" == kind) {
+        try {
+            p = new Cylinder(argc - 3, argv + 3);
+        } catch (invalid_argument e) {
+            perror_and_exit(e, Cylinder::help_message)
+        }
+    } else if ("torus" == kind) {
+        try {
+            p = new Torus(argc - 3, argv + 3);
+        } catch (invalid_argument e) {
+            perror_and_exit(e, Torus::help_message)
+        }
+    } else if ("patch" == kind) {
+        try {
+            p = new Patches(argc - 3, argv + 3);
+        } catch (invalid_argument e) {
+            perror_and_exit(e, Patches::help_message)
         }
     } else {
         printHelpPage();
         return 1;
     }
-    write_to_file(argv[1], &points);
-    points.clear();
+    write_to_file(argv[1], p->draw());
+    delete p;
     return 0;
 }

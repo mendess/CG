@@ -17,6 +17,7 @@ public:
     std::array<float, 3> as_array() const;
     Point operator+(const Point) const;
     Point operator*(float) const;
+    Point operator/(float) const;
     ~Point() {}
 };
 
