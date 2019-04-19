@@ -22,6 +22,8 @@ static int DRAW_LEVEL = -1;
 static bool SHOW_AXIS = false;
 static size_t FOLLOW_TARGET = 0;
 static bool FOLLOWING = false;
+static bool PAUSED = false;
+static double TIME_SCALE = 1.0;
 
 void changeSize(int w, int h)
 {
@@ -43,12 +45,25 @@ void changeSize(int w, int h)
     glMatrixMode(GL_MODELVIEW);
 }
 
+double deltaTime()
+{
+    static double elapsed = 0;
+    double new_elapsed = glutGet(GLUT_ELAPSED_TIME);
+    double delta = new_elapsed - elapsed;
+    elapsed = new_elapsed;
+    return delta;
+}
+
 void renderScene()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+    static double elapsed = 0;
+    double delta = deltaTime() * TIME_SCALE;
+    if (!PAUSED)
+        elapsed += delta;
     if (FOLLOWING) {
-        auto p = SCENE->get_model_position(FOLLOW_TARGET);
+        auto p = SCENE->get_model_position(FOLLOW_TARGET, elapsed);
         if (p.has_value()) {
             Camera::set_follow(p.value());
         }
@@ -82,17 +97,22 @@ void renderScene()
     }
     glScalef(SCALE, SCALE, SCALE);
 
-    SCENE->draw(DRAW_LEVEL);
+    SCENE->draw(DRAW_LEVEL, elapsed);
 
     stringstream title;
     title << "CG-Engine | Draw Level: "
           << DRAW_LEVEL
           << " | Camera Mode: "
-          << Camera::to_string(Camera::current_camera());
+          << Camera::to_string(Camera::current_camera())
+          << " | Time Scale: " << TIME_SCALE
+          << " | Model Scale: " << SCALE;
     if (FOLLOWING) {
         title << " | FOLLOW TARGET: "
               << FOLLOW_TARGET;
     }
+    if (PAUSED)
+        title << " | PAUSED |";
+
     glutSetWindowTitle(title.str().data());
 
     glutSwapBuffers();
@@ -127,7 +147,7 @@ void key_bindings(unsigned char key, int _x, int _y)
     case '.':
         SHOW_AXIS = !SHOW_AXIS;
         break;
-    case '}': {
+    case '}':
         if (!FOLLOWING) {
             FOLLOWING = true;
             FOLLOW_TARGET = 0;
@@ -137,8 +157,7 @@ void key_bindings(unsigned char key, int _x, int _y)
             FOLLOW_TARGET = 0;
         }
         break;
-    }
-    case '{': {
+    case '{':
         if (!FOLLOWING) {
             FOLLOWING = true;
             FOLLOW_TARGET = SCENE->model_count() - 1;
@@ -148,9 +167,17 @@ void key_bindings(unsigned char key, int _x, int _y)
             FOLLOW_TARGET = SCENE->model_count() - 1;
         }
         break;
-    }
+    case '(':
+        TIME_SCALE -= 0.1;
+        break;
+    case ')':
+        TIME_SCALE += 0.1;
+        break;
     case ',':
         TranslateAnimated::toggle_routes();
+        break;
+    case 'p':
+        PAUSED = !PAUSED;
         break;
     case 'q':
         exit(0);

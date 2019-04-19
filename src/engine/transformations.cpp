@@ -13,10 +13,15 @@
 
 using namespace std;
 
-tuple<Point, Point> getGlobalCatmullRomPoint(vector<Point> points, float gt);
-Matrix translate_matrix(float x, float y, float z);
-Matrix scale_matrix(float x, float y, float z);
-Matrix rotation_matrix(float angle, float x, float y, float z);
+static tuple<Point, Point> getGlobalCatmullRomPoint(vector<Point> points, float gt);
+static Matrix translate_matrix(float x, float y, float z);
+static Matrix scale_matrix(float x, float y, float z);
+static Matrix rotation_matrix(float angle, float x, float y, float z);
+static void buildRotMatrix(Point, Point, Point, float* m);
+static Point cross(Point, Point);
+static Point normalize(Point);
+static float length(const float* v);
+static void multMatrixVector(const float m[4][4], const float v[4], float res[4]);
 
 void RotateStatic::transform(double elapsed) const
 {
@@ -61,6 +66,12 @@ void TranslateAnimated::transform(double elapsed) const
     tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed / dur);
     Point pos = get<0>(pos_deriv);
     glTranslatef(pos.x(), pos.y(), pos.z());
+    /* Point X = normalize(get<1>(pos_deriv)); */
+    /* Point Z = normalize(cross(X, { 0, 1, 0 })); */
+    /* Point Y = normalize(cross(Z, X)); */
+    /* float m[16]; */
+    /* buildRotMatrix(X, Y, Z, m); */
+    /* glMultMatrixf(m); */
 }
 
 Matrix TranslateAnimated::matrix(double elapsed) const
@@ -146,61 +157,44 @@ Matrix rotation_matrix(float angle, float x, float y, float z)
     m.matrix[0][0] = x * x + (1 - (x * x)) * cos(angle);
     m.matrix[0][1] = x * y * (1 - cos(angle)) - z * sin(angle);
     m.matrix[0][2] = x * z * (1 - cos(angle)) + y * sin(angle);
-    m.matrix[0][3] = 0;
     m.matrix[1][0] = y * x * (1 - cos(angle)) + z * sin(angle);
     m.matrix[1][1] = y * y + (1 - y * y) * cos(angle);
     m.matrix[1][2] = y * z * (1 - cos(angle)) - x * sin(angle);
-    m.matrix[1][3] = 0;
     m.matrix[2][0] = z * x * (1 - cos(angle)) - y * sin(angle);
     m.matrix[2][1] = z * y * (1 - cos(angle)) + x * sin(angle);
     m.matrix[2][2] = z * z + (1 - z * z) * cos(angle);
-    m.matrix[2][3] = 0;
-    m.matrix[3][0] = 0;
-    m.matrix[3][1] = 0;
-    m.matrix[3][2] = 0;
     m.matrix[3][3] = 1;
+    m.matrix[0][3] = m.matrix[1][3] = m.matrix[2][3] = 0;
+    m.matrix[3][0] = m.matrix[3][1] = m.matrix[3][2] = 0;
     return m;
 }
 
-void buildRotMatrix(float* x, float* y, float* z, float* m)
+void buildRotMatrix(Point x, Point y, Point z, float* m)
 {
-    m[0] = x[0];
-    m[1] = x[1];
-    m[2] = x[2];
-    m[3] = 0;
-    m[4] = y[0];
-    m[5] = y[1];
-    m[6] = y[2];
-    m[7] = 0;
-    m[8] = z[0];
-    m[9] = z[1];
-    m[10] = z[2];
-    m[11] = 0;
-    m[12] = 0;
-    m[13] = 0;
-    m[14] = 0;
+    m[0] = x.x();
+    m[1] = x.y();
+    m[2] = x.z();
+    m[4] = y.x();
+    m[5] = y.y();
+    m[6] = y.z();
+    m[8] = z.x();
+    m[9] = z.y();
+    m[10] = z.z();
     m[15] = 1;
+    m[3] = m[7] = m[11] = m[12] = m[13] = m[14] = 0;
 }
 
-void cross(const float* a, const float* b, float* res)
+Point cross(Point a, Point b)
 {
-    res[0] = a[1] * b[2] - a[2] * b[1];
-    res[1] = a[2] * b[0] - a[0] * b[2];
-    res[2] = a[0] * b[1] - a[1] * b[0];
+    return Point(
+        a.y() * b.z() - a.z() * b.y(),
+        a.z() * b.x() - a.x() * b.z(),
+        a.x() * b.y() - a.y() * b.z());
 }
 
-void normalize(float* a)
+Point normalize(Point p)
 {
-    float l = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
-    a[0] = a[0] / l;
-    a[1] = a[1] / l;
-    a[2] = a[2] / l;
-}
-
-float length(const float* v)
-{
-    float res = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-    return res;
+    return p / sqrt(p.x() * p.x() + p.y() * p.y() + p.z() * p.z());
 }
 
 void multMatrixVector(const float m[4][4], const float v[4], float res[4])

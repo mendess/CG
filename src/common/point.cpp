@@ -32,6 +32,11 @@ Point Point::operator+(const Point other) const
     return Point(_x + other._x, _y + other._y, _z + other._z);
 }
 
+Point Point::operator/(float l) const
+{
+    return Point(_x / l, _y / l, _z / l);
+}
+
 string Point::to_string() const
 {
     ostringstream sstream;
