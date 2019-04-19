@@ -71,15 +71,39 @@ tabsize=4
 
 % Este relatorio assume que foi feita a leitura dos dois anteriores
 
-\section{Alterações dos ficheiros de input}\label{sec:estrutura-ficheiros}
-
 \section{Arquitetura do Projecto}
 
 \subsection{Model}
-% VBO
+
+Os modelos passaram a ser desenhados com \textit{Vertex Buffer Objects} (VBOs). Estes permitem reduzir o número de pedidos feitos a placa gráfica, aumentando significativamente a performance do programa.
+
+Por outro lado, perderam a possibilidade de ser desenhados com todos os seus triângulos pintados de cores aleatórias, visto que não e possível especificar a cor de cada triângulo quando são todos enviados para o GPU simultaneamente.
+
+Esta desvantagem irá, no entanto, ser mitigada na próxima fazer com a adição de luz e texturas.
 
 \subsection{Transformations}
-% Versoes animadas das transformacoes
+
+Para que fosse possível animar os modelos, para cada transformação foi criada uma nova versão \textit{animada}: \texttt{TranslateAnimated}, \texttt{RotateAnimated}, \texttt{ScaleAnimated}.
+
+Todas estas recebem o tempo que demoram a completar a animação. Quando uma animação termina recomeça imediatamente.
+
+\subsubsection{TranslateAnimated}
+
+Esta transformação recebe um conjunto de pontos que definem um caminho pelo qual o modelo deve viajar assim como o tempo que deve demorar a percorrer esse caminho.
+
+Depois, fazendo uso do número de milissegundos que já passaram desde o inicio do programa, calcula, usando o algoritmo de \textit{CatmulRom}, o ponto no caminho em que o modelo deve estar para esse milissegundo.
+
+\subsubsection{RotateAnimated}
+
+A rotação animada, ao contrario da sua versão estática, recebe uma duração em vez de um ângulo, mantendo os outros parâmetros. Esta duração é mais tarde usada para determinar quanto tempo demora o objecto a efectuar uma rotação de 360o graus.
+
+\subsubsection{ScaleAnimated}
+
+A escala animada adiciona aos antigos rácios para $x, y, z$ um novo triplo de rácios, e para animar simplesmente vai ``progredindo'' de um dos rácios para o outro durante o tempo que a animação demora. Sendo que no inicio e no fim da animação se encontra no primeiro triplo.
+
+\subsubsection{Group}
+
+O método de desenho passou a receber o tempo que passou desde o inicio do programa para que o possa passar as várias transformações assim assegurando que todas usam o mesmo valor de tempo.
 
 \subsection{\textit{Follow mode}}
 Porque agora os models se deslocam e mais dificil de os ver, para resolver este problema
@@ -97,6 +121,8 @@ Para poder focar a camera no objecto e necessario obter a sua posicao no espaco 
 
 Para este fim, foi implementado um método que dado um índice vai multiplicando todas as matrizes de transformação ate chegar ao modelo, e por fim usa a matriz final para extrair as coordenadas do modelo.
 
+% Adicionar diagrama que explica a escolha de modelo por indice
+
 \subsubsection{Camera}
 
 A camera, por outro lado, sofreu uma grande re-estruturacao do antigo modo \textit{Explorer}.
@@ -104,11 +130,28 @@ Foi concluido que o \textit{Follow mode} era o caso geral deste, ou seja, o \tex
 permitia ao utilizador focar-se na origem enquanto se deslocava na superficie de uma esfera (invisivel), podendo alterar o raio desta esfera. Por outro lado, o \textit{Follow mode} permite
 que o utilizador faca tudo isto mas focando-se em qualquer ponto do espaco 3D. Desta forma o \textit{Explorer mode} foi substituido pelo novo, \textit{Follow mode}.
 
+\section{Generator}
+
+Uma nova funcionalidade foi adicionada ao \texttt{generator}. Este é agora capaz de ler \textit{patch files} que definem superfícies Bezier e transforma-los nos ficheiros \texttt{.3d} que o \texttt{engine} está preparado para receber.
+
+Um \textit{patch file} contem duas secções: \textit{patches} e pontos de controlo.
+
+A segunda contem triplos de coordenadas que irão ser usados pelos \textit{patches}, enquanto que a primeira contem um \textit{patch} por linha.
+
+\subsection{Patch}
+
+Um \textit{patch} é um conjunto de 16 pontos que definem uma superfície de Bezier (cada linha contem, na verdade, 16 indices que referenciam os pontos de controlo da superfície).
+
+\section{Alterações dos ficheiros de input}\label{sec:estrutura-ficheiros}
+
+
 \section{Key Bindings}
 
 % I/O (move in fast)
 % { } (change follow target)
 % ,  (show orbits)
+% ( ) (change the rate at which time passes)
+% p (pause)
 
 \section{Sistema Solar}
 
@@ -121,5 +164,7 @@ que o utilizador faca tudo isto mas focando-se em qualquer ponto do espaco 3D. D
 
 
 \section{Conclusões e Trabalho Futuro}
+
+% Implementar VBOs com indices
 
 \end{document}
