@@ -1,7 +1,7 @@
 #!/bin/python3
 import random
-from math import sin, cos, pi
-import sys
+from random import uniform, gauss
+from math import sin, cos, pi, sqrt
 
 class Planet:
     def __init__(self, name, radius, r, g, b, distance=None, moons=[], rings=[], orbit_x=None, orbit_y=None):
@@ -23,13 +23,15 @@ class Planet:
             self.orbit_y = orbit_y
 
     def print_planet(self, indent=8):
-        time = random.uniform(10, 20);
+        time = uniform(10, 20);
         print(' ' * indent, '<!-- {} -->'.format(self.name))
         print(' ' * indent, '<group R="{}" G="{}" B="{}" >'.format(self.r, self.g, self.b))
         print(' ' * indent, '    <translate time="{}">'.format(time))
         for i in range(100):
             a = ((2 * pi)/100) * i
-            print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(self.orbit_x * sin(a), self.orbit_y * cos(a)))
+            x = self.orbit_x * sin(a)
+            z = self.orbit_y * cos(a)
+            print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
         print(' ' * indent, '    </translate>')
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(self.radius))
         print(' ' * indent, '    <models>')
@@ -42,19 +44,44 @@ class Planet:
         print(' ' * indent, '</group>')
 
     def print_moon(self, indent=12):
-        a = random.uniform(-2 * pi, 2 * pi)
-        b = random.uniform(-pi / 5, pi / 5)
-        x = self.distance * cos(b) * sin(a)
-        y = self.distance * sin(b)
-        z = self.distance * cos(b) * cos(a)
+        STEPS = 100
+        shift = uniform(0, 2 * pi)
         print(' ' * indent, '<!-- {} -->'.format(self.name))
         print(' ' * indent, '<group R="{}" G="{}" B="{}">'.format(self.r, self.g, self.b))
-        print(' ' * indent, '    <translate X="{}" Y="{}" Z="{}" /> <!-- alpha: {} | radius: {} -->'.format(x, y, z, a, self.distance))
+        print(' ' * indent, '    <translate time="{}">'.format(10))
+        n = make_rand_vector()
+        u = make_rand_vector_par(n)
+        uxn = cross(u,n)
+        for i in range(STEPS):
+            a = ((2 * pi) / STEPS) * i + shift
+            x = self.distance * cos(a) * u[0] + self.distance * sin(a) * uxn[0]
+            y = self.distance * cos(a) * u[1] + self.distance * sin(a) * uxn[1]
+            z = self.distance * cos(a) * u[2] + self.distance * sin(a) * uxn[2]
+            print(' ' * indent, '        <point X="{}" Y="{}" Z="{}"/>'.format(x, y, z))
+        print(' ' * indent, '    </translate>')
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(self.radius))
         print(' ' * indent, '    <models>')
         print(' ' * indent, '        <model file="scenes/sphere.3d"/>')
         print(' ' * indent, '    </models>')
         print(' ' * indent, '</group>')
+
+
+def cross(a, b):
+    res = [0,0,0]
+    res[0] = a[1] * b[2] - a[2] * b[1]
+    res[1] = a[2] * b[0] - a[0] * b[2]
+    res[2] = a[0] * b[1] - a[1] * b[0]
+    return res
+
+def make_rand_vector():
+    vec = [gauss(0, 1) for i in range(3)]
+    mag = sum(x**2 for x in vec) ** .5
+    return [x/mag for x in vec]
+
+def make_rand_vector_par(u):
+    vec = [(-u[0] - u[2]) / u[0], 1, 1]
+    mag = sum(x**2 for x in vec) ** .5
+    return [x/mag for x in vec]
 
 class Ring:
     def __init__(self, r, g, b, rx, ry, rz, angle, sx, sy, sz):
@@ -78,25 +105,29 @@ class Ring:
         print(' ' * indent, '    </models>')
         print(' ' * indent, '</group>')
 
+
 def draw_asteroids(number, min_distance, max_distance, indent=8):
     for i in range(number):
-        time     = random.uniform(1, 20)
-        distance = random.uniform(min_distance, max_distance)
-        size     = random.uniform(0.005, 0.05)
+        time     = uniform(1, 20)
+        distance = uniform(min_distance, max_distance)
+        size     = uniform(0.005, 0.05)
         STEPS    = 100
-        shift    = random.uniform(0, 2 * pi)
+        shift    = uniform(0, 2 * pi)
         print(' ' * indent, '<!-- Asteroid {} -->'.format(i))
         print(' ' * indent, '<group R="0.6" G="0.6" B="0.6" >')
         print(' ' * indent, '    <translate time="{}">'.format(time))
         for i in range(STEPS):
             a = ((2 * pi) / STEPS) * i + shift
-            print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(distance * sin(a), distance * cos(a)))
+            x = distance * sin(a)
+            z = distance * cos(a)
+            print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
         print(' ' * indent, '    </translate>')
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(0.01))
         print(' ' * indent, '    <models>')
         print(' ' * indent, '        <model file="scenes/sphere.3d"/>')
         print(' ' * indent, '    </models>')
         print(' ' * indent, '</group>')
+
 
 def draw_commet(indent=8):
     time     = 20
@@ -109,7 +140,9 @@ def draw_commet(indent=8):
     yShift = 10
     for i in range(STEPS):
         a = ((2 * pi) / STEPS) * i
-        print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(distance_x * sin(a) + distance_x * .75, distance_z * cos(a)))
+        x = distance_x * sin(a) + distance_x * .75
+        z = distance_z * cos(a)
+        print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
     print(' ' * indent, '    </translate>')
     print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(0.01))
     print(' ' * indent, '    <models>')
