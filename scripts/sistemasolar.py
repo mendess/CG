@@ -109,7 +109,7 @@ def draw_commet(indent=8):
     yShift = 10
     for i in range(STEPS):
         a = ((2 * pi) / STEPS) * i
-        print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(distance_x * cos(a) + distance_x * .75, distance_z * sin(a)))
+        print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(distance_x * sin(a) + distance_x * .75, distance_z * cos(a)))
     print(' ' * indent, '    </translate>')
     print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(0.01))
     print(' ' * indent, '    <models>')
