@@ -63,12 +63,10 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         std::transform(name.begin(), name.end(), name.begin(), ::tolower);
         if ("models" == name) {
             for (auto model = node->first_node(); model != NULL; model = model->next_sibling()) {
-                char* file = model->first_attribute()->value();
-                Model m = Model(file);
-                if (m.loaded()) {
-                    models.push_back(m);
-                } else {
-                    cerr << "Couldn't load '" << file << "': No such file or directory" << endl;
+                try {
+                    models.push_back(Model(model->first_attribute()->value()));
+                } catch(string error) {
+                    cerr << error << endl;
                 }
             }
         } else if ("group" == name) {

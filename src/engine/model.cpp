@@ -22,18 +22,15 @@ Model::Model(char* modelFile)
     float x, y, z;
     ifstream infile(modelFile);
     if (!infile.good()) {
-        return;
+        string error = "Couldn't load '";
+        error.append(modelFile);
+        error.append("': No such file or directory");
+        throw error;
     }
     while (infile >> x >> y >> z) {
         push(x, y, z);
     }
-    infile.close();
     n_vertices = vbo.size() / 3;
-}
-
-bool Model::loaded() const
-{
-    return vbo.size() != 0;
 }
 
 void Model::draw()
