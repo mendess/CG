@@ -6,7 +6,8 @@ using namespace std;
 
 const string Sphere::help_message = "sphere requires: radius slices stacks";
 
-Sphere::Sphere(int argc, char**args) {
+Sphere::Sphere(int argc, char** args)
+{
     if (argc < 3) {
         throw invalid_argument("Not enough arguments");
     }
@@ -61,4 +62,3 @@ std::vector<Point> Sphere::draw() const
 
     return coordsSphere;
 }
-

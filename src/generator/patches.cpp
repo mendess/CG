@@ -33,7 +33,7 @@ void Patches::construct(string filename, int t)
     }
     size_t patch_count;
     control_points >> patch_count;
-    control_points.ignore(numeric_limits<std::streamsize>::max(),'\n');
+    control_points.ignore(numeric_limits<std::streamsize>::max(), '\n');
     for (size_t i = 0; i < patch_count; i++) {
         string line;
         getline(control_points, line);
@@ -42,7 +42,7 @@ void Patches::construct(string filename, int t)
     }
     size_t point_count;
     control_points >> point_count;
-    control_points.ignore(numeric_limits<std::streamsize>::max(),'\n');
+    control_points.ignore(numeric_limits<std::streamsize>::max(), '\n');
     for (size_t i = 0; i < point_count; i++) {
         string line;
         getline(control_points, line);

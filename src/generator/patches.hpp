@@ -3,18 +3,18 @@
 
 #include "../common/point.hpp"
 #include "primitives.hpp"
+#include <array>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <array>
 
 constexpr size_t N_CONTROL_POINTS = 16;
 
 class Patch {
 private:
 public:
-    std::array<size_t ,N_CONTROL_POINTS> control_points;
+    std::array<size_t, N_CONTROL_POINTS> control_points;
     Patch(std::vector<size_t>);
     std::string to_string() const;
 };

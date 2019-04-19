@@ -45,7 +45,8 @@ void changeSize(int w, int h)
     glMatrixMode(GL_MODELVIEW);
 }
 
-double deltaTime() {
+double deltaTime()
+{
     static double elapsed = 0;
     double new_elapsed = glutGet(GLUT_ELAPSED_TIME);
     double delta = new_elapsed - elapsed;
@@ -109,7 +110,7 @@ void renderScene()
         title << " | FOLLOW TARGET: "
               << FOLLOW_TARGET;
     }
-    if(PAUSED)
+    if (PAUSED)
         title << " | PAUSED |";
 
     glutSetWindowTitle(title.str().data());

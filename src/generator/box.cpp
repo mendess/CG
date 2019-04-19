@@ -5,7 +5,8 @@ using namespace std;
 
 const string Box::help_message = "box requires: x y z [divisions]";
 
-Box::Box(int argc, char** args) {
+Box::Box(int argc, char** args)
+{
 
     if (argc < 3) {
         throw invalid_argument("Not enough arguments");

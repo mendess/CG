@@ -5,7 +5,7 @@
 
 namespace Render {
 
-void render(int argc, char** argv, Group * scene);
+void render(int argc, char** argv, Group* scene);
 
 }
 

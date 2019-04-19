@@ -1,7 +1,7 @@
 #ifndef POINT_H
 #define POINT_H
-#include <string>
 #include <array>
+#include <string>
 
 class Point {
 private:

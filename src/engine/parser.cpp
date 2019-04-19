@@ -32,7 +32,7 @@ Group* load(vector<string> configs)
 {
     vector<string> texts;
     transform(configs.begin(), configs.end(),
-            std::back_inserter(texts), [](string x) { return read_file(x); });
+        std::back_inserter(texts), [](string x) { return read_file(x); });
     xml_document<char>* doc = new xml_document<char>();
     if (configs.size() > 0) {
         try {

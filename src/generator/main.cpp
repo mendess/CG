@@ -15,7 +15,7 @@ using namespace std;
 
 static char* PROGRAM_NAME;
 
-#define perror_and_exit(e, help_message)               \
+#define perror_and_exit(e, help_message)              \
     cerr << "Invalid args, " << help_message << endl; \
     cerr << e.what() << endl;                         \
     return 1;
