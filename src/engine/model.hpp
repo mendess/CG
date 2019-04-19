@@ -23,7 +23,6 @@ private:
 
 public:
     Model(char*);
-    bool loaded() const;
     void draw();
 };
 
