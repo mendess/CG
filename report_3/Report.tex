@@ -70,13 +70,12 @@ tabsize=4
 
 \section{Introdução}
 
-\pagebreak
-
 % Este relatorio assume que foi feita a leitura dos dois anteriores
 
 \section{Arquitetura do Projecto}
 
 \subsection{Model}
+
 Os modelos passaram a ser desenhados com \textit{Vertex Buffer Objects} (VBOs). Estes permitem reduzir o número de pedidos feitos à placa gráfica, aumentando assim, significativamente, a performance do programa.
 
 Por outro lado, perderam a possibilidade de ser desenhados com todos os seus triângulos pintados de cores aleatórias, visto que não é possível especificar a cor de cada triângulo quando estes são todos enviados para o GPU simultaneamente.
@@ -84,6 +83,7 @@ Por outro lado, perderam a possibilidade de ser desenhados com todos os seus tri
 Esta desvantagem irá, no entanto, ser mitigada na próxima fase com a adição de luz e texturas.
 
 \subsection{Transformations}
+
 Para que fosse possível animar os modelos, para cada transformação foi criada uma nova versão \textit{animada}: \texttt{TranslateAnimated}, \texttt{RotateAnimated}, \texttt{ScaleAnimated}.
 
 Todas estas recebem o tempo que demoram a completar a animação. Quando uma animação termina recomeça imediatamente.
@@ -102,14 +102,12 @@ A rotação animada, ao contrário da sua versão estática, recebe uma duraçã
 
 A escala animada adiciona aos antigos rácios para $x, y, z$ um novo triplo de rácios, e para animar vai, simplesmente, ``progredindo'' de um rácio para outro durante o tempo que a animação demora. Sendo que, no início e no fim da animação se encontra no primeiro triplo.
 
-
 \subsubsection{Group}
 
 O método de desenho recebe agora o tempo que passou desde o início do programa, para que o possa passar às várias transformações, assegurando assim que todas usam o mesmo valor de tempo.
 
-% Versoes animadas das transformacoes
-
 \subsection{\textit{Follow mode}}
+
 Neste momento os models deslocam-se, o que torna mais complicado de os ver. Assim, para resolver este problema
 foi implementado o \textit{Follow mode}. Neste o utilizador pode escolher um \textit{model}
 para a câmara seguir. Sendo que, o comportamento da câmara neste modo é igual ao antigo
@@ -124,6 +122,8 @@ Para poder focar a câmara no objeto é necessário obter a sua posição no esp
 \textit{models} em si não têm coordenadas próprias, ou seja, são transladados, rotacionados e escalados para as suas posições. Logo, é necessário que o \textit{Group} tenha a capacidade de calcular as coordenadas de cada modelo.
 
 Para este fim, foi implementado um método que dado um índice vai multiplicando todas as matrizes de transformação até chegar ao modelo, e por fim usa a matriz final para extrair as coordenadas do modelo.
+
+%TODO: Grafico para mostrar a selecao do modelo
 
 \subsubsection{Câmara}
 
@@ -144,15 +144,25 @@ Os pontos de controlo contém triplos de coordenadas que irão ser usados pelos 
 
 Um \textit{patch} é um conjunto de 16 pontos que definem uma superfície de Bezier (cada linha contém, na verdade, 16 índices que referenciam os pontos de controlo da superfície).
 
+%TODO: Explain Bezier
+
 \section{Alterações dos ficheiros de input}\label{sec:estrutura-ficheiros}
+
+O XML de input utilizado foi estendido para possibilitar a utilização das novas funcionalidades, no entanto, foi mantida a \textit{backwards compatibility} para o formato anterior. De forma a que modelos antigos continuem a ser validos.
 
 \section{Key Bindings}
 
-% I/O (move in fast)
-% { } (change follow target)
-% ,  (show orbits)
-% ( ) (change the rate at which time passes)
-% p (pause)
+Novas \textit{key bindings} foram adicionadas:
+
+\begin{itemize}
+    \item \texttt{Shift+I} e \texttt{Shift+O}: Similares ao \textit{i} e
+        \texttt{o} permitem diminuir e aumentar o raio do \textit{Follow mode}.
+    \item \verb!{! e \verb!}!: Permite seleccionar o modelo a seguir.
+    \item \texttt{,}: Liga/Desliga as rotas dos modelos em translação.
+    \item \verb!(! e \verb!)!: Aumenta e Diminui a velocidade com que o tempo
+        passa.
+    \item \texttt{P}: Liga/Desliga pausa.
+\end{itemize}
 
 \section{Sistema Solar}
 
@@ -160,9 +170,8 @@ No Sistema Solar cada um dos astros tem a sua própria órbita e esta é animada
 As órbitas dos planetas são órbitas elípticas, tentando assim retratar o sistema solar real. As órbitas das luas de cada planeta são órbitas circulares.
 Além destes astros, planetas e respetivas luas, foi adicionado também ao sistema solar uma cintura de asteróides que se situa entre Marte e Júpiter e um cometa com uma órbita elíptica muito alongada.
 
-
 \section{Conclusões e Trabalho Futuro}
 
-% Implementar VBOs com indices
+Em suma, todas as funcionalidades pedidas foram implementadas assim como alguns extras. No entanto, algumas optimizações não foram implementadas, como por exemplo, o uso de índices no VBOs. Tencionamos adicionar isto na proxima fase.
 
 \end{document}
