@@ -84,21 +84,21 @@ Esta desvantagem irá, no entanto, ser mitigada na próxima fase com a adição 
 
 \subsection{Transformations}
 
-Para que fosse possível animar os modelos, para cada transformação foi criada uma nova versão \textit{animada}: \texttt{TranslateAnimated}, \texttt{RotateAnimated}, \texttt{ScaleAnimated}.
+Para que fosse possível animar os modelos, para cada transformação foi criada uma nova versão \textit{animada}: \texttt{TranslateAnimated}~(\ref{sec:translate}), \texttt{RotateAnimated}~(\ref{sec:rotate}), \texttt{ScaleAnimated}~(\ref{sec:scale}).
 
 Todas estas recebem o tempo que demoram a completar a animação. Quando uma animação termina recomeça imediatamente.
 
-\subsubsection{TranslateAnimated}
+\subsubsection{TranslateAnimated}\label{sec:translate}
 
 Esta transformação recebe um conjunto de pontos que definem um caminho pelo qual o modelo deve viajar assim como o tempo que deve demorar a percorrer esse caminho.
 
 Depois, fazendo uso do número de milissegundos que já passaram desde o início do programa, calcula, usando o algoritmo de \textit{CatmulRom}, o ponto no caminho em que o modelo deve estar para esse milissegundo.
 
-\subsubsection{RotateAnimated}
+\subsubsection{RotateAnimated}\label{sec:rotate}
 
 A rotação animada, ao contrário da sua versão estática, recebe uma duração em vez de receber um ângulo, mantendo os outros parâmetros. Esta duração é mais tarde usada para determinar quanto tempo demora o objeto a efetuar uma rotação de 360\degree{} graus.
 
-\subsubsection{ScaleAnimated}
+\subsubsection{ScaleAnimated}\label{sec:scale}
 
 A escala animada adiciona aos antigos rácios para $x, y, z$ um novo triplo de rácios, e para animar vai, simplesmente, ``progredindo'' de um rácio para outro durante o tempo que a animação demora. Sendo que, no início e no fim da animação se encontra no primeiro triplo.
 
