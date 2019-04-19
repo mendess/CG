@@ -19,8 +19,8 @@ int main(int argc, char** argv)
         args.push_back(a);
     }
     bool render = true;
-    for(auto it = args.begin(); it != args.end(); ){
-        if(*it == "-d" || *it == "--dry"){
+    for (auto it = args.begin(); it != args.end();) {
+        if (*it == "-d" || *it == "--dry") {
             render = false;
             args.erase(it);
         } else {

@@ -4,9 +4,9 @@
 #include "../dependencies/rapidxml.hpp"
 #include "model.hpp"
 #include "transformations.hpp"
-#include <vector>
 #include <memory>
 #include <optional>
+#include <vector>
 
 class Group {
 private:
@@ -19,7 +19,7 @@ private:
     bool random_color;
 
     Group(rapidxml::xml_node<char>*, float, float, float, float);
-    std::optional<Matrix> get_model_position(size_t, Matrix) const;
+    std::optional<Matrix> get_model_position(size_t, Matrix, double) const;
 
 public:
     Group(rapidxml::xml_node<char>* group)
@@ -29,9 +29,8 @@ public:
 
     int levels() const { return _levels; };
     int model_count() const { return _model_count; }
-    std::optional<Point> get_model_position(size_t) const;
-    void draw(int);
-    void draw_with_routes(int);
+    std::optional<Point> get_model_position(size_t, double) const;
+    void draw(int, double);
 };
 
 #endif // GROUP_HPP
