@@ -99,9 +99,19 @@ void renderScene()
 
     SCENE->draw(DRAW_LEVEL, elapsed);
 
+    static float deltaComulative = 0;
+    deltaComulative += delta;
+    static float fps = 60;
+    if(deltaComulative > 500) {
+        deltaComulative -= 1000;
+        fps = (1 / delta) * 1000;
+    }
+
     stringstream title;
-    title << "CG-Engine | Draw Level: "
-          << DRAW_LEVEL
+    title.precision(2);
+    title << "CG-Engine "
+          << " | FPS: "  << fps
+          << " | Draw Level: " << DRAW_LEVEL
           << " | Camera Mode: "
           << Camera::to_string(Camera::current_camera())
           << " | Time Scale: " << TIME_SCALE
