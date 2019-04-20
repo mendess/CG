@@ -70,7 +70,7 @@ tabsize=4
 \pagebreak
 
 \section{Introdução}
-Este trabalho foi proposto no âmbito da unidade curricular de Computação Gráfica, e tem como objetivo desenvolver um motor gráfico genérico para representar objetos a 3 dimensões. Este relatório tem também como contexto ambos os relatórios anteriores.
+Este trabalho foi proposto no âmbito da unidade curricular de Computação Gráfica, e tem como objetivo desenvolver um motor gráfico genérico para representar objetos a 3 dimensões. Este relatório tem como contexto ambos os relatórios anteriores.
 
 Nesta terceira fase do projeto estendemos as capacidades do motor gráfico anteriormente definido com a adição de animações e de mais opções de camera.
 
@@ -96,7 +96,7 @@ Todas estas recebem o tempo que demoram a completar a animação. Quando uma ani
 
 \subsubsection{TranslateAnimated}\label{sec:translate}
 
-Esta transformação recebe um conjunto de pontos que definem um caminho pelo qual o modelo deve viajar assim como o tempo que deve demorar a percorrer esse caminho.
+Esta transformação recebe um conjunto de pontos que definem um caminho pelo qual o modelo deve viajar.
 
 Depois, fazendo uso do número de milissegundos que já passaram desde o início do programa, calcula, usando o algoritmo de \textit{Catmul-Rom}, o ponto no caminho em que o modelo deve estar para esse milissegundo.
 
@@ -104,9 +104,28 @@ Depois, fazendo uso do número de milissegundos que já passaram desde o início
 
 A rotação animada, ao contrário da sua versão estática, recebe uma duração em vez de receber um ângulo, mantendo os outros parâmetros. Esta duração é mais tarde usada para determinar quanto tempo demora o objeto a efetuar uma rotação de 360\degree{} graus.
 
+Depois, simplesmente calcula um ângulo a partir do tempo que passou desde o início do programa para determinar o ângulo para esse instante.
+
+\begin{figure}[H]
+    \[
+        angle = \frac{elapsed \x 360}{duracao}
+    \]
+    \caption{Formula de calculo do ângulo da rotação para um dado instante}
+\end{figure}
+
 \subsubsection{ScaleAnimated}\label{sec:scale}
 
 A escala animada adiciona aos antigos rácios para $x, y, z$ um novo triplo de rácios, e para animar vai, simplesmente, ``progredindo'' de um rácio para outro durante o tempo que a animação demora. Sendo que, no início e no fim da animação se encontra no primeiro triplo.
+
+\begin{figure}[H]
+    \[
+        t = |2 \x \frac{elapsed}{dur} - 1|\\
+    \]
+    \[
+        R = (x_i + t (x_f - x_i), y_i + t (y_f - y_i), z_i + t (z_f - z_i))
+    \]
+    \caption{Formula usada para determinar o rácio $R$ da animação para o instante $elapsed$.}
+\end{figure}
 
 \subsubsection{Group}
 
@@ -119,13 +138,11 @@ foi implementado o \textit{Follow mode}. Neste o utilizador pode escolher um \te
 para a câmara seguir. Sendo que, o comportamento da câmara neste modo é igual ao antigo
 \textit{explorer mode} apenas com a diferença do centro, em que no modo antigo era na origem do referencial e agora passou a ser objeto.
 
-Para conseguir este efeito, existiram duas grandes alterações fundamentais que tiveram de ser feitas no \textit{Group} e no
-\textit{Câmara}.
+Para conseguir este efeito, foram feitas duas grandes alterações fundamentais aos módulos \textit{Group} e \textit{Câmara}.
 
 \subsubsection{Group}
 
-Para poder focar a câmara no objeto é necessário obter a sua posição no espaco 3D. Embora que os
-\textit{models} em si não têm coordenadas próprias, ou seja, são transladados, rotacionados e escalados para as suas posições. Logo, é necessário que o \textit{Group} tenha a capacidade de calcular as coordenadas de cada modelo.
+Para poder focar a câmara no objeto é necessário obter a sua posição no espaço 3D. O problema com este requisito é que os \textit{models} em si não têm coordenadas próprias, são transladados, rodados e escalados para as suas posições. Logo, é necessário que o \textit{Group} tenha a capacidade de calcular as coordenadas de cada modelo.
 
 Para este fim, foi implementado um método que dado um índice vai multiplicando todas as matrizes de transformação até chegar ao modelo, e por fim usa a matriz final para extrair as coordenadas do modelo.
 
@@ -137,16 +154,16 @@ Para este fim, foi implementado um método que dado um índice vai multiplicando
 
 \subsubsection{Câmara}
 
-A câmara, por outro lado, sofreu uma grande re-estruturação do seu antigo modo \textit{Explorer}.
+A câmara, por outro lado, sofreu uma grande reestruturação do seu antigo modo \textit{Explorer}.
 Foi então concluído que o \textit{Follow mode} era o caso geral deste, ou seja, o \textit{Explorer mode}
 permitia ao utilizador focar-se na origem enquanto se deslocava na superfície de uma esfera (invisível), podendo-se alterar o raio desta esfera. Por outro lado, o \textit{Follow mode} permite
-que ao utilizador fazer tudo isto, mas focando-se em qualquer ponto do espaço 3D. Desta forma, o \textit{Explorer mode} foi substituído pelo novo, \textit{Follow mode}.
+ao utilizador fazer tudo isto, mas focando-se em qualquer ponto do espaço 3D. Desta forma, o \textit{Explorer mode} foi substituído pelo novo, \textit{Follow mode}.
 
 \section{Generator}
 
-Uma nova funcionalidade foi adicionada ao \texttt{generator}. Este é agora capaz de ler \textit{patch files} que definem superfícies Bezier e transforma-los nos ficheiros \texttt{.3d} que o \texttt{engine} está preparado para receber.
+Uma nova funcionalidade foi adicionada ao \texttt{generator}. Este é agora capaz de ler \textit{patch files} que definem superfícies \texttt{Bezier} e transforma-los nos ficheiros \texttt{.3d} que o \texttt{engine} está preparado para receber.
 
-Um \textit{patch file} contém duas seções: \textit{patches} e pontos de controlo.
+Um \textit{patch file} contém duas secções: \textit{patches} e pontos de controlo.
 
 Os pontos de controlo contém triplos de coordenadas que irão ser usados pelos \textit{patches}, enquanto que os \textit{patches} contêm um \textit{patch} por linha.
 
@@ -154,7 +171,7 @@ Os pontos de controlo contém triplos de coordenadas que irão ser usados pelos 
 
 Um \textit{patch} é um conjunto de 16 pontos que definem uma superfície de Bezier (cada linha contém, na verdade, 16 índices que referenciam os pontos de controlo da superfície).
 
-Cada patch destes representa uma superfície e os 16 pontos são divididos em grupos de 4 que descrevem arcos desta superfície. Depois, para cada arco definem se os pontos da curva usando o nível de \textit{tessellation} para definir quantos pontos criar. Por fim, utilizando estes pontos aplica se o mesmo algoritmo para definir N curvas (uma para cada 4 pontos de cada arco) unindo os 4 arcos e formando uma rede de arcos. Os quadrados desta rede sao mais tarde usados partidos em dois triângulos e serializados como 6 pontos no espaço.
+Cada patch destes representa uma superfície e os 16 pontos são divididos em grupos de 4 que descrevem arcos desta superfície. Depois, para cada arco definem-se os pontos da curva usando o nível de \textit{tessellation} para definir quantos pontos criar. Por fim, utilizando estes pontos aplica se o mesmo algoritmo para definir N curvas (uma para cada 4 pontos de cada arco) unindo os 4 arcos e formando uma rede de arcos. Os quadrados desta rede são mais tarde partidos em dois triângulos e serializados como 6 pontos no espaço.
 
 \begin{figure}[H]
     \centering
@@ -168,7 +185,7 @@ O \texttt{XML} de input utilizado foi estendido para possibilitar a utilização
 
 \subsection{Translação Animada}
 
-Para definir uma translação animada cria-se um bloco translate com o parâmetro \texttt{TIME}, e dentro deste define se a lista de pontos que a translação ira seguir.
+Para definir uma translação animada cria-se um bloco \textit{translate} com o parâmetro \texttt{TIME}, e dentro deste define se a lista de pontos que a translação ira seguir.
 
 Por exemplo:
 \begin{minted}{xml}
@@ -180,7 +197,7 @@ Por exemplo:
     </translate>
 \end{minted}
 
-Todos os parâmetros podem ser omitidos tendo todos valores por defeito: 0 para as coordenadas dos pontos, e 1 para a duração da animação.
+Todos os parâmetros podem ser omitidos, pois todos tem valores por defeito: 0 para as coordenadas dos pontos, e 1 para a duração da animação.
 
 \subsection{Rotação Animada}
 
@@ -219,11 +236,12 @@ Novas \textit{key bindings} foram adicionadas:
 \section{Sistema Solar}
 
 No Sistema Solar cada um dos astros tem a sua própria órbita e esta é animada, à excepção do sol obviamente.
-As órbitas dos planetas são órbitas elípticas, tentando assim retratar o sistema solar real. As órbitas das luas de cada planeta são órbitas circulares.
-Além destes astros, planetas e respetivas luas, foi adicionado também ao sistema solar uma cintura de asteróides que se situa entre Marte e Júpiter e um cometa com uma órbita elíptica muito alongada.
+As órbitas dos planetas são órbitas elípticas, tentando assim retratar o sistema solar real. As órbitas das luas de cada planeta são órbitas circulares com inclinações aleatórias.
+
+Além destes astros, foi adicionado também ao sistema solar uma cintura de asteróides que se situa entre Marte e Júpiter e um cometa com uma órbita elíptica muito alongada. O cometa tem a forma de \textit{teapot} para demonstrar também as capacidades do gerador.
 
 \section{Conclusões e Trabalho Futuro}
 
-Em suma, todas as funcionalidades pedidas foram implementadas assim como alguns extras. No entanto, algumas optimizações não foram implementadas, como por exemplo, o uso de índices no VBOs. Tencionamos adicionar isto na proxima fase.
+Em suma, todas as funcionalidades pedidas foram implementadas assim como alguns extras. No entanto, algumas optimizações não foram implementadas, como por exemplo, o uso de índices no VBOs. Tencionamos adicionar isto na próxima fase.
 
 \end{document}
