@@ -12,6 +12,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{gensymb}
+\usepackage{tikz}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -69,18 +70,17 @@ tabsize=4
 \pagebreak
 
 \section{Introdução}
-
 Este trabalho foi proposto no âmbito da unidade curricular de Computação Gráfica, e tem como objetivo desenvolver um motor gráfico genérico para representar objetos a 3 dimensões. Este relatório tem também como contexto ambos os relatórios anteriores.
 
 Nesta terceira fase do projeto estendemos as capacidades do motor gráfico anteriormente definido com a adição de animações e de mais opções de camera.
 
 O gerador de modelos foi também estendido para processar \textit{Bezier Patches} de forma a ser mais fácil adicionar modelos complexos sem ser necessário o uso das primitivas.
 
-Por fim, o modelo de teste utilizado (O Sistema Solar) foi alterado para demonstrar estas capacidades, fazendo com que os planetas orbitassem o Sol e com que as luas orbitassem os planetas, contando ainda com a adição de um cometa.
+Por fim, o modelo de teste utilizado (O Sistema Solar) foi alterado para demonstrar estas capacidades, fazendo com que os planetas orbitassem o Sol e com que as luas orbitassem os planetas, contando ainda com a adição de um cometa e de uma cintura de asteroides.
 
 \section{Arquitetura do Projecto}
 
-\subsection{Model}
+\subsection{Model}\label{sec:models}
 
 Os modelos passaram a ser desenhados com \textit{Vertex Buffer Objects} (VBOs). Estes permitem reduzir o número de pedidos feitos à placa gráfica, aumentando assim, significativamente, a performance do programa.
 
@@ -98,7 +98,7 @@ Todas estas recebem o tempo que demoram a completar a animação. Quando uma ani
 
 Esta transformação recebe um conjunto de pontos que definem um caminho pelo qual o modelo deve viajar assim como o tempo que deve demorar a percorrer esse caminho.
 
-Depois, fazendo uso do número de milissegundos que já passaram desde o início do programa, calcula, usando o algoritmo de \textit{CatmulRom}, o ponto no caminho em que o modelo deve estar para esse milissegundo.
+Depois, fazendo uso do número de milissegundos que já passaram desde o início do programa, calcula, usando o algoritmo de \textit{Catmul-Rom}, o ponto no caminho em que o modelo deve estar para esse milissegundo.
 
 \subsubsection{RotateAnimated}\label{sec:rotate}
 
@@ -129,7 +129,11 @@ Para poder focar a câmara no objeto é necessário obter a sua posição no esp
 
 Para este fim, foi implementado um método que dado um índice vai multiplicando todas as matrizes de transformação até chegar ao modelo, e por fim usa a matriz final para extrair as coordenadas do modelo.
 
-%TODO: Grafico para mostrar a selecao do modelo
+\begin{figure}[H]
+    \centering
+    \input{group.tex}
+    \caption{Representação gráfica da numeração dos modelos}
+\end{figure}
 
 \subsubsection{Câmara}
 
@@ -150,19 +154,61 @@ Os pontos de controlo contém triplos de coordenadas que irão ser usados pelos 
 
 Um \textit{patch} é um conjunto de 16 pontos que definem uma superfície de Bezier (cada linha contém, na verdade, 16 índices que referenciam os pontos de controlo da superfície).
 
-%TODO: Explain Bezier
+Cada patch destes representa uma superfície e os 16 pontos são divididos em grupos de 4 que descrevem arcos desta superfície. Depois, para cada arco definem se os pontos da curva usando o nível de \textit{tessellation} para definir quantos pontos criar. Por fim, utilizando estes pontos aplica se o mesmo algoritmo para definir N curvas (uma para cada 4 pontos de cada arco) unindo os 4 arcos e formando uma rede de arcos. Os quadrados desta rede sao mais tarde usados partidos em dois triângulos e serializados como 6 pontos no espaço.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{bezier.jpg}
+    \caption{A superfície gerada por pontos de controlo}
+\end{figure}
 
 \section{Alterações dos ficheiros de input}\label{sec:estrutura-ficheiros}
 
-O XML de input utilizado foi estendido para possibilitar a utilização das novas funcionalidades, no entanto, foi mantida a \textit{backwards compatibility} para o formato anterior. De forma a que modelos antigos continuem a ser validos.
+O \texttt{XML} de input utilizado foi estendido para possibilitar a utilização das novas funcionalidades, no entanto, foi mantida a \textit{backwards compatibility} para o formato anterior. De forma a que modelos antigos continuem a ser validos. Uma ligeira diferença, no entanto, é que o parâmetro \texttt{RAND} agora apenas define um cor aleatória para o grupo, ao contrario do comportamento anterior em que desenhava todos os triângulos de todos os seus modelos de cor diferente (ver secção~\ref{sec:models})
+
+\subsection{Translação Animada}
+
+Para definir uma translação animada cria-se um bloco translate com o parâmetro \texttt{TIME}, e dentro deste define se a lista de pontos que a translação ira seguir.
+
+Por exemplo:
+\begin{minted}{xml}
+    <translate time="1" >
+        <point X="1" Y="1" Z="1"/>
+        <point Y="1" />
+        <point Z="1" />
+        <point X="1.4" />
+    </translate>
+\end{minted}
+
+Todos os parâmetros podem ser omitidos tendo todos valores por defeito: 0 para as coordenadas dos pontos, e 1 para a duração da animação.
+
+\subsection{Rotação Animada}
+
+Uma rotação animada troca apenas o ângulo por uma duração.
+\begin{minted}{xml}
+    <rotate X="1" TIME="1" />
+\end{minted}
+
+Tal como na translação todos os parâmetros podem ser omitidos, com excepção da duração, que é usada para determinar se a rotação é estática ou animada.
+
+\subsection{Escala Animada}
+
+Uma escala animada tem de receber a escala inicial e a escala final, denominada no \texttt{XML} como \texttt{XI, YI, ZI} e \texttt{XF, YF, ZF} respectivamente. Junto destas espera também uma parâmetro \texttt{time} para a duração.
+
+\begin{minted}{xml}
+    <scale XI="20" YI="20" ZI="20" XF="30" YF="30" ZF="30" TIME="1"/>
+\end{minted}
+
+Todos estes tem valores por defeito e podem ser omitidos.
 
 \section{Key Bindings}
 
 Novas \textit{key bindings} foram adicionadas:
 
 \begin{itemize}
-    \item \texttt{Shift+I} e \texttt{Shift+O}: Similares ao \textit{i} e
-        \texttt{o} permitem diminuir e aumentar o raio do \textit{Follow mode}.
+    \item \texttt{Shift+I} e \texttt{Shift+O}: Similares ao \texttt{I} e
+        \texttt{O} permitem diminuir e aumentar o raio do \textit{Follow mode},
+        mas a uma velocidade mais alta.
     \item \verb!{! e \verb!}!: Permite seleccionar o modelo a seguir.
     \item \texttt{,}: Liga/Desliga as rotas dos modelos em translação.
     \item \verb!(! e \verb!)!: Aumenta e Diminui a velocidade com que o tempo
