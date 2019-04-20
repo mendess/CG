@@ -57,14 +57,19 @@ Matrix TranslateStatic::matrix(double elapsed) const
 
 bool TranslateAnimated::show_routes = false;
 
+Point TranslateAnimated::get_position(double elapsed) const
+{
+    while (elapsed > dur)
+        elapsed -= dur;
+    tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed / dur);
+    return get<0>(pos_deriv);
+}
+
 void TranslateAnimated::transform(double elapsed) const
 {
     if (show_routes)
         draw_routes();
-    while (elapsed > dur)
-        elapsed -= dur;
-    tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed / dur);
-    Point pos = get<0>(pos_deriv);
+    Point pos = get_position(elapsed);
     glTranslatef(pos.x(), pos.y(), pos.z());
     /* Point X = normalize(get<1>(pos_deriv)); */
     /* Point Z = normalize(cross(X, { 0, 1, 0 })); */
@@ -76,10 +81,7 @@ void TranslateAnimated::transform(double elapsed) const
 
 Matrix TranslateAnimated::matrix(double elapsed) const
 {
-    while (elapsed > dur)
-        elapsed -= dur;
-    tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed / dur);
-    Point pos = get<0>(pos_deriv);
+    Point pos = get_position(elapsed);
     return translate_matrix(pos.x(), pos.y(), pos.z());
 }
 
@@ -108,29 +110,27 @@ Matrix ScaleStatic::matrix(double elapsed) const
     return scale_matrix(x, y, z);
 }
 
-void ScaleAnimated::transform(double elapsed) const
+tuple<float, float, float> ScaleAnimated::get_ratio(double elapsed) const
 {
     while (elapsed > dur)
         elapsed -= dur;
-    float t = elapsed / dur;
-    t = abs(2 * t - 1);
-    float mx, my, mz;
-    mx = xi + t * (xf - xi);
-    my = yi + t * (yf - yi);
-    mz = zi + t * (zf - zi);
-    glScalef(mx, my, mz);
+    const float t = abs(2 * (elapsed / dur) - 1);
+    float mx = xi + t * (xf - xi);
+    float my = yi + t * (yf - yi);
+    float mz = zi + t * (zf - zi);
+    return make_tuple(mx, my, mz);
+}
+
+void ScaleAnimated::transform(double elapsed) const
+{
+    auto r = get_ratio(elapsed);
+    glScalef(get<0>(r), get<1>(r), get<2>(r));
 }
 
 Matrix ScaleAnimated::matrix(double elapsed) const
 {
-    while (elapsed > dur)
-        elapsed -= dur;
-    const float t = elapsed / dur;
-    float mx, my, mz;
-    mx = xi + t * (xf - xi);
-    my = yi + t * (yf - yi);
-    mz = zi + t * (zf - zi);
-    return scale_matrix(mx, my, mz);
+    auto r = get_ratio(elapsed);
+    return scale_matrix(get<0>(r), get<1>(r), get<2>(r));
 }
 
 Matrix translate_matrix(float x, float y, float z)

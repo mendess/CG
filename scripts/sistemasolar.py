@@ -135,7 +135,7 @@ def draw_commet(indent=8):
     distance_z = 8
     STEPS    = 100
     print(' ' * indent, '<!-- Commet -->')
-    print(' ' * indent, '<group R="0.6" G="0.6" B="0.6" >')
+    print(' ' * indent, '<group R="1" G="0.6" B="0" >')
     print(' ' * indent, '    <translate time="{}">'.format(time))
     yShift = 10
     for i in range(STEPS):
@@ -162,11 +162,11 @@ jupiter_moons = [
 saturn_rings = [Ring(0.803, 0.702, 0.503, 1, 0, 0.5, 90, 1.5, 1.5, 0)]
 saturn_moons = [Planet('Titan', 0.04425, 0.8, 0.8, 0.8, 2.1604)]
 uranus_moons = [
-        Planet('Miranda' , 0.0037728, 0.8, 0.8, 0.8, 1.035120),
-        Planet('Ariel'   , 0.0092624, 0.8, 0.8, 0.8, 1.528160),
-        Planet('Umbriel' , 0.0093552, 0.8, 0.8, 0.8, 2.130400),
-        Planet('Titania' , 0.0126144, 0.8, 0.8, 0.8, 3.487280),
-        Planet('Oberon'  , 0.0121824, 0.8, 0.8, 0.8, 4.668160)
+        Planet('Miranda' , 0.0037728, 0.8, 0.8, 0.8, 2.035120),
+        Planet('Ariel'   , 0.0092624, 0.8, 0.8, 0.8, 2.528160),
+        Planet('Umbriel' , 0.0093552, 0.8, 0.8, 0.8, 3.130400),
+        Planet('Titania' , 0.0126144, 0.8, 0.8, 0.8, 4.487280),
+        Planet('Oberon'  , 0.0121824, 0.8, 0.8, 0.8, 5.668160)
         ]
 neptune_moons = [
         Planet('Triton', 0.0000205, 0.8, 0.8, 0.8, 16.27)
