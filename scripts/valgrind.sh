@@ -6,6 +6,11 @@ for ((i = 0; i < ${#figures[@]}; i++))
 do
     figure=${figures[i]}
     param=${params[i]}
-    echo -e "\033[33mvalgrind --leak-check=full --show-reachable=no --show-leak-kinds=all 'generator $figure.3d $figure $param'\033[0m" &>> valgrind.out
-    valgrind --leak-check=full --show-reachable=no --show-leak-kinds=all target/generator/generator $figure.3d $figure $param &>> valgrind.out
+    echo -e "\033[33mvalgrind --leak-check=full --show-reachable=no --show-leak-kinds=all 'generator $figure.3d $figure $param'\033[0m"
+    valgrind --leak-check=full --show-reachable=no --show-leak-kinds=all \
+        target/release/generator/generator /tmp/file "$figure" $param
+
 done
+
+valgrind --leak-check=full --show-reachable=no --show-leak-kinds=all \
+    target/release/engine/engine scenes/sistemasolar.xml -d
