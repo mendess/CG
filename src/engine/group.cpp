@@ -4,9 +4,11 @@
 #include "transformations.hpp"
 #include <algorithm>
 #include <cstring>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <optional>
+#include <random>
 #include <string>
 #include <tuple>
 #include <unordered_map>
@@ -31,8 +33,7 @@ void mutl_matrix(const float a[4][4], float b[4][4]);
 Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 {
     _levels = 1;
-    random_color = false;
-    if (group->first_attribute()) { // if there are color attributes, override them
+    if (group->first_attribute()) { // if there are color attributes, override them inherited ones
         this->r = this->g = this->b = 0.0f;
         this->a = 1.0f;
     } else {
@@ -54,8 +55,13 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
             this->b = stof(value);
         } else if ("A" == name) {
             this->a = stof(attr->value());
-        } else if ("RAND" == name && value != "FALSE") {
-            random_color = true;
+        } else if ("RAND" == name && value != "false"){
+            static default_random_engine generator(42);
+            static uniform_int_distribution<int> distribution(0, 100);
+            static auto rng = bind(distribution, generator);
+            this->r = rng() / 100.0f;
+            this->g = rng() / 100.0f;
+            this->b = rng() / 100.0f;
         }
     }
     for (auto node = group->first_node(); node != NULL; node = node->next_sibling()) {
@@ -65,7 +71,7 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
             for (auto model = node->first_node(); model != NULL; model = model->next_sibling()) {
                 try {
                     models.push_back(Model(model->first_attribute()->value()));
-                } catch(string error) {
+                } catch (string error) {
                     cerr << error << endl;
                 }
             }
@@ -188,7 +194,7 @@ unique_ptr<Transformation> parse_translate(xml_node<char>* node)
         params[name] = attr->value();
     }
     if (params["TIME"] != "") {
-        float dur = stof(params["TIME"]);
+        float dur = params["TIME"] != "" ? stof(params["TIME"]) : 1.0;
         vector<Point> points;
         for (auto point = node->first_node(); point != NULL; point = point->next_sibling()) {
             x = y = z = 0.0f;

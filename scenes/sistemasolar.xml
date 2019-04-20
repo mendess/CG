@@ -224,7 +224,7 @@
              </models>
          </group>
          <!-- Earth -->
-         <group R="0.0" G="0" B="1" >
+         <group RAND="true" >
              <translate time="19.756552839722122">
                  <point X="0.0" Z="2.5"/>
                  <point X="0.15697629882328343" Z="2.495066821070679"/>
