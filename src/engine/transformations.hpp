@@ -73,6 +73,8 @@ private:
     std::vector<Point> points;
     float dur;
 
+    Point get_position(double) const;
+
 public:
     TranslateAnimated(std::vector<Point> points, float dur)
         : points(points)
@@ -105,6 +107,8 @@ public:
 class ScaleAnimated : public Transformation {
 private:
     float xi, yi, zi, xf, yf, zf, dur;
+
+    std::tuple<float, float, float> get_ratio(double) const;
 
 public:
     ScaleAnimated(float xi, float yi, float zi,

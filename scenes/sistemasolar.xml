@@ -224,7 +224,7 @@
              </models>
          </group>
          <!-- Earth -->
-         <group RAND="true" >
+         <group R="0" G="0.52" B="0.74" >
              <translate time="19.756552839722122">
                  <point X="0.0" Z="2.5"/>
                  <point X="0.15697629882328343" Z="2.495066821070679"/>
@@ -2302,7 +2302,7 @@
              </models>
          </group>
          <!-- Commet -->
-         <group R="0.6" G="0.6" B="0.6" >
+         <group R="1" G="0.6" B="0" >
              <translate time="20">
                  <point X="11.25" Z="8.0"/>
                  <point X="12.1918577929397" Z="7.9842138274261725"/>
