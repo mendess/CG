@@ -174,7 +174,7 @@ neptune_moons = [
 
 mercury = Planet('Mercury', orbit_x=1.8,  orbit_y=1.8,  radius=0.0216, r=1.0,    g=0,      b=0)
 venus   = Planet('Venus',   orbit_x=2.2,  orbit_y=2.2,  radius=0.0531, r=0.0,    g=1,      b=0)
-earth   = Planet('Earth',   orbit_x=2.5,  orbit_y=2.5,  radius=0.0555, r=0.0,    g=0,      b=1, moons=earth_moon)
+earth   = Planet('Earth',   orbit_x=2.5,  orbit_y=2.5,  radius=0.0555, r=0.0,    g=0.52,      b=0.74, moons=earth_moon)
 mars    = Planet('Mars',    orbit_x=3.4,  orbit_y=3.4,  radius=0.0333, r=0.5,    g=0,      b=0)
 jupiter = Planet('Jupiter', orbit_x=7.2,  orbit_y=7.2,  radius=0.6111, r=0.6030, g=0.490,  b=0.373, moons=jupiter_moons)
 saturn  = Planet('Saturn',  orbit_x=13.6, orbit_y=13.6, radius=0.4888, r=0.9290, g=0.800,  b=0.6588, moons=saturn_moons, rings=saturn_rings)
