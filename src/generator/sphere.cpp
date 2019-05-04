@@ -35,29 +35,17 @@ std::vector<Point> Sphere::draw() const
             float currentStack = theta * thetaMovement;
             float currentSlice = phi * phiMovement;
 
-            coordsSphere.push_back(Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
-                radius * cos(currentStack + thetaMovement),
-                radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
-
-            coordsSphere.push_back(Point(radius * sin(currentStack) * sin(currentSlice),
-                radius * cos(currentStack),
-                radius * sin(currentStack) * cos(currentSlice)));
-
-            coordsSphere.push_back(Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice),
-                radius * cos(currentStack + thetaMovement),
-                radius * sin(currentStack + thetaMovement) * cos(currentSlice)));
-
-            coordsSphere.push_back(Point(radius * sin(currentStack) * sin(currentSlice + phiMovement),
-                radius * cos(currentStack),
-                radius * sin(currentStack) * cos(currentSlice + phiMovement)));
-
-            coordsSphere.push_back(Point(radius * sin(currentStack) * sin(currentSlice),
-                radius * cos(currentStack),
-                radius * sin(currentStack) * cos(currentSlice)));
-
-            coordsSphere.push_back(Point(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement),
-                radius * cos(currentStack + thetaMovement),
-                radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement)));
+            Point p0(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement), radius * cos(currentStack + thetaMovement), radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement));
+            Point p1(radius * sin(currentStack + thetaMovement) * sin(currentSlice), radius * cos(currentStack + thetaMovement), radius * sin(currentStack + thetaMovement) * cos(currentSlice));
+            Point p2(radius * sin(currentStack) * sin(currentSlice + phiMovement), radius * cos(currentStack), radius * sin(currentStack) * cos(currentSlice + phiMovement));
+            Point p3(radius * sin(currentStack) * sin(currentSlice), radius * cos(currentStack), radius * sin(currentStack) * cos(currentSlice));
+            //////
+            coordsSphere.push_back(p0);
+            coordsSphere.push_back(p3);
+            coordsSphere.push_back(p1);
+            coordsSphere.push_back(p2);
+            coordsSphere.push_back(p3);
+            coordsSphere.push_back(p0);
         }
 
     return coordsSphere;
