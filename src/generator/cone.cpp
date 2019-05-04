@@ -27,27 +27,36 @@ std::vector<Point> Cone::draw() const
     for (int i = 0; i < stacks; i++) {
         for (int k = 0; k < slices; k++) {
 
+            Point p0(0, 0, 0);
+            Point p1(radius * sin(phi * (k + 1)), 0, radius * cos(phi * (k + 1)));
+            Point p2(radius * sin(phi * k), 0, radius * cos(phi * k));
+            Point p3((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k));
+            Point p4((radius - theta * i) * sin(phi * (k + 1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k + 1)));
+            Point p5(0, stacks * stackSpacing, 0);
+            Point p6((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1)));
+            Point p7((radius - theta * (i + 1)) * sin(phi * k), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * k));
+
             if (!i) {
                 //Base
-                coordsCone.push_back(Point(0, 0, 0));
-                coordsCone.push_back(Point(radius * sin(phi * (k + 1)), 0, radius * cos(phi * (k + 1))));
-                coordsCone.push_back(Point(radius * sin(phi * k), 0, radius * cos(phi * k)));
+                coordsCone.push_back(p0);
+                coordsCone.push_back(p1);
+                coordsCone.push_back(p2);
             }
 
             if (i == stacks - 1) {
                 //Top
-                coordsCone.push_back(Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
-                coordsCone.push_back(Point((radius - theta * i) * sin(phi * (k + 1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k + 1))));
-                coordsCone.push_back(Point(0, stacks * stackSpacing, 0));
+                coordsCone.push_back(p3);
+                coordsCone.push_back(p4);
+                coordsCone.push_back(p5);
             }
 
             else { //Around
-                coordsCone.push_back(Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
-                coordsCone.push_back(Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
-                coordsCone.push_back(Point((radius - theta * (i + 1)) * sin(phi * k), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * k)));
-                coordsCone.push_back(Point((radius - theta * i) * sin(phi * k), i * stackSpacing, (radius - theta * i) * cos(phi * k)));
-                coordsCone.push_back(Point((radius - theta * i) * sin(phi * (k + 1)), i * stackSpacing, (radius - theta * i) * cos(phi * (k + 1))));
-                coordsCone.push_back(Point((radius - theta * (i + 1)) * sin(phi * (k + 1)), (i + 1) * stackSpacing, (radius - theta * (i + 1)) * cos(phi * (k + 1))));
+                coordsCone.push_back(p3);
+                coordsCone.push_back(p6);
+                coordsCone.push_back(p7);
+                coordsCone.push_back(p3);
+                coordsCone.push_back(p4);
+                coordsCone.push_back(p6);
             }
         }
     }
