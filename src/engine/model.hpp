@@ -16,10 +16,12 @@ class Model {
 private:
     GLuint buffer;
     std::vector<float> vbo;
+    std::vector<float> normals;
+    std::vector<float> texture_coords;
     size_t n_vertices;
     bool prepared;
 
-    void push(float, float, float);
+    void push(float, float, float, float, float, float, float, float);
 
 public:
     Model(char*);

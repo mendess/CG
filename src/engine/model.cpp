@@ -19,7 +19,7 @@ using namespace std;
 Model::Model(char* modelFile)
     : prepared(false)
 {
-    float x, y, z;
+    float x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y;
     ifstream infile(modelFile);
     if (!infile.good()) {
         string error = "Couldn't load '";
@@ -27,8 +27,8 @@ Model::Model(char* modelFile)
         error.append("': No such file or directory");
         throw error;
     }
-    while (infile >> x >> y >> z) {
-        push(x, y, z);
+    while (infile >> x >> y >> z >> normal_x >> normal_y >> normal_z >> texture_x >> texture_y) {
+        push(x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y);
     }
     n_vertices = vbo.size() / 3;
 }
@@ -46,9 +46,22 @@ void Model::draw()
     glDrawArrays(GL_TRIANGLES, 0, n_vertices);
 }
 
-void Model::push(float x, float y, float z)
+inline void Model::push(
+    float x,
+    float y,
+    float z,
+    float normal_x,
+    float normal_y,
+    float normal_z,
+    float texture_x,
+    float texture_y)
 {
     vbo.push_back(x);
     vbo.push_back(y);
     vbo.push_back(z);
+    normals.push_back(normal_x);
+    normals.push_back(normal_y);
+    normals.push_back(normal_z);
+    texture_coords.push_back(texture_x);
+    texture_coords.push_back(texture_y);
 }

@@ -13,13 +13,11 @@
 
 using namespace std;
 
-static tuple<Point, Point> getGlobalCatmullRomPoint(vector<Point> points, float gt);
+static tuple<Point, Vector> getGlobalCatmullRomPoint(vector<Point> points, float gt);
 static Matrix translate_matrix(float x, float y, float z);
 static Matrix scale_matrix(float x, float y, float z);
 static Matrix rotation_matrix(float angle, float x, float y, float z);
-static void buildRotMatrix(Point, Point, Point, float* m);
-static Point cross(Point, Point);
-static Point normalize(Point);
+static void buildRotMatrix(Vector, Vector, Vector, float* m);
 static float length(const float* v);
 static void multMatrixVector(const float m[4][4], const float v[4], float res[4]);
 
@@ -57,31 +55,32 @@ Matrix TranslateStatic::matrix(double elapsed) const
 
 bool TranslateAnimated::show_routes = false;
 
-Point TranslateAnimated::get_position(double elapsed) const
+tuple<Point, Vector> TranslateAnimated::get_position(double elapsed) const
 {
     while (elapsed > dur)
         elapsed -= dur;
-    tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, elapsed / dur);
-    return get<0>(pos_deriv);
+    tuple<Point, Vector> pos_deriv = getGlobalCatmullRomPoint(points, elapsed / dur);
+    return pos_deriv;
 }
 
 void TranslateAnimated::transform(double elapsed) const
 {
     if (show_routes)
         draw_routes();
-    Point pos = get_position(elapsed);
+    auto pos_deriv = get_position(elapsed);
+    Point pos = get<0>(pos_deriv);
     glTranslatef(pos.x(), pos.y(), pos.z());
-    /* Point X = normalize(get<1>(pos_deriv)); */
-    /* Point Z = normalize(cross(X, { 0, 1, 0 })); */
-    /* Point Y = normalize(cross(Z, X)); */
-    /* float m[16]; */
-    /* buildRotMatrix(X, Y, Z, m); */
-    /* glMultMatrixf(m); */
+    Vector X = get<1>(pos_deriv).normalize();
+    Vector Z = X.cross({ 0, 1, 0 }).normalize();
+    Vector Y = Z.cross(X).normalize();
+    float m[16];
+    buildRotMatrix(X, Y, Z, m);
+    glMultMatrixf(m);
 }
 
 Matrix TranslateAnimated::matrix(double elapsed) const
 {
-    Point pos = get_position(elapsed);
+    Point pos = get<0>(get_position(elapsed));
     return translate_matrix(pos.x(), pos.y(), pos.z());
 }
 
@@ -92,7 +91,7 @@ void TranslateAnimated::draw_routes() const
     const float gt_step = 1.0 / NUM_STEPS;
     glBegin(GL_LINE_LOOP);
     for (int i = 0; i < NUM_STEPS; i++) {
-        tuple<Point, Point> pos_deriv = getGlobalCatmullRomPoint(points, gt);
+        tuple<Point, Vector> pos_deriv = getGlobalCatmullRomPoint(points, gt);
         Point pos = get<0>(pos_deriv);
         glVertex3f(pos.x(), pos.y(), pos.z());
         gt += gt_step;
@@ -169,7 +168,7 @@ Matrix rotation_matrix(float angle, float x, float y, float z)
     return m;
 }
 
-void buildRotMatrix(Point x, Point y, Point z, float* m)
+void buildRotMatrix(Vector x, Vector y, Vector z, float* m)
 {
     m[0] = x.x();
     m[1] = x.y();
@@ -184,19 +183,6 @@ void buildRotMatrix(Point x, Point y, Point z, float* m)
     m[3] = m[7] = m[11] = m[12] = m[13] = m[14] = 0;
 }
 
-Point cross(Point a, Point b)
-{
-    return Point(
-        a.y() * b.z() - a.z() * b.y(),
-        a.z() * b.x() - a.x() * b.z(),
-        a.x() * b.y() - a.y() * b.z());
-}
-
-Point normalize(Point p)
-{
-    return p / sqrt(p.x() * p.x() + p.y() * p.y() + p.z() * p.z());
-}
-
 void multMatrixVector(const float m[4][4], const float v[4], float res[4])
 {
     for (int j = 0; j < 4; ++j) {
@@ -207,7 +193,7 @@ void multMatrixVector(const float m[4][4], const float v[4], float res[4])
     }
 }
 
-tuple<Point, Point> getCatmullRomPoint(float t, Point p0, Point p1, Point p2, Point p3)
+tuple<Point, Vector> getCatmullRomPoint(float t, Point p0, Point p1, Point p2, Point p3)
 {
     // catmull-rom matrix
     const float m[4][4] = {
@@ -237,7 +223,7 @@ tuple<Point, Point> getCatmullRomPoint(float t, Point p0, Point p1, Point p2, Po
         tv[0] * aZ[0] + tv[1] * aZ[1] + tv[2] * aZ[2] + tv[3] * aZ[3]);
     // compute deriv = T' * A
     float tvl[4] = { 3 * t * t, 2 * t, 1, 0 };
-    Point deriv(
+    Vector deriv(
         tvl[0] * aX[0] + tvl[1] * aX[1] + tvl[2] * aX[2] + tvl[3] * aX[3],
         tvl[0] * aY[0] + tvl[1] * aY[1] + tvl[2] * aY[2] + tvl[3] * aY[3],
         tvl[0] * aZ[0] + tvl[1] * aZ[1] + tvl[2] * aZ[2] + tvl[3] * aZ[3]);
@@ -245,7 +231,7 @@ tuple<Point, Point> getCatmullRomPoint(float t, Point p0, Point p1, Point p2, Po
 }
 
 // given  global t, returns the point in the curve
-tuple<Point, Point> getGlobalCatmullRomPoint(vector<Point> points, float gt)
+tuple<Point, Vector> getGlobalCatmullRomPoint(vector<Point> points, float gt)
 {
     const size_t point_count = points.size();
     float t = gt * point_count; // this is the real global t

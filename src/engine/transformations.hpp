@@ -73,7 +73,7 @@ private:
     std::vector<Point> points;
     float dur;
 
-    Point get_position(double) const;
+    std::tuple<Point, Vector> get_position(double) const;
 
 public:
     TranslateAnimated(std::vector<Point> points, float dur)
