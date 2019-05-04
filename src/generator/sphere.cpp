@@ -32,12 +32,14 @@ std::vector<Point> Sphere::draw() const
     for (int phi = 0; phi < slices; phi++)
         for (int theta = 0; theta < stacks; theta++) {
 
-            float currentStack = theta * thetaMovement;
-            float currentSlice = phi * phiMovement;
+            const float currentStack = theta * thetaMovement;
+            const float currentSlice = phi * phiMovement;
+            const float nextStack = currentStack + thetaMovement;
+            const float nextSlice = currentSlice + phiMovement;
 
-            Point p0(radius * sin(currentStack + thetaMovement) * sin(currentSlice + phiMovement), radius * cos(currentStack + thetaMovement), radius * sin(currentStack + thetaMovement) * cos(currentSlice + phiMovement));
-            Point p1(radius * sin(currentStack + thetaMovement) * sin(currentSlice), radius * cos(currentStack + thetaMovement), radius * sin(currentStack + thetaMovement) * cos(currentSlice));
-            Point p2(radius * sin(currentStack) * sin(currentSlice + phiMovement), radius * cos(currentStack), radius * sin(currentStack) * cos(currentSlice + phiMovement));
+            Point p0(radius * sin(nextStack) * sin(nextSlice), radius * cos(nextStack), radius * sin(nextStack) * cos(nextSlice));
+            Point p1(radius * sin(nextStack) * sin(currentSlice), radius * cos(nextStack), radius * sin(nextStack) * cos(currentSlice));
+            Point p2(radius * sin(currentStack) * sin(nextSlice), radius * cos(currentStack), radius * sin(currentStack) * cos(nextSlice));
             Point p3(radius * sin(currentStack) * sin(currentSlice), radius * cos(currentStack), radius * sin(currentStack) * cos(currentSlice));
             //////
             coordsSphere.push_back(p0);
