@@ -28,6 +28,8 @@ unique_ptr<Transformation> parse_rotate(xml_node<char>* node);
 
 unique_ptr<Transformation> parse_scale(xml_node<char>* node);
 
+unique_ptr<Model> parse_model(xml_node<char>* node);
+
 void mutl_matrix(const float a[4][4], float b[4][4]);
 
 Group::Group(xml_node<char>* group, float r, float g, float b, float a)
@@ -55,7 +57,7 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
             this->b = stof(value);
         } else if ("A" == name) {
             this->a = stof(attr->value());
-        } else if ("RAND" == name && value != "false"){
+        } else if ("RAND" == name && value != "false") {
             static default_random_engine generator(42);
             static uniform_int_distribution<int> distribution(0, 100);
             static auto rng = bind(distribution, generator);
@@ -70,7 +72,7 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         if ("models" == name) {
             for (auto model = node->first_node(); model != NULL; model = model->next_sibling()) {
                 try {
-                    models.push_back(Model(model->first_attribute()->value()));
+                    models.push_back(parse_model(model));
                 } catch (string error) {
                     cerr << error << endl;
                 }
@@ -95,7 +97,17 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
     _levels = max_level + 1;
 }
 
-void Group::draw(int max_depth, double elapsed)
+void Group::prepare()
+{
+    for (size_t i = 0; i < models.size(); i++) {
+        models[i]->prepare();
+    }
+    for (size_t i = 0; i < subgroups.size(); i++) {
+        subgroups[i].prepare();
+    }
+}
+
+void Group::draw(int max_depth, double elapsed) const
 {
     if (max_depth > 0) {
         glPushMatrix();
@@ -103,11 +115,11 @@ void Group::draw(int max_depth, double elapsed)
         for (const auto& transformation : transformations) {
             transformation->transform(elapsed);
         }
-        for (size_t i = 0; i < models.size(); i++) {
-            models[i].draw();
+        for (const auto& model : models) {
+            model->draw();
         }
-        for (size_t i = 0; i < subgroups.size(); i++) {
-            subgroups[i].draw(max_depth - 1, elapsed);
+        for (const auto& subgroup : subgroups) {
+            subgroup.draw(max_depth - 1, elapsed);
         }
         glPopMatrix();
     }
@@ -300,4 +312,44 @@ unique_ptr<Transformation> parse_scale(xml_node<char>* node)
     } else {
         return make_unique<ScaleAnimated>(xi, yi, zi, xf, yf, zf, dur);
     }
+}
+
+unique_ptr<Model> parse_model(xml_node<char>* node)
+{
+    ModelBuilder mb;
+    for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
+        string name = string(attr->name());
+        string value = string(attr->value());
+        std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+        if("FILE" == name) {
+            mb.withFile(value);
+        } else if ("TEXTURE" == name) {
+            mb.withTexture(value);
+        } else if ("DIFFR" == name) {
+            mb.withDiffuseR(stof(value));
+        } else if ("SPECR" == name) {
+            mb.withSpecularR(stof(value));
+        } else if ("EMISR" == name) {
+            mb.withEmissiveR(stof(value));
+        } else if ("AMBIR" == name) {
+            mb.withAmbientR(stof(value));
+        } else if ("DIFFG" == name) {
+            mb.withDiffuseG(stof(value));
+        } else if ("SPECG" == name) {
+            mb.withSpecularG(stof(value));
+        } else if ("EMISG" == name) {
+            mb.withEmissiveG(stof(value));
+        } else if ("AMBIG" == name) {
+            mb.withAmbientG(stof(value));
+        } else if ("DIFFB" == name) {
+            mb.withDiffuseB(stof(value));
+        } else if ("SPECB" == name) {
+            mb.withSpecularB(stof(value));
+        } else if ("EMISB" == name) {
+            mb.withEmissiveB(stof(value));
+        } else if ("AMBIB" == name) {
+            mb.withAmbientB(stof(value));
+        }
+    }
+    return mb.build();
 }

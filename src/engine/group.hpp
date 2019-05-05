@@ -11,7 +11,7 @@
 class Group {
 private:
     std::vector<std::unique_ptr<Transformation>> transformations;
-    std::vector<Model> models;
+    std::vector<std::unique_ptr<Model>> models;
     std::vector<Group> subgroups;
     int _levels;
     int _model_count;
@@ -30,7 +30,8 @@ public:
     int levels() const { return _levels; };
     int model_count() const { return _model_count; }
     std::optional<Point> get_model_position(size_t, double) const;
-    void draw(int, double);
+    void prepare();
+    void draw(int, double) const;
 };
 
 #endif // GROUP_HPP

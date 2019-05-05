@@ -4,9 +4,13 @@
 
 #include <iostream>
 #include <sstream>
+
+#include <IL/il.h>
+
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
+#include <GL/glew.h>
 #include <GL/glut.h>
 #endif
 
@@ -205,20 +209,33 @@ int render(int argc, char** argv, Group* scene)
     glutCreateWindow("CG-Engine");
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    // Required callback registry
+
     SCENE = scene;
     DRAW_LEVEL = SCENE->levels();
+
+    // Required callback registry
     glutDisplayFunc(renderScene);
     glutReshapeFunc(changeSize);
     glutIdleFunc(renderScene);
     glutKeyboardFunc(key_bindings);
 
     glewInit();
+
     //  OpenGL settings
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_TEXTURE_2D);
+
+    SCENE->prepare();
+
     glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    ilInit();
+
     // enter GLUT's main cycle
+
     glutMainLoop();
     return 1;
 }
