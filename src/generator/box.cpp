@@ -2,8 +2,6 @@
 #include <stdexcept>
 #include <tuple>
 
-#include <iostream>
-
 using namespace std;
 
 Box::Box(int argc, char** args)
@@ -53,7 +51,6 @@ std::vector<Point> Box::draw() const
             const Vector rightV = Vector(1, 0, 0);
             //Front
             {
-                cout << "Front" << endl;
                 const auto f = [=](Point p) { return p.setXYtoTexture(halfX, halfY, 0, 0); };
                 coordsBox.push_back(f(Point(currentX, currentY, halfZ, frontV)));
                 coordsBox.push_back(f(Point(nextX, currentY, halfZ, frontV)));
@@ -61,16 +58,9 @@ std::vector<Point> Box::draw() const
                 coordsBox.push_back(f(Point(nextX, currentY, halfZ, frontV)));
                 coordsBox.push_back(f(Point(nextX, nextY, halfZ, frontV)));
                 coordsBox.push_back(f(Point(currentX, nextY, halfZ, frontV)));
-                cout << f(Point(currentX, currentY, halfZ, frontV)).to_string() << endl;
-                cout << f(Point(nextX, currentY, halfZ, frontV)).to_string() << endl;
-                cout << f(Point(currentX, nextY, halfZ, frontV)).to_string() << endl;
-                cout << f(Point(nextX, currentY, halfZ, frontV)).to_string() << endl;
-                cout << f(Point(nextX, nextY, halfZ, frontV)).to_string() << endl;
-                cout << f(Point(currentX, nextY, halfZ, frontV)).to_string() << endl;
             }
             //Back
             {
-                cout << "Back" << endl;
                 const auto f = [=](Point p) { return p.setXYtoTexture(halfX, halfY, 0, .5f); };
                 coordsBox.push_back(f(Point(currentX, currentY, -halfZ, backV)));
                 coordsBox.push_back(f(Point(currentX, nextY, -halfZ, backV)));
@@ -78,16 +68,9 @@ std::vector<Point> Box::draw() const
                 coordsBox.push_back(f(Point(nextX, currentY, -halfZ, backV)));
                 coordsBox.push_back(f(Point(currentX, nextY, -halfZ, backV)));
                 coordsBox.push_back(f(Point(nextX, nextY, -halfZ, backV)));
-                cout << f(Point(currentX, currentY, -halfZ, backV)).to_string() << endl;
-                cout << f(Point(currentX, nextY, -halfZ, backV)).to_string() << endl;
-                cout << f(Point(nextX, currentY, -halfZ, backV)).to_string() << endl;
-                cout << f(Point(nextX, currentY, -halfZ, backV)).to_string() << endl;
-                cout << f(Point(currentX, nextY, -halfZ, backV)).to_string() << endl;
-                cout << f(Point(nextX, nextY, -halfZ, backV)).to_string() << endl;
             }
             //Up
             {
-                cout << "Up" << endl;
                 const auto f = [=](Point p) { return p.setXZtoTexture(halfX, halfZ, 1.f / 3.f, 0); };
                 coordsBox.push_back(f(Point(currentX, halfY, currentZ, upV)));
                 coordsBox.push_back(f(Point(currentX, halfY, nextZ, upV)));
@@ -95,16 +78,9 @@ std::vector<Point> Box::draw() const
                 coordsBox.push_back(f(Point(currentX, halfY, currentZ, upV)));
                 coordsBox.push_back(f(Point(nextX, halfY, nextZ, upV)));
                 coordsBox.push_back(f(Point(nextX, halfY, currentZ, upV)));
-                cout << f(Point(currentX, halfY, currentZ, upV)).to_string() << endl;
-                cout << f(Point(currentX, halfY, nextZ, upV)).to_string() << endl;
-                cout << f(Point(nextX, halfY, nextZ, upV)).to_string() << endl;
-                cout << f(Point(currentX, halfY, currentZ, upV)).to_string() << endl;
-                cout << f(Point(nextX, halfY, nextZ, upV)).to_string() << endl;
-                cout << f(Point(nextX, halfY, currentZ, upV)).to_string() << endl;
             }
             //Down
             {
-                cout << "Down" << endl;
                 const auto f = [=](Point p) { return p.setXZtoTexture(halfX, halfZ, 1.f / 3.f, .5f); };
                 coordsBox.push_back(f(Point(currentX, -halfY, currentZ, downV)));
                 coordsBox.push_back(f(Point(nextX, -halfY, nextZ, downV)));
@@ -112,16 +88,9 @@ std::vector<Point> Box::draw() const
                 coordsBox.push_back(f(Point(currentX, -halfY, currentZ, downV)));
                 coordsBox.push_back(f(Point(nextX, -halfY, currentZ, downV)));
                 coordsBox.push_back(f(Point(nextX, -halfY, nextZ, downV)));
-                cout << f(Point(currentX, -halfY, currentZ, downV)).to_string() << endl;
-                cout << f(Point(nextX, -halfY, nextZ, downV)).to_string() << endl;
-                cout << f(Point(currentX, -halfY, nextZ, downV)).to_string() << endl;
-                cout << f(Point(currentX, -halfY, currentZ, downV)).to_string() << endl;
-                cout << f(Point(nextX, -halfY, currentZ, downV)).to_string() << endl;
-                cout << f(Point(nextX, -halfY, nextZ, downV)).to_string() << endl;
             }
             //Left
             {
-                cout << "Left" << endl;
                 const auto f = [=](Point p) { return p.setYZtoTexture(halfY, halfY, 2.f / 3.f, 0); };
                 coordsBox.push_back(f(Point(-halfX, -halfY + spacingY * i, currentZ, leftV)));
                 coordsBox.push_back(f(Point(-halfX, -halfY + spacingY * i, nextZ, leftV)));
@@ -129,16 +98,9 @@ std::vector<Point> Box::draw() const
                 coordsBox.push_back(f(Point(-halfX, -halfY + spacingY * (i + 1), currentZ, leftV)));
                 coordsBox.push_back(f(Point(-halfX, -halfY + spacingY * i, nextZ, leftV)));
                 coordsBox.push_back(f(Point(-halfX, -halfY + spacingY * (i + 1), nextZ, leftV)));
-                cout << f(Point(-halfX, -halfY + spacingY * i, currentZ, leftV)).to_string() << endl;
-                cout << f(Point(-halfX, -halfY + spacingY * i, nextZ, leftV)).to_string() << endl;
-                cout << f(Point(-halfX, -halfY + spacingY * (i + 1), currentZ, leftV)).to_string() << endl;
-                cout << f(Point(-halfX, -halfY + spacingY * (i + 1), currentZ, leftV)).to_string() << endl;
-                cout << f(Point(-halfX, -halfY + spacingY * i, nextZ, leftV)).to_string() << endl;
-                cout << f(Point(-halfX, -halfY + spacingY * (i + 1), nextZ, leftV)).to_string() << endl;
             }
             //Right
             {
-                cout << "Right" << endl;
                 const auto f = [=](Point p) { return p.setYZtoTexture(halfY, halfZ, 2.f / 3.f, .5f); };
                 coordsBox.push_back(f(Point(halfX, -halfY + spacingY * i, currentZ, rightV)));
                 coordsBox.push_back(f(Point(halfX, -halfY + spacingY * (i + 1), currentZ, rightV)));
@@ -146,12 +108,6 @@ std::vector<Point> Box::draw() const
                 coordsBox.push_back(f(Point(halfX, -halfY + spacingY * (i + 1), currentZ, rightV)));
                 coordsBox.push_back(f(Point(halfX, -halfY + spacingY * (i + 1), nextZ, rightV)));
                 coordsBox.push_back(f(Point(halfX, -halfY + spacingY * i, nextZ, rightV)));
-                cout << f(Point(halfX, -halfY + spacingY * i, currentZ, rightV)).to_string() << endl;
-                cout << f(Point(halfX, -halfY + spacingY * (i + 1), currentZ, rightV)).to_string() << endl;
-                cout << f(Point(halfX, -halfY + spacingY * i, nextZ, rightV)).to_string() << endl;
-                cout << f(Point(halfX, -halfY + spacingY * (i + 1), currentZ, rightV)).to_string() << endl;
-                cout << f(Point(halfX, -halfY + spacingY * (i + 1), nextZ, rightV)).to_string() << endl;
-                cout << f(Point(halfX, -halfY + spacingY * i, nextZ, rightV)).to_string() << endl;
             }
         }
     }

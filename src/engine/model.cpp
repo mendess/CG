@@ -166,22 +166,22 @@ SimpleModel::SimpleModel(string modelFile)
 void SimpleModel::prepare()
 {
     glGenBuffers(1, &buffer);
-    cout << "Generated buffer in: " << buffer << endl;
+    /* cout << "Generated buffer in: " << buffer << endl; */
 
-    cout << "Binding buffer: " << buffer << endl;
+    /* cout << "Binding buffer: " << buffer << endl; */
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
-    cout << "Buffering data os size: " << vbo.size() * sizeof(float) << endl;
+    /* cout << "Buffering data os size: " << vbo.size() * sizeof(float) << endl; */
     glBufferData(GL_ARRAY_BUFFER, vbo.size() * sizeof(float), vbo.data(), GL_STATIC_DRAW);
 }
 
 void SimpleModel::draw() const
 {
-    cout << "Binding buffer: " << buffer << endl;
+    /* cout << "Binding buffer: " << buffer << endl; */
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    cout << "Giving buffer semantics" << endl;
+    /* cout << "Giving buffer semantics" << endl; */
     glVertexPointer(3, GL_FLOAT, 0, 0);
-    cout << "Drawing arrays" << endl;
+    /* cout << "Drawing arrays" << endl; */
     glDrawArrays(GL_TRIANGLES, 0, n_vertices);
 }
 

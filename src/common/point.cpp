@@ -82,11 +82,18 @@ Point::Point(float x, float y, float z, Vector normal, tuple<float, float> textu
 {
 }
 
+Point Point::setNormalToOrigin() const
+{
+    return Point(
+        _x,
+        _y,
+        _z,
+        Vector(_x, _y, _z).normalize(),
+        make_tuple(0, 0));
+}
+
 Point Point::setXYtoTexture(float maxX, float maxY, float x_offset, float y_offset) const
 {
-    // maxX == 0.5
-    // maxY == 0.5
-    // offset == 0
     return Point(
         _x,
         _y,
@@ -114,6 +121,19 @@ Point Point::setYZtoTexture(float maxY, float maxZ, float y_offset, float z_offs
         _z,
         _normal,
         { y_offset + ((_y + maxY) * 0.33) / (2 * maxY), z_offset + ((_z + maxZ) * 0.5) / (2 * maxZ) });
+}
+
+#include <iostream>
+
+Point Point::setTexture(float x, float y) const
+{
+    cout << "x: " << x << " y: " << y << endl;
+    return Point(
+        _x,
+        _y,
+        _z,
+        _normal,
+        make_tuple(x, y));
 }
 
 array<float, 3> Point::as_array() const

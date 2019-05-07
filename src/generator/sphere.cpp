@@ -29,18 +29,36 @@ std::vector<Point> Sphere::draw() const
     //vertical direction to count all of the stacks;
     float thetaMovement = M_PI / stacks;
 
-    for (int phi = 0; phi < slices; phi++)
-        for (int theta = 0; theta < stacks; theta++) {
+    float texture_x_shift = 1.0 / slices;
+    float texture_y_shift = 1.0 / stacks;
 
+    for (int phi = 0; phi < slices; phi++) {
+        for (int theta = 0; theta < stacks; theta++) {
             const float currentStack = theta * thetaMovement;
             const float currentSlice = phi * phiMovement;
             const float nextStack = currentStack + thetaMovement;
             const float nextSlice = currentSlice + phiMovement;
 
-            Point p0(radius * sin(nextStack) * sin(nextSlice), radius * cos(nextStack), radius * sin(nextStack) * cos(nextSlice));
-            Point p1(radius * sin(nextStack) * sin(currentSlice), radius * cos(nextStack), radius * sin(nextStack) * cos(currentSlice));
-            Point p2(radius * sin(currentStack) * sin(nextSlice), radius * cos(currentStack), radius * sin(currentStack) * cos(nextSlice));
-            Point p3(radius * sin(currentStack) * sin(currentSlice), radius * cos(currentStack), radius * sin(currentStack) * cos(currentSlice));
+            const float texture_x = phi * texture_x_shift;
+            const float texture_y = theta * texture_y_shift;
+            const float next_texture_x = (phi + 1) * texture_x_shift;
+            const float next_texture_y = (theta + 1) * texture_y_shift;
+
+            Point p0 = Point(radius * sin(nextStack) * sin(nextSlice), radius * cos(nextStack), radius * sin(nextStack) * cos(nextSlice))
+                           .setNormalToOrigin()
+                           .setTexture(next_texture_x, next_texture_y);
+
+            Point p1 = Point(radius * sin(nextStack) * sin(currentSlice), radius * cos(nextStack), radius * sin(nextStack) * cos(currentSlice))
+                           .setNormalToOrigin()
+                           .setTexture(texture_x, next_texture_y);
+
+            Point p2 = Point(radius * sin(currentStack) * sin(nextSlice), radius * cos(currentStack), radius * sin(currentStack) * cos(nextSlice))
+                           .setNormalToOrigin()
+                           .setTexture(next_texture_x, texture_y);
+
+            Point p3 = Point(radius * sin(currentStack) * sin(currentSlice), radius * cos(currentStack), radius * sin(currentStack) * cos(currentSlice))
+                           .setNormalToOrigin()
+                           .setTexture(texture_x, texture_y);
             //////
             coordsSphere.push_back(p0);
             coordsSphere.push_back(p3);
@@ -49,6 +67,6 @@ std::vector<Point> Sphere::draw() const
             coordsSphere.push_back(p3);
             coordsSphere.push_back(p0);
         }
-
+    }
     return coordsSphere;
 }
