@@ -52,13 +52,17 @@ Point::Point(float x, float y, float z)
 {
 }
 
-Point::Point(
-    float x,
-    float y,
-    float z,
-    Vector normal,
-    float texture_x,
-    float texture_y)
+Point::Point(float x, float y, float z, Vector normal)
+    : _x(x)
+    , _y(y)
+    , _z(z)
+    , _normal(normal)
+    , _texture_x(0)
+    , _texture_y(0)
+{
+}
+
+Point::Point(float x, float y, float z, Vector normal, float texture_x, float texture_y)
     : _x(x)
     , _y(y)
     , _z(z)
@@ -66,6 +70,50 @@ Point::Point(
     , _texture_x(texture_x)
     , _texture_y(texture_y)
 {
+}
+
+Point::Point(float x, float y, float z, Vector normal, tuple<float, float> texture)
+    : _x(x)
+    , _y(y)
+    , _z(z)
+    , _normal(normal)
+    , _texture_x(get<0>(texture))
+    , _texture_y(get<1>(texture))
+{
+}
+
+Point Point::setXYtoTexture(float maxX, float maxY, float x_offset, float y_offset) const
+{
+    // maxX == 0.5
+    // maxY == 0.5
+    // offset == 0
+    return Point(
+        _x,
+        _y,
+        _z,
+        _normal,
+        { x_offset + ((_x + maxX) * 0.33) / (2 * maxX),
+            y_offset + ((_y + maxY) * 0.5) / (2 * maxY) });
+}
+
+Point Point::setXZtoTexture(float maxX, float maxZ, float x_offset, float z_offset) const
+{
+    return Point(
+        _x,
+        _y,
+        _z,
+        _normal,
+        { x_offset + ((_x + maxX) * 0.33) / (2 * maxX), z_offset + ((_z + maxZ) * 0.5) / (2 * maxZ) });
+}
+
+Point Point::setYZtoTexture(float maxY, float maxZ, float y_offset, float z_offset) const
+{
+    return Point(
+        _x,
+        _y,
+        _z,
+        _normal,
+        { y_offset + ((_y + maxY) * 0.33) / (2 * maxY), z_offset + ((_z + maxZ) * 0.5) / (2 * maxZ) });
 }
 
 array<float, 3> Point::as_array() const

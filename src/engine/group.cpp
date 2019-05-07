@@ -321,7 +321,7 @@ unique_ptr<Model> parse_model(xml_node<char>* node)
         string name = string(attr->name());
         string value = string(attr->value());
         std::transform(name.begin(), name.end(), name.begin(), ::toupper);
-        if("FILE" == name) {
+        if ("FILE" == name) {
             mb.withFile(value);
         } else if ("TEXTURE" == name) {
             mb.withTexture(value);

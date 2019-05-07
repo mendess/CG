@@ -106,7 +106,7 @@ void renderScene()
     static float deltaComulative = 0;
     deltaComulative += delta;
     static float fps = 60;
-    if(deltaComulative > 500) {
+    if (deltaComulative > 500) {
         deltaComulative -= 1000;
         fps = (1 / delta) * 1000;
     }
@@ -114,7 +114,7 @@ void renderScene()
     stringstream title;
     title.precision(2);
     title << "CG-Engine "
-          << " | FPS: "  << fps
+          << " | FPS: " << fps
           << " | Draw Level: " << DRAW_LEVEL
           << " | Camera Mode: "
           << Camera::to_string(Camera::current_camera())
@@ -226,16 +226,17 @@ int render(int argc, char** argv, Group* scene)
     glEnable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
 
+    ilInit();
+    ilEnable(IL_ORIGIN_SET);
+    ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
+
     SCENE->prepare();
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-    ilInit();
-
     // enter GLUT's main cycle
-
     glutMainLoop();
     return 1;
 }

@@ -8,12 +8,14 @@
 #include <random>
 #include <stdexcept>
 #include <string>
+
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
 #include <GL/glew.h>
 #include <GL/glut.h>
 #endif
+#include <IL/il.h>
 
 using namespace std;
 
@@ -133,10 +135,10 @@ unique_ptr<Model> ModelBuilder::build() const
 {
     if (!file) {
         throw invalid_argument("No model file");
-    } else if (simple) {
+    } else if (this->simple) {
         return make_unique<SimpleModel>(*file);
     } else if (texture_file) {
-        return make_unique<TexturedModel>(*file, *texture_file);
+        return make_unique<TexturedModel>(*file, *texture_file, *diffuse, *specular, *emissive, *ambient);
     } else {
         return make_unique<ColoredModel>(*file, *diffuse, *specular, *emissive, *ambient);
     }
@@ -153,7 +155,7 @@ SimpleModel::SimpleModel(string modelFile)
         throw error;
     }
     while (infile >> x >> y >> z >> normal_x >> normal_y >> normal_z >> texture_x >> texture_y) {
-        push(x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y);
+        push(x, y, z);
     }
     n_vertices = vbo.size() / 3;
     buffer = 0;
@@ -186,12 +188,7 @@ void SimpleModel::draw() const
 inline void SimpleModel::push(
     float x,
     float y,
-    float z,
-    float normal_x,
-    float normal_y,
-    float normal_z,
-    float texture_x,
-    float texture_y)
+    float z)
 {
     vbo.push_back(x);
     vbo.push_back(y);
@@ -199,6 +196,10 @@ inline void SimpleModel::push(
 }
 
 ColoredModel::ColoredModel(string modelFile, RGB diffuse, RGB specular, RGB emissive, RGB ambient)
+    : diffuse(diffuse)
+    , specular(specular)
+    , emissive(emissive)
+    , ambient(ambient)
 {
     float x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y;
     ifstream infile(modelFile);
@@ -209,13 +210,9 @@ ColoredModel::ColoredModel(string modelFile, RGB diffuse, RGB specular, RGB emis
         throw error;
     }
     while (infile >> x >> y >> z >> normal_x >> normal_y >> normal_z >> texture_x >> texture_y) {
-        push(x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y);
+        push(x, y, z, normal_x, normal_y, normal_z);
     }
     n_vertices = vbo.size() / 3;
-    this->diffuse = diffuse;
-    this->specular = specular;
-    this->emissive = emissive;
-    this->ambient = ambient;
 }
 
 void ColoredModel::prepare()
@@ -231,6 +228,18 @@ void ColoredModel::prepare()
 
 void ColoredModel::draw() const
 {
+    float diffuse_arr[] = { diffuse.r, diffuse.g, diffuse.b, 1 };
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_arr);
+
+    float specular_arr[] = { specular.r, specular.g, specular.b, 1 };
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_arr);
+
+    float emissive_arr[] = { emissive.r, emissive.g, emissive.b, 1 };
+    glMaterialfv(GL_FRONT, GL_EMISSION, emissive_arr);
+
+    float ambient_arr[] = { ambient.r, ambient.g, ambient.b, 1 };
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_arr);
+
     glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer());
     glVertexPointer(3, GL_FLOAT, 0, 0);
 
@@ -246,9 +255,7 @@ inline void ColoredModel::push(
     float z,
     float normal_x,
     float normal_y,
-    float normal_z,
-    float texture_x,
-    float texture_y)
+    float normal_z)
 {
     vbo.push_back(x);
     vbo.push_back(y);
@@ -258,7 +265,18 @@ inline void ColoredModel::push(
     normals.push_back(normal_z);
 }
 
-TexturedModel::TexturedModel(string modelFile, string texture_file)
+TexturedModel::TexturedModel(
+    string modelFile,
+    string texture_file,
+    RGB diffuse,
+    RGB specular,
+    RGB emissive,
+    RGB ambient)
+    : texture_file(texture_file)
+    , diffuse(diffuse)
+    , specular(specular)
+    , emissive(emissive)
+    , ambient(ambient)
 {
     float x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y;
     ifstream infile(modelFile);
@@ -286,10 +304,39 @@ void TexturedModel::prepare()
 
     glBindBuffer(GL_ARRAY_BUFFER, texture_buffer());
     glBufferData(GL_ARRAY_BUFFER, texture_coords.size() * sizeof(float), texture_coords.data(), GL_STATIC_DRAW);
+
+    unsigned int t, tw, th;
+    ilGenImages(1, &t);
+    ilBindImage(t);
+    ilLoadImage((ILstring)texture_file.c_str());
+    tw = ilGetInteger(IL_IMAGE_WIDTH);
+    th = ilGetInteger(IL_IMAGE_HEIGHT);
+    ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+    unsigned char* texData = ilGetData();
+
+    glGenTextures(1, &texture_slot);
+    glBindTexture(GL_TEXTURE_2D, texture_slot);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tw, th, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
 }
 
 void TexturedModel::draw() const
 {
+    float diffuse_arr[] = { diffuse.r, diffuse.g, diffuse.b, 1 };
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_arr);
+
+    float specular_arr[] = { specular.r, specular.g, specular.b, 1 };
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_arr);
+
+    float emissive_arr[] = { emissive.r, emissive.g, emissive.b, 1 };
+    glMaterialfv(GL_FRONT, GL_EMISSION, emissive_arr);
+
+    float ambient_arr[] = { ambient.r, ambient.g, ambient.b, 1 };
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_arr);
+
     glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer());
     glVertexPointer(3, GL_FLOAT, 0, 0);
 
@@ -299,7 +346,9 @@ void TexturedModel::draw() const
     glBindBuffer(GL_ARRAY_BUFFER, texture_buffer());
     glTexCoordPointer(2, GL_FLOAT, 0, 0);
 
+    glBindTexture(GL_TEXTURE_2D, texture_slot);
     glDrawArrays(GL_TRIANGLES, 0, n_vertices);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 inline void TexturedModel::push(

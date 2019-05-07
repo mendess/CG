@@ -2,6 +2,7 @@
 #define POINT_H
 #include <array>
 #include <string>
+#include <tuple>
 
 class Vector {
 private:
@@ -27,7 +28,9 @@ private:
 public:
     Point();
     Point(float, float, float);
+    Point(float, float, float, Vector);
     Point(float, float, float, Vector, float, float);
+    Point(float, float, float, Vector, std::tuple<float, float>);
     std::string to_string() const;
     float x() const { return _x; }
     float y() const { return _y; }
@@ -35,6 +38,9 @@ public:
     Vector normal() const { return _normal; }
     float texture_x() const { return _texture_x; }
     float texture_y() const { return _texture_y; }
+    Point setXYtoTexture(float, float, float, float) const;
+    Point setXZtoTexture(float, float, float, float) const;
+    Point setYZtoTexture(float, float, float, float) const;
     std::array<float, 3> as_array() const;
     Point operator+(const Point) const;
     Point operator*(float)const;
