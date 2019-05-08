@@ -57,9 +57,8 @@ bool TranslateAnimated::show_routes = false;
 
 tuple<Point, Vector> TranslateAnimated::get_position(double elapsed) const
 {
-    while (elapsed > dur)
-        elapsed -= dur;
-    tuple<Point, Vector> pos_deriv = getGlobalCatmullRomPoint(points, elapsed / dur);
+    int elapsed_i = ((int) elapsed) % ((int) dur);
+    tuple<Point, Vector> pos_deriv = getGlobalCatmullRomPoint(points, ((float) elapsed_i) / dur);
     return pos_deriv;
 }
 
@@ -70,12 +69,12 @@ void TranslateAnimated::transform(double elapsed) const
     auto pos_deriv = get_position(elapsed);
     Point pos = get<0>(pos_deriv);
     glTranslatef(pos.x(), pos.y(), pos.z());
-    Vector X = get<1>(pos_deriv).normalize();
-    Vector Z = X.cross({ 0, 1, 0 }).normalize();
-    Vector Y = Z.cross(X).normalize();
-    float m[16];
-    buildRotMatrix(X, Y, Z, m);
-    glMultMatrixf(m);
+    /* Vector X = get<1>(pos_deriv).normalize(); */
+    /* Vector Z = X.cross({ 0, 1, 0 }).normalize(); */
+    /* Vector Y = Z.cross(X).normalize(); */
+    /* float m[16]; */
+    /* buildRotMatrix(X, Y, Z, m); */
+    /* glMultMatrixf(m); */
 }
 
 Matrix TranslateAnimated::matrix(double elapsed) const
