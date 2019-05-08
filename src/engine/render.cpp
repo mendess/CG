@@ -21,7 +21,7 @@ using namespace std;
 namespace Render {
 
 static float SCALE = 1;
-static Group* SCENE;
+static unique_ptr<Scene> SCENE;
 static int DRAW_LEVEL = -1;
 static bool SHOW_AXIS = false;
 static size_t FOLLOW_TARGET = 0;
@@ -199,7 +199,7 @@ void key_bindings(unsigned char key, int _x, int _y)
     renderScene();
 }
 
-int render(int argc, char** argv, Group* scene)
+int render(int argc, char** argv, unique_ptr<Scene> scene)
 {
     // init GLUT and the window
     glutInit(&argc, argv);
@@ -210,7 +210,7 @@ int render(int argc, char** argv, Group* scene)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
 
-    SCENE = scene;
+    SCENE.reset(scene.get());
     DRAW_LEVEL = SCENE->levels();
 
     // Required callback registry

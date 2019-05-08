@@ -32,6 +32,109 @@ unique_ptr<Model> parse_model(xml_node<char>* node);
 
 void mutl_matrix(const float a[4][4], float b[4][4]);
 
+Light::Light(xml_node<char>* light)
+{
+    float x, y, z;
+    x = y = z = 0;
+    type = LightType::Disabled;
+    for (auto attr = light->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
+        string name = attr->name();
+        string value = attr->name();
+        if ("TYPE" == name) {
+            if ("POINT" == value) {
+                type = LightType::Point;
+            } else if ("DIRECTIONAL" == value) {
+                type = LightType::Directional;
+            } else if ("SPOT" == value) {
+                type = LightType::Spot;
+            } else {
+                cerr << "Invalid light type: " << value << endl;
+            }
+        } else if ("POSX" == name) {
+            x = stof(value);
+        } else if ("POSY" == name) {
+            y = stof(value);
+        } else if ("POSZ" == name) {
+            z = stof(value);
+        } else {
+            cerr << "Invalid attribute: " << name << endl;
+        }
+    }
+    pos = Point(x, y, z);
+}
+
+Scene::Scene(xml_node<char>* scene)
+{
+    _levels = 1;
+    int max_level = 0;
+    _model_count = 0;
+    for (auto node = scene->first_node(); node != NULL; node = node->next_sibling()) {
+        string name = string(node->name());
+        std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+        if ("group" == name) {
+            Group group(node);
+            _model_count += group.model_count();
+            if (group.levels() > max_level)
+                max_level = group.levels();
+            groups.push_back(move(group));
+        } else if ("lights" == name) {
+            for (auto light = node->first_node(); light != NULL; light->next_sibling()) {
+                lights.push_back(Light(light));
+            }
+        }
+    }
+    _levels = 1 + max_level;
+}
+
+void Scene::prepare()
+{
+    for (size_t i = 0; i < groups.size(); i++) {
+        groups[i].prepare();
+    }
+}
+
+optional<Point> Scene::get_model_position(size_t index, double elapsed) const
+{
+    Matrix m = { .matrix = {
+                     { 1, 0, 0, 0 },
+                     { 0, 1, 0, 0 },
+                     { 0, 0, 1, 0 },
+                     { 0, 0, 0, 1 } } };
+    auto p = get_model_position(index, m, elapsed);
+    if (p.has_value()) {
+        const Matrix m = p.value();
+        float coords[4];
+        const float base[4] = { 0, 0, 0, 1 };
+        for (int i = 0; i < 4; ++i) {
+            coords[i] = 0;
+            for (int j = 0; j < 4; ++j) {
+                coords[i] += base[j] * m.matrix[i][j];
+            }
+        }
+        return Point(coords[0], coords[1], coords[2]);
+    } else {
+        return nullopt;
+    }
+}
+
+optional<Matrix> Scene::get_model_position(size_t index, Matrix position, double elapsed) const
+{
+    size_t models_skiped = 0;
+    for (const auto& sg : groups) {
+        if (index < models_skiped + sg.model_count()) {
+            auto p = sg.get_model_position(index - models_skiped, position, elapsed);
+            if (!p.has_value()) {
+                return nullopt;
+            } else {
+                position = p.value();
+            }
+            return position;
+        }
+        models_skiped += sg.model_count();
+    }
+    return nullopt;
+}
+
 Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 {
     _levels = 1;
@@ -78,7 +181,8 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
                 }
             }
         } else if ("group" == name) {
-            subgroups.push_back(Group(node, this->r, this->g, this->b, this->a));
+            Group group(node, this->r, this->g, this->b, this->a);
+            subgroups.push_back(move(group));
         } else if ("translate" == name) {
             transformations.push_back(parse_translate(node));
         } else if ("rotate" == name) {
@@ -175,6 +279,15 @@ optional<Matrix> Group::get_model_position(size_t index, Matrix position, double
         return position;
     }
     return nullopt;
+}
+
+void Scene::draw(int max_depth, double elapsed) const
+{
+    if (max_depth > 0) {
+        for (const auto& group : groups) {
+            group.draw(max_depth - 1, elapsed);
+        }
+    }
 }
 
 void mutl_matrix(const float a[4][4], float b[4][4])
