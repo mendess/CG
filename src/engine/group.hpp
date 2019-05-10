@@ -5,25 +5,10 @@
 #include "../dependencies/rapidxml.hpp"
 #include "model.hpp"
 #include "transformations.hpp"
+#include "light.hpp"
 #include <memory>
 #include <optional>
 #include <vector>
-
-enum class LightType {
-    Point,
-    Directional,
-    Spot,
-    Disabled
-};
-
-class Light {
-private:
-    LightType type;
-    Point pos;
-
-public:
-    Light(rapidxml::xml_node<char>*);
-};
 
 class Group {
 private:
@@ -53,7 +38,7 @@ public:
 
 class Scene {
 private:
-    std::vector<Light> lights;
+    std::vector<std::unique_ptr<Light>> lights;
     std::vector<Group> groups;
     int _levels;
     int _model_count;

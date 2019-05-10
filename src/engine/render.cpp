@@ -199,6 +199,8 @@ void key_bindings(unsigned char key, int _x, int _y)
     renderScene();
 }
 
+#include <iostream>
+
 int render(int argc, char** argv, unique_ptr<Scene> scene)
 {
     // init GLUT and the window

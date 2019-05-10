@@ -192,6 +192,9 @@ pluto   = Planet('Pluto',   orbit_x=53.6, orbit_y=103.6, radius=0.01,   r=0.5607
 planets = [ mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto ]
 
 print('<scene>')
+print('    <lights>')
+print('        <light type="Point" />')
+print('    </lights>')
 print('    <!--Sun-->')
 print('    <group R="1" G="1" B="1" A="1">')
 print('        <scale X="20" Y="20" Z="20" />')

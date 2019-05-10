@@ -1,5 +1,6 @@
 #include "group.hpp"
 #include "../dependencies/rapidxml.hpp"
+#include "light.hpp"
 #include "model.hpp"
 #include "transformations.hpp"
 #include <algorithm>
@@ -28,40 +29,11 @@ unique_ptr<Transformation> parse_rotate(xml_node<char>* node);
 
 unique_ptr<Transformation> parse_scale(xml_node<char>* node);
 
+optional<unique_ptr<Light>> parse_light(xml_node<char>* node);
+
 unique_ptr<Model> parse_model(xml_node<char>* node);
 
 void mutl_matrix(const float a[4][4], float b[4][4]);
-
-Light::Light(xml_node<char>* light)
-{
-    float x, y, z;
-    x = y = z = 0;
-    type = LightType::Disabled;
-    for (auto attr = light->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
-        string name = attr->name();
-        string value = attr->name();
-        if ("TYPE" == name) {
-            if ("POINT" == value) {
-                type = LightType::Point;
-            } else if ("DIRECTIONAL" == value) {
-                type = LightType::Directional;
-            } else if ("SPOT" == value) {
-                type = LightType::Spot;
-            } else {
-                cerr << "Invalid light type: " << value << endl;
-            }
-        } else if ("POSX" == name) {
-            x = stof(value);
-        } else if ("POSY" == name) {
-            y = stof(value);
-        } else if ("POSZ" == name) {
-            z = stof(value);
-        } else {
-            cerr << "Invalid attribute: " << name << endl;
-        }
-    }
-    pos = Point(x, y, z);
-}
 
 Scene::Scene(xml_node<char>* scene)
 {
@@ -78,16 +50,25 @@ Scene::Scene(xml_node<char>* scene)
                 max_level = group.levels();
             groups.push_back(move(group));
         } else if ("lights" == name) {
-            for (auto light = node->first_node(); light != NULL; light->next_sibling()) {
-                lights.push_back(Light(light));
+            for (auto light = node->first_node(); light != NULL; light = light->next_sibling()) {
+                auto l = parse_light(light);
+                if (l)
+                    lights.push_back(std::move(*l));
             }
         }
     }
-    _levels = 1 + max_level;
+    _levels = max_level;
 }
 
 void Scene::prepare()
 {
+    if (lights.size() > 8) {
+        cerr << "Too many lights (" << lights.size() << ")!" << endl;
+        exit(1);
+    }
+    for (size_t i = 0; i < lights.size(); i++) {
+        lights[i]->enable();
+    }
     for (size_t i = 0; i < groups.size(); i++) {
         groups[i].prepare();
     }
@@ -163,7 +144,7 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         } else if ("RAND" == name && value != "false") {
             static default_random_engine generator(42);
             static uniform_int_distribution<int> distribution(0, 100);
-            static auto rng = bind(distribution, generator);
+            static auto rng = std::bind(distribution, generator);
             this->r = rng() / 100.0f;
             this->g = rng() / 100.0f;
             this->b = rng() / 100.0f;
@@ -283,10 +264,11 @@ optional<Matrix> Group::get_model_position(size_t index, Matrix position, double
 
 void Scene::draw(int max_depth, double elapsed) const
 {
-    if (max_depth > 0) {
-        for (const auto& group : groups) {
-            group.draw(max_depth - 1, elapsed);
-        }
+    for (const auto& light : lights) {
+        light->render();
+    }
+    for (const auto& group : groups) {
+        group.draw(max_depth, elapsed);
     }
 }
 
@@ -425,6 +407,27 @@ unique_ptr<Transformation> parse_scale(xml_node<char>* node)
     } else {
         return make_unique<ScaleAnimated>(xi, yi, zi, xf, yf, zf, dur);
     }
+}
+
+optional<unique_ptr<Light>> parse_light(xml_node<char>* light)
+{
+    auto type = light->first_attribute("type");
+    if (!type) {
+        cerr << "no light type specified" << endl;
+        return nullopt;
+    }
+    string value = type->value();
+    std::transform(value.begin(), value.end(), value.begin(), ::toupper);
+    if ("POINT" == value) {
+        return make_unique<PointLight>(light);
+    } else if ("DIRECTIONAL" == value) {
+        return make_unique<DirectionalLight>(light);
+    } else if ("SPOT" == value) {
+        return make_unique<SpotLight>(light);
+    } else {
+        cerr << "Invalid light type: " << value << endl;
+    }
+    return nullopt;
 }
 
 unique_ptr<Model> parse_model(xml_node<char>* node)

@@ -2,6 +2,7 @@
 #define MODEL_H
 
 #include "../common/point.hpp"
+#include "rgb.hpp"
 
 #include <memory>
 #include <optional>
@@ -14,23 +15,6 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #endif
-
-class RGB {
-public:
-    float r, g, b;
-    RGB()
-        : r(0)
-        , g(0)
-        , b(0)
-    {
-    }
-    RGB(float r, float g, float b)
-        : r(r)
-        , g(g)
-        , b(b)
-    {
-    }
-};
 
 class Model {
 public:
