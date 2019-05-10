@@ -24,15 +24,16 @@ class Planet:
         self.texture = texture
 
     def print_planet(self, indent=8):
-        time = uniform(10, 20);
+        time = uniform(20, 40);
         print(' ' * indent, '<!-- {} -->'.format(self.name))
         if self.texture is None:
             print(' ' * indent, '<group R="{}" G="{}" B="{}">'.format(self.r, self.g, self.b))
         else:
             print(' ' * indent, '<group R="1" G="1" B="1">')
         print(' ' * indent, '    <translate time="{}">'.format(time))
-        for i in range(100):
-            a = ((2 * pi)/100) * i
+        STEPS = 500
+        for i in range(STEPS):
+            a = ((2 * pi)/STEPS) * i
             x = self.orbit_x * sin(a)
             z = self.orbit_y * cos(a)
             print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
@@ -115,7 +116,7 @@ class Ring:
 
 def draw_asteroids(number, min_distance, max_distance, indent=8):
     for i in range(number):
-        time     = uniform(1, 20)
+        time     = uniform(5, 40)
         distance = uniform(min_distance, max_distance)
         size     = uniform(0.005, 0.05)
         STEPS    = 100
