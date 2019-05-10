@@ -20,35 +20,6 @@ int gl_light(size_t number)
     return (int[]) { GL_LIGHT0, GL_LIGHT1, GL_LIGHT2, GL_LIGHT3, GL_LIGHT4, GL_LIGHT5, GL_LIGHT6, GL_LIGHT7 }[number];
 }
 
-PointLight::PointLight(xml_node<char>* light)
-{
-    float x, y, z;
-    float amb_r, amb_g, amb_b;
-    float dif_r, dif_g, dif_b;
-    unordered_map<string, string> params = util::params_to_map(light);
-    pos = Point(
-        get_or_default(params["POSX"], 0),
-        get_or_default(params["POSY"], 0),
-        get_or_default(params["POSZ"], 0));
-    ambient = get_component("AMBI");
-    diffuse = get_component("DIFF");
-}
-
-void PointLight::enable() const
-{
-    glEnable(gl_light(number));
-}
-
-void PointLight::render() const
-{
-    GLfloat amb[4] = { ambient.r, ambient.g, ambient.b, 1.0 };
-    GLfloat diff[4] = { diffuse.r, diffuse.g, diffuse.b, 1.0 };
-    GLfloat position[4] = { pos.x(), pos.y(), pos.z(), 1.0 };
-    glLightfv(gl_light(number), GL_POSITION, position);
-    glLightfv(gl_light(number), GL_AMBIENT, amb);
-    glLightfv(gl_light(number), GL_DIFFUSE, diff);
-}
-
 DirectionalLight::DirectionalLight(xml_node<char>* light)
 {
     float x, y, z;
@@ -59,8 +30,9 @@ DirectionalLight::DirectionalLight(xml_node<char>* light)
         get_or_default(params["POSX"], 0),
         get_or_default(params["POSY"], 0),
         get_or_default(params["POSZ"], 0));
-    ambient = get_component("AMBI");
-    diffuse = get_component("DIFF");
+    RGB color = get_component("", 1);
+    ambient = color / 0.2;
+    diffuse = color;
 }
 
 void DirectionalLight::enable() const
@@ -78,6 +50,36 @@ void DirectionalLight::render() const
     glLightfv(gl_light(number), GL_DIFFUSE, diff);
 }
 
+PointLight::PointLight(xml_node<char>* light)
+{
+    float x, y, z;
+    float amb_r, amb_g, amb_b;
+    float dif_r, dif_g, dif_b;
+    unordered_map<string, string> params = util::params_to_map(light);
+    pos = Point(
+        get_or_default(params["POSX"], 0),
+        get_or_default(params["POSY"], 0),
+        get_or_default(params["POSZ"], 0));
+    RGB color = get_component("", 1);
+    ambient = color / 0.2;
+    diffuse = color;
+}
+
+void PointLight::enable() const
+{
+    glEnable(gl_light(number));
+}
+
+void PointLight::render() const
+{
+    GLfloat amb[4] = { ambient.r, ambient.g, ambient.b, 1.0 };
+    GLfloat diff[4] = { diffuse.r, diffuse.g, diffuse.b, 1.0 };
+    GLfloat position[4] = { pos.x(), pos.y(), pos.z(), 1.0 };
+    glLightfv(gl_light(number), GL_POSITION, position);
+    glLightfv(gl_light(number), GL_AMBIENT, amb);
+    glLightfv(gl_light(number), GL_DIFFUSE, diff);
+}
+
 SpotLight::SpotLight(xml_node<char>* light)
 {
     float x, y, z;
@@ -88,11 +90,7 @@ SpotLight::SpotLight(xml_node<char>* light)
         get_or_default(params["POSX"], 0),
         get_or_default(params["POSY"], 0),
         get_or_default(params["POSZ"], 0));
-    direction = Point(
-        get_or_default(params["DIRX"], 0),
-        get_or_default(params["DIRY"], 0),
-        get_or_default(params["DIRZ"], 0));
-    diffuse = get_component("DIFF");
+    diffuse = get_component("", 1);
 }
 
 void SpotLight::enable() const

@@ -76,6 +76,7 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         if ("models" == name) {
             for (auto model = node->first_node(); model != NULL; model = model->next_sibling()) {
                 try {
+                    cout << parse_model(model)->to_string() << endl;
                     models.push_back(parse_model(model));
                 } catch (string error) {
                     cerr << error << endl;
@@ -379,17 +380,17 @@ unique_ptr<Model> parse_model(xml_node<char>* node)
         return make_unique<TexturedModel>(
             file,
             params["TEXTURE"],
-            get_component("DIFF"),
-            get_component("SPEC"),
-            get_component("EMIS"),
-            get_component("AMBI"));
+            get_component("DIFF", 1),
+            get_component("SPEC", 0),
+            get_component("EMIS", 0),
+            get_component("AMBI", 0));
     } else if (has_components(params)) {
         return make_unique<ColoredModel>(
             file,
-            get_component("DIFF"),
-            get_component("SPEC"),
-            get_component("EMIS"),
-            get_component("AMBI"));
+            get_component("DIFF", 1),
+            get_component("SPEC", 0),
+            get_component("EMIS", 0),
+            get_component("AMBI", 0));
     }
     return make_unique<SimpleModel>(file);
 }

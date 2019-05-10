@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -20,6 +21,7 @@ class Model {
 public:
     virtual void prepare() = 0;
     virtual void draw() const = 0;
+    virtual std::string to_string() const = 0;
 };
 
 class SimpleModel : public Model {
@@ -34,6 +36,10 @@ public:
     SimpleModel(std::string);
     void prepare();
     void draw() const;
+    std::string to_string() const
+    {
+        return "SimpleModel{}";
+    }
 };
 
 class ColoredModel : public Model {
@@ -56,6 +62,16 @@ public:
     ColoredModel(std::string, RGB, RGB, RGB, RGB);
     void prepare();
     void draw() const;
+    std::string to_string() const
+    {
+        std::stringstream ss;
+        ss << "ColoredModel{ "
+           << "DIFF: { " << diffuse.r << ", " << diffuse.g << ", " << diffuse.b << " },"
+           << "SPEC: { " << specular.r << ", " << specular.g << ", " << specular.b << " },"
+           << "EMIS: { " << emissive.r << ", " << emissive.g << ", " << emissive.b << " },"
+           << "AMBI: { " << ambient.r << ", " << ambient.g << ", " << ambient.b << " } }";
+        return ss.str();
+    }
 };
 
 class TexturedModel : public Model {
@@ -82,6 +98,17 @@ public:
     TexturedModel(std::string, std::string, RGB, RGB, RGB, RGB);
     void prepare();
     void draw() const;
+    std::string to_string() const
+    {
+        std::stringstream ss;
+        ss << "TexturedModel{ "
+           << "FILE: { " << texture_file << " },"
+           << "DIFF: { " << diffuse.r << ", " << diffuse.g << ", " << diffuse.b << " },"
+           << "SPEC: { " << specular.r << ", " << specular.g << ", " << specular.b << " },"
+           << "EMIS: { " << emissive.r << ", " << emissive.g << ", " << emissive.b << " },"
+           << "AMBI: { " << ambient.r << ", " << ambient.g << ", " << ambient.b << " } }";
+        return ss.str();
+    }
 };
 
 #endif //MODEL_H

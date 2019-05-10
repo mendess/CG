@@ -43,7 +43,7 @@ class Planet:
         if self.texture is None:
             print(' ' * indent, '        <model file="scenes/sphere.3d"/>')
         else:
-            print(' ' * indent, '        <model file="scenes/sphere.3d" texture="{}"/>'.format(self.texture))
+            print(' ' * indent, '        <model file="scenes/sphere.3d" texture="{}" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>'.format(self.texture))
         print(' ' * indent, '    </models>')
         for moon in self.moons:
             moon.print_moon()
@@ -200,7 +200,7 @@ print('    <!--Sun-->')
 print('    <group R="1" G="1" B="1" A="1">')
 print('        <scale X="20" Y="20" Z="20" />')
 print('        <models>')
-print('            <model file="scenes/sphere.3d" texture="assets/2k_sun.jpg"/>')
+print('            <model file="scenes/sphere.3d" texture="assets/2k_sun.jpg" EMISR="1" EMISG="1" EMISB="1"/>')
 print('        </models>')
 for planet in planets:
     planet.print_planet()
