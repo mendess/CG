@@ -22,47 +22,6 @@ public:
     virtual void draw() const = 0;
 };
 
-class ModelBuilder {
-private:
-    std::optional<std::string> file;
-    std::optional<std::string> texture_file;
-    std::optional<RGB> diffuse;
-    std::optional<RGB> specular;
-    std::optional<RGB> emissive;
-    std::optional<RGB> ambient;
-    bool simple;
-    void set_r(std::optional<RGB>& rgb, float val);
-    void set_g(std::optional<RGB>& rgb, float val);
-    void set_b(std::optional<RGB>& rgb, float val);
-
-public:
-    ModelBuilder()
-        : file(std::nullopt)
-        , texture_file(std::nullopt)
-        , diffuse(std::nullopt)
-        , specular(std::nullopt)
-        , emissive(std::nullopt)
-        , ambient(std::nullopt)
-        , simple(true)
-    {
-    }
-    ModelBuilder& withFile(std::string);
-    ModelBuilder& withTexture(std::string);
-    ModelBuilder& withDiffuseR(float);
-    ModelBuilder& withDiffuseG(float);
-    ModelBuilder& withDiffuseB(float);
-    ModelBuilder& withSpecularR(float);
-    ModelBuilder& withSpecularG(float);
-    ModelBuilder& withSpecularB(float);
-    ModelBuilder& withEmissiveR(float);
-    ModelBuilder& withEmissiveG(float);
-    ModelBuilder& withEmissiveB(float);
-    ModelBuilder& withAmbientR(float);
-    ModelBuilder& withAmbientG(float);
-    ModelBuilder& withAmbientB(float);
-    std::unique_ptr<Model> build() const;
-};
-
 class SimpleModel : public Model {
 private:
     GLuint buffer;

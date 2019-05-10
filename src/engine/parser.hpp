@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace Parser {
-std::unique_ptr<Scene> load(std::vector<std::string> configs);
+std::unique_ptr<Group> load(std::vector<std::string> configs);
 }
 
 #endif // PARSER_H

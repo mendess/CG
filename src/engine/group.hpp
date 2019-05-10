@@ -14,6 +14,7 @@ class Group {
 private:
     std::vector<std::unique_ptr<Transformation>> transformations;
     std::vector<std::unique_ptr<Model>> models;
+    std::vector<std::unique_ptr<Light>> lights;
     std::vector<Group> subgroups;
     int _levels;
     int _model_count;
@@ -31,24 +32,6 @@ public:
     int levels() const { return _levels; };
     int model_count() const { return _model_count; }
     std::optional<Matrix> get_model_position(size_t, Matrix, double) const;
-    std::optional<Point> get_model_position(size_t, double) const;
-    void prepare();
-    void draw(int, double) const;
-};
-
-class Scene {
-private:
-    std::vector<std::unique_ptr<Light>> lights;
-    std::vector<Group> groups;
-    int _levels;
-    int _model_count;
-
-    std::optional<Matrix> get_model_position(size_t, Matrix, double) const;
-public:
-    Scene(rapidxml::xml_node<char>*);
-
-    int levels() const { return _levels; };
-    int model_count() const { return _model_count; }
     std::optional<Point> get_model_position(size_t, double) const;
     void prepare();
     void draw(int, double) const;

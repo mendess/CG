@@ -21,7 +21,7 @@ using namespace std;
 namespace Render {
 
 static float SCALE = 1;
-static unique_ptr<Scene> SCENE;
+static unique_ptr<Group> SCENE;
 static int DRAW_LEVEL = -1;
 static bool SHOW_AXIS = false;
 static size_t FOLLOW_TARGET = 0;
@@ -201,7 +201,7 @@ void key_bindings(unsigned char key, int _x, int _y)
 
 #include <iostream>
 
-int render(int argc, char** argv, unique_ptr<Scene> scene)
+int render(int argc, char** argv, unique_ptr<Group> scene)
 {
     // init GLUT and the window
     glutInit(&argc, argv);
@@ -227,6 +227,7 @@ int render(int argc, char** argv, unique_ptr<Scene> scene)
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
 
     ilInit();
     ilEnable(IL_ORIGIN_SET);

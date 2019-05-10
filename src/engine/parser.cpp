@@ -29,7 +29,7 @@ string read_file(string config)
     return text;
 }
 
-unique_ptr<Scene> load(vector<string> configs)
+unique_ptr<Group> load(vector<string> configs)
 {
     vector<string> texts;
     transform(configs.begin(), configs.end(),
@@ -53,7 +53,7 @@ unique_ptr<Scene> load(vector<string> configs)
             cerr << configs[i] << ": " << e.what() << ": " << e.where<char>() << endl;
         }
     }
-    auto scene = make_unique<Scene>(doc->first_node("scene"));
+    auto scene = make_unique<Group>(doc->first_node("scene"));
     doc->clear();
     delete doc;
     return scene;

@@ -229,7 +229,6 @@ tuple<Point, Vector> getCatmullRomPoint(float t, Point p0, Point p1, Point p2, P
     return make_tuple(pos, deriv);
 }
 
-// given  global t, returns the point in the curve
 tuple<Point, Vector> getGlobalCatmullRomPoint(vector<Point> points, float gt)
 {
     const size_t point_count = points.size();

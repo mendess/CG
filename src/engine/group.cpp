@@ -1,4 +1,5 @@
 #include "group.hpp"
+#include "../common/util.hpp"
 #include "../dependencies/rapidxml.hpp"
 #include "light.hpp"
 #include "model.hpp"
@@ -34,87 +35,6 @@ optional<unique_ptr<Light>> parse_light(xml_node<char>* node);
 unique_ptr<Model> parse_model(xml_node<char>* node);
 
 void mutl_matrix(const float a[4][4], float b[4][4]);
-
-Scene::Scene(xml_node<char>* scene)
-{
-    _levels = 1;
-    int max_level = 0;
-    _model_count = 0;
-    for (auto node = scene->first_node(); node != NULL; node = node->next_sibling()) {
-        string name = string(node->name());
-        std::transform(name.begin(), name.end(), name.begin(), ::tolower);
-        if ("group" == name) {
-            Group group(node);
-            _model_count += group.model_count();
-            if (group.levels() > max_level)
-                max_level = group.levels();
-            groups.push_back(move(group));
-        } else if ("lights" == name) {
-            for (auto light = node->first_node(); light != NULL; light = light->next_sibling()) {
-                auto l = parse_light(light);
-                if (l)
-                    lights.push_back(std::move(*l));
-            }
-        }
-    }
-    _levels = max_level;
-}
-
-void Scene::prepare()
-{
-    if (lights.size() > 8) {
-        cerr << "Too many lights (" << lights.size() << ")!" << endl;
-        exit(1);
-    }
-    for (size_t i = 0; i < lights.size(); i++) {
-        lights[i]->enable();
-    }
-    for (size_t i = 0; i < groups.size(); i++) {
-        groups[i].prepare();
-    }
-}
-
-optional<Point> Scene::get_model_position(size_t index, double elapsed) const
-{
-    Matrix m = { .matrix = {
-                     { 1, 0, 0, 0 },
-                     { 0, 1, 0, 0 },
-                     { 0, 0, 1, 0 },
-                     { 0, 0, 0, 1 } } };
-    auto p = get_model_position(index, m, elapsed);
-    if (p.has_value()) {
-        const Matrix m = p.value();
-        float coords[4];
-        const float base[4] = { 0, 0, 0, 1 };
-        for (int i = 0; i < 4; ++i) {
-            coords[i] = 0;
-            for (int j = 0; j < 4; ++j) {
-                coords[i] += base[j] * m.matrix[i][j];
-            }
-        }
-        return Point(coords[0], coords[1], coords[2]);
-    } else {
-        return nullopt;
-    }
-}
-
-optional<Matrix> Scene::get_model_position(size_t index, Matrix position, double elapsed) const
-{
-    size_t models_skiped = 0;
-    for (const auto& sg : groups) {
-        if (index < models_skiped + sg.model_count()) {
-            auto p = sg.get_model_position(index - models_skiped, position, elapsed);
-            if (!p.has_value()) {
-                return nullopt;
-            } else {
-                position = p.value();
-            }
-            return position;
-        }
-        models_skiped += sg.model_count();
-    }
-    return nullopt;
-}
 
 Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 {
@@ -170,6 +90,12 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
             transformations.push_back(parse_rotate(node));
         } else if ("scale" == name) {
             transformations.push_back(parse_scale(node));
+        } else if ("lights" == name) {
+            for (auto light = node->first_node(); light != NULL; light = light->next_sibling()) {
+                auto l = parse_light(light);
+                if (l)
+                    lights.push_back(std::move(*l));
+            }
         }
     }
     int max_level = 0;
@@ -184,6 +110,13 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
 
 void Group::prepare()
 {
+    if (lights.size() > 8) {
+        cerr << "Too many lights (" << lights.size() << ")!" << endl;
+        exit(1);
+    }
+    for (size_t i = 0; i < lights.size(); i++) {
+        lights[i]->enable();
+    }
     for (size_t i = 0; i < models.size(); i++) {
         models[i]->prepare();
     }
@@ -197,6 +130,9 @@ void Group::draw(int max_depth, double elapsed) const
     if (max_depth > 0) {
         glPushMatrix();
         glColor4f(r, g, b, a);
+        for (const auto& light : lights) {
+            light->render();
+        }
         for (const auto& transformation : transformations) {
             transformation->transform(elapsed);
         }
@@ -260,16 +196,6 @@ optional<Matrix> Group::get_model_position(size_t index, Matrix position, double
         return position;
     }
     return nullopt;
-}
-
-void Scene::draw(int max_depth, double elapsed) const
-{
-    for (const auto& light : lights) {
-        light->render();
-    }
-    for (const auto& group : groups) {
-        group.draw(max_depth, elapsed);
-    }
 }
 
 void mutl_matrix(const float a[4][4], float b[4][4])
@@ -430,42 +356,40 @@ optional<unique_ptr<Light>> parse_light(xml_node<char>* light)
     return nullopt;
 }
 
-unique_ptr<Model> parse_model(xml_node<char>* node)
+bool has_components(unordered_map<string, string> params)
 {
-    ModelBuilder mb;
-    for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
-        string name = string(attr->name());
-        string value = string(attr->value());
-        std::transform(name.begin(), name.end(), name.begin(), ::toupper);
-        if ("FILE" == name) {
-            mb.withFile(value);
-        } else if ("TEXTURE" == name) {
-            mb.withTexture(value);
-        } else if ("DIFFR" == name) {
-            mb.withDiffuseR(stof(value));
-        } else if ("SPECR" == name) {
-            mb.withSpecularR(stof(value));
-        } else if ("EMISR" == name) {
-            mb.withEmissiveR(stof(value));
-        } else if ("AMBIR" == name) {
-            mb.withAmbientR(stof(value));
-        } else if ("DIFFG" == name) {
-            mb.withDiffuseG(stof(value));
-        } else if ("SPECG" == name) {
-            mb.withSpecularG(stof(value));
-        } else if ("EMISG" == name) {
-            mb.withEmissiveG(stof(value));
-        } else if ("AMBIG" == name) {
-            mb.withAmbientG(stof(value));
-        } else if ("DIFFB" == name) {
-            mb.withDiffuseB(stof(value));
-        } else if ("SPECB" == name) {
-            mb.withSpecularB(stof(value));
-        } else if ("EMISB" == name) {
-            mb.withEmissiveB(stof(value));
-        } else if ("AMBIB" == name) {
-            mb.withAmbientB(stof(value));
+    const string components[] = { "DIFF", "SPEC", "EMIS", "AMBI" };
+    const string rgb[] = { "R", "G", "B" };
+    for (const auto comp : components) {
+        for (const auto color : rgb) {
+            if (params[comp + color] != "")
+                return true;
         }
     }
-    return mb.build();
+    return false;
+}
+
+unique_ptr<Model> parse_model(xml_node<char>* node)
+{
+    unordered_map<string, string> params = util::params_to_map(node);
+    string file = params["FILE"];
+    if (file == "")
+        throw invalid_argument("No model file");
+    if (params["TEXTURE"] != "") {
+        return make_unique<TexturedModel>(
+            file,
+            params["TEXTURE"],
+            get_component("DIFF"),
+            get_component("SPEC"),
+            get_component("EMIS"),
+            get_component("AMBI"));
+    } else if (has_components(params)) {
+        return make_unique<ColoredModel>(
+            file,
+            get_component("DIFF"),
+            get_component("SPEC"),
+            get_component("EMIS"),
+            get_component("AMBI"));
+    }
+    return make_unique<SimpleModel>(file);
 }
