@@ -37,19 +37,43 @@ std::vector<Point> Torus::draw() const
             Point p0 = Point(
                 ring_x + (ring_radius * cos(beta) * sin(alpha)),
                 ring_y + (ring_radius * cos(beta) * cos(alpha)),
-                ring_z + (ring_radius * sin(beta)));
+                ring_z + (ring_radius * sin(beta)))
+                           .setNormal(
+                               Vector(
+                                   ring_radius * cos(beta) * sin(alpha),
+                                   ring_radius * cos(beta) * cos(alpha),
+                                   ring_radius * sin(beta))
+                                   .normalize());
             Point p1 = Point(
                 next_ring_x + (ring_radius * cos(beta) * sin(alpha + alpha_step)),
                 next_ring_y + (ring_radius * cos(beta) * cos(alpha + alpha_step)),
-                next_ring_z + (ring_radius * sin(beta)));
+                next_ring_z + (ring_radius * sin(beta)))
+                           .setNormal(
+                               Vector(
+                                   ring_radius * cos(beta) * sin(alpha + alpha_step),
+                                   ring_radius * cos(beta) * cos(alpha + alpha_step),
+                                   ring_radius * sin(beta))
+                                   .normalize());
             Point p2 = Point(
                 ring_x + (ring_radius * cos(beta + beta_step) * sin(alpha)),
                 ring_y + (ring_radius * cos(beta + beta_step) * cos(alpha)),
-                ring_z + (ring_radius * sin(beta + beta_step)));
+                ring_z + (ring_radius * sin(beta + beta_step)))
+                           .setNormal(
+                               Vector(
+                                   ring_radius * cos(beta + beta_step) * sin(alpha),
+                                   ring_radius * cos(beta + beta_step) * cos(alpha),
+                                   ring_radius * sin(beta + beta_step))
+                                   .normalize());
             Point p3 = Point(
                 next_ring_x + (ring_radius * cos(beta + beta_step) * sin(alpha + alpha_step)),
                 next_ring_y + (ring_radius * cos(beta + beta_step) * cos(alpha + alpha_step)),
-                next_ring_z + (ring_radius * sin(beta + beta_step)));
+                next_ring_z + (ring_radius * sin(beta + beta_step)))
+                           .setNormal(
+                               Vector(
+                                   ring_radius * cos(beta + beta_step) * sin(alpha + alpha_step),
+                                   ring_radius * cos(beta + beta_step) * cos(alpha + alpha_step),
+                                   ring_radius * sin(beta + beta_step))
+                                   .normalize());
             // T1
             coords.push_back(p1);
             coords.push_back(p0);

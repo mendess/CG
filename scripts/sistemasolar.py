@@ -120,7 +120,7 @@ class Ring:
         print(' ' * indent, '    <rotate X="{}" Y="{}" Z="{}" angle="{}" />'.format(self.rx, self.ry, self.rz, self.angle))
         print(' ' * indent, '    <scale X="{}" Y="{}" Z="{}" />'.format(self.sx, self.sy, self.sz))
         print(' ' * indent, '    <models>')
-        print(' ' * indent, '        <model file="scenes/torus.3d" />')
+        print(' ' * indent, '        <model file="scenes/torus.3d" diffR="{}" diffG="{}" diffB="{}"/>'.format(self.r, self.g, self.b))
         print(' ' * indent, '    </models>')
         print(' ' * indent, '</group>')
 
@@ -143,7 +143,7 @@ def draw_asteroids(number, min_distance, max_distance, indent=8):
         print(' ' * indent, '    </translate>')
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(0.01))
         print(' ' * indent, '    <models>')
-        print(' ' * indent, '        <model file="scenes/sphere.3d"/>')
+        print(' ' * indent, '        <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>')
         print(' ' * indent, '    </models>')
         print(' ' * indent, '</group>')
 
@@ -178,7 +178,7 @@ jupiter_moons = [
         Planet('Ganymede', 0.03704, 0.8, 0.8, 0.8, 2.1432),
         Planet('Callisto', 0.03448, 0.8, 0.8, 0.8, 2.2514)
         ]
-saturn_rings = [Ring(0.803, 0.702, 0.503, 1, 0, 0.5, 90, 1.5, 1.5, 0)]
+saturn_rings = [Ring(0.803, 0.702, 0.503, 1, 0.1, 0.5, 90, 1.5, 1.5, 0)]
 saturn_moons = [Planet('Titan', 0.04425, 0.8, 0.8, 0.8, 2.1604)]
 uranus_moons = [
         Planet('Miranda' , 0.0037728, 0.8, 0.8, 0.8, 2.035120),
