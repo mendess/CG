@@ -103,7 +103,7 @@ def make_rand_vector_par(u):
     return [x/mag for x in vec]
 
 class Ring:
-    def __init__(self, r, g, b, rx, ry, rz, angle, sx, sy, sz):
+    def __init__(self, r, g, b, rx, ry, rz, angle, sx, sy, sz, texture=None):
         self.r = r
         self.g = g
         self.b = b
@@ -114,13 +114,17 @@ class Ring:
         self.sx = sx
         self.sy = sy
         self.sz = sz
+        self.texture = texture
 
     def print_ring(self, indent=12):
-        print(' ' * indent, '<group R="{}" G="{}" B="{}" A="0.5">'.format(self.r, self.g, self.b))
+        print(' ' * indent, '<group R="{}" G="{}" B="{}">'.format(self.r, self.g, self.b))
         print(' ' * indent, '    <rotate X="{}" Y="{}" Z="{}" angle="{}" />'.format(self.rx, self.ry, self.rz, self.angle))
         print(' ' * indent, '    <scale X="{}" Y="{}" Z="{}" />'.format(self.sx, self.sy, self.sz))
         print(' ' * indent, '    <models>')
-        print(' ' * indent, '        <model file="scenes/torus.3d" diffR="{}" diffG="{}" diffB="{}"/>'.format(self.r, self.g, self.b))
+        if self.texture is not None:
+            print(' ' * indent, '        <model file="scenes/torus.3d" texture="{}" diffR="{}" diffG="{}" diffB="{}"/>'.format(self.texture, self.r, self.g, self.b))
+        else:
+            print(' ' * indent, '        <model file="scenes/torus.3d" diffR="{}" diffG="{}" diffB="{}"/>'.format(self.r, self.g, self.b))
         print(' ' * indent, '    </models>')
         print(' ' * indent, '</group>')
 
@@ -178,7 +182,7 @@ jupiter_moons = [
         Planet('Ganymede', 0.03704, 0.8, 0.8, 0.8, 2.1432),
         Planet('Callisto', 0.03448, 0.8, 0.8, 0.8, 2.2514)
         ]
-saturn_rings = [Ring(0.803, 0.702, 0.503, 1, 0.1, 0.5, 90, 1.5, 1.5, 0)]
+saturn_rings = [Ring(0.803, 0.702, 0.503, 1, 0, 0.5, 90, 1.5, 1.5, 0.1, texture='assets/8k_saturn_ring_alpha_full.png')]
 saturn_moons = [Planet('Titan', 0.04425, 0.8, 0.8, 0.8, 2.1604)]
 uranus_moons = [
         Planet('Miranda' , 0.0037728, 0.8, 0.8, 0.8, 2.035120),

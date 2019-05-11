@@ -17,7 +17,7 @@
     <group R="0.803" G="0.702" B="0.503">
         <rotate Y="1" time="6" />
         <models>
-            <model file="scenes/torus.3d" diffR="0.803" diffG="0.702" diffB="0.503" />
+            <model file="scenes/torus.3d" texture="assets/donut.png" diffR="0.803" diffG="0.702" diffB="0.503" />
         </models>
     </group>
 </scene>

@@ -24,6 +24,8 @@ std::vector<Point> Torus::draw() const
     const double beta_step = (2 * M_PI) / sides;
     const double ring_distance = outerRadius - innerRadius;
     const double ring_radius = innerRadius;
+    const double texture_x_shift = 1.0 / sides;
+    const double texture_y_shift = 1;
     double alpha = 0;
     for (int r = 0; r < rings; r++) {
         double beta = 0;
@@ -34,6 +36,10 @@ std::vector<Point> Torus::draw() const
         double next_ring_y = ring_distance * cos(beta) * cos(alpha + alpha_step);
         double next_ring_z = 0;
         for (int s = 0; s < sides; s++) {
+            double texture_x = texture_x_shift * s;
+            double texture_y = 0;
+            double texture_x_next = texture_x_shift * (s + 1);
+            double texture_y_next = texture_y_shift;
             Point p0 = Point(
                 ring_x + (ring_radius * cos(beta) * sin(alpha)),
                 ring_y + (ring_radius * cos(beta) * cos(alpha)),
@@ -43,7 +49,8 @@ std::vector<Point> Torus::draw() const
                                    ring_radius * cos(beta) * sin(alpha),
                                    ring_radius * cos(beta) * cos(alpha),
                                    ring_radius * sin(beta))
-                                   .normalize());
+                                   .normalize())
+                           .setTexture(texture_x, texture_y);
             Point p1 = Point(
                 next_ring_x + (ring_radius * cos(beta) * sin(alpha + alpha_step)),
                 next_ring_y + (ring_radius * cos(beta) * cos(alpha + alpha_step)),
@@ -53,7 +60,8 @@ std::vector<Point> Torus::draw() const
                                    ring_radius * cos(beta) * sin(alpha + alpha_step),
                                    ring_radius * cos(beta) * cos(alpha + alpha_step),
                                    ring_radius * sin(beta))
-                                   .normalize());
+                                   .normalize())
+                           .setTexture(texture_x, texture_y_next);
             Point p2 = Point(
                 ring_x + (ring_radius * cos(beta + beta_step) * sin(alpha)),
                 ring_y + (ring_radius * cos(beta + beta_step) * cos(alpha)),
@@ -63,7 +71,8 @@ std::vector<Point> Torus::draw() const
                                    ring_radius * cos(beta + beta_step) * sin(alpha),
                                    ring_radius * cos(beta + beta_step) * cos(alpha),
                                    ring_radius * sin(beta + beta_step))
-                                   .normalize());
+                                   .normalize())
+                           .setTexture(texture_x_next, texture_y);
             Point p3 = Point(
                 next_ring_x + (ring_radius * cos(beta + beta_step) * sin(alpha + alpha_step)),
                 next_ring_y + (ring_radius * cos(beta + beta_step) * cos(alpha + alpha_step)),
@@ -73,7 +82,8 @@ std::vector<Point> Torus::draw() const
                                    ring_radius * cos(beta + beta_step) * sin(alpha + alpha_step),
                                    ring_radius * cos(beta + beta_step) * cos(alpha + alpha_step),
                                    ring_radius * sin(beta + beta_step))
-                                   .normalize());
+                                   .normalize())
+                           .setTexture(texture_x_next, texture_y_next);
             // T1
             coords.push_back(p1);
             coords.push_back(p0);

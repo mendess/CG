@@ -28,6 +28,7 @@ static size_t FOLLOW_TARGET = 0;
 static bool FOLLOWING = false;
 static bool PAUSED = false;
 static double TIME_SCALE = 1.0;
+static bool LIGHTS = true;
 
 void changeSize(int w, int h)
 {
@@ -194,6 +195,13 @@ void key_bindings(unsigned char key, int _x, int _y)
         break;
     case 'p':
         PAUSED = !PAUSED;
+        break;
+    case '/':
+        if (LIGHTS)
+            glDisable(GL_LIGHTING);
+        else
+            glEnable(GL_LIGHTING);
+        LIGHTS = !LIGHTS;
         break;
     case 'q':
         exit(0);
