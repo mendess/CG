@@ -116,7 +116,7 @@ void Group::prepare()
         exit(1);
     }
     for (size_t i = 0; i < lights.size(); i++) {
-        lights[i]->enable();
+        lights[i]->prepare();
     }
     for (size_t i = 0; i < models.size(); i++) {
         models[i]->prepare();

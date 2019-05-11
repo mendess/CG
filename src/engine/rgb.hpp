@@ -23,6 +23,13 @@ public:
             g / val,
             b / val);
     }
+    RGB operator*(float val)
+    {
+        return RGB(
+            r * val,
+            g * val,
+            b * val);
+    }
 };
 
 #endif // RGB_HPP

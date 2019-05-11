@@ -41,23 +41,19 @@ SimpleModel::SimpleModel(string modelFile)
 void SimpleModel::prepare()
 {
     glGenBuffers(1, &buffer);
-    /* cout << "Generated buffer in: " << buffer << endl; */
-
-    /* cout << "Binding buffer: " << buffer << endl; */
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
-    /* cout << "Buffering data os size: " << vbo.size() * sizeof(float) << endl; */
     glBufferData(GL_ARRAY_BUFFER, vbo.size() * sizeof(float), vbo.data(), GL_STATIC_DRAW);
 }
 
 void SimpleModel::draw() const
 {
-    /* cout << "Binding buffer: " << buffer << endl; */
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    /* cout << "Giving buffer semantics" << endl; */
-    glVertexPointer(3, GL_FLOAT, 0, 0);
-    /* cout << "Drawing arrays" << endl; */
-    glDrawArrays(GL_TRIANGLES, 0, n_vertices);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        glVertexPointer(3, GL_FLOAT, 0, 0);
+        glDrawArrays(GL_TRIANGLES, 0, n_vertices);
+    }
+    glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 inline void SimpleModel::push(
@@ -103,25 +99,31 @@ void ColoredModel::prepare()
 
 void ColoredModel::draw() const
 {
-    float diffuse_arr[] = { diffuse.r, diffuse.g, diffuse.b, 1 };
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_arr);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    {
+        float diffuse_arr[] = { diffuse.r, diffuse.g, diffuse.b, 1 };
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_arr);
 
-    float specular_arr[] = { specular.r, specular.g, specular.b, 1 };
-    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_arr);
+        float specular_arr[] = { specular.r, specular.g, specular.b, 1 };
+        glMaterialfv(GL_FRONT, GL_SPECULAR, specular_arr);
 
-    float emissive_arr[] = { emissive.r, emissive.g, emissive.b, 1 };
-    glMaterialfv(GL_FRONT, GL_EMISSION, emissive_arr);
+        float emissive_arr[] = { emissive.r, emissive.g, emissive.b, 1 };
+        glMaterialfv(GL_FRONT, GL_EMISSION, emissive_arr);
 
-    float ambient_arr[] = { ambient.r, ambient.g, ambient.b, 1 };
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_arr);
+        float ambient_arr[] = { ambient.r, ambient.g, ambient.b, 1 };
+        glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_arr);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer());
-    glVertexPointer(3, GL_FLOAT, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer());
+        glVertexPointer(3, GL_FLOAT, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, normal_buffer());
-    glNormalPointer(GL_FLOAT, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, normal_buffer());
+        glNormalPointer(GL_FLOAT, 0, 0);
 
-    glDrawArrays(GL_TRIANGLES, 0, n_vertices);
+        glDrawArrays(GL_TRIANGLES, 0, n_vertices);
+    }
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 inline void ColoredModel::push(
@@ -200,30 +202,38 @@ void TexturedModel::prepare()
 
 void TexturedModel::draw() const
 {
-    float diffuse_arr[] = { diffuse.r, diffuse.g, diffuse.b, 1 };
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_arr);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    {
+        float diffuse_arr[] = { diffuse.r, diffuse.g, diffuse.b, 1 };
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_arr);
 
-    float specular_arr[] = { specular.r, specular.g, specular.b, 1 };
-    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_arr);
+        float specular_arr[] = { specular.r, specular.g, specular.b, 1 };
+        glMaterialfv(GL_FRONT, GL_SPECULAR, specular_arr);
 
-    float emissive_arr[] = { emissive.r, emissive.g, emissive.b, 1 };
-    glMaterialfv(GL_FRONT, GL_EMISSION, emissive_arr);
+        float emissive_arr[] = { emissive.r, emissive.g, emissive.b, 1 };
+        glMaterialfv(GL_FRONT, GL_EMISSION, emissive_arr);
 
-    float ambient_arr[] = { ambient.r, ambient.g, ambient.b, 1 };
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_arr);
+        float ambient_arr[] = { ambient.r, ambient.g, ambient.b, 1 };
+        glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_arr);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer());
-    glVertexPointer(3, GL_FLOAT, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer());
+        glVertexPointer(3, GL_FLOAT, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, normal_buffer());
-    glNormalPointer(GL_FLOAT, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, normal_buffer());
+        glNormalPointer(GL_FLOAT, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, texture_buffer());
-    glTexCoordPointer(2, GL_FLOAT, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, texture_buffer());
+        glTexCoordPointer(2, GL_FLOAT, 0, 0);
 
-    glBindTexture(GL_TEXTURE_2D, texture_slot);
-    glDrawArrays(GL_TRIANGLES, 0, n_vertices);
-    glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, texture_slot);
+        glDrawArrays(GL_TRIANGLES, 0, n_vertices);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 inline void TexturedModel::push(

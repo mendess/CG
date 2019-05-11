@@ -35,7 +35,7 @@ DirectionalLight::DirectionalLight(xml_node<char>* light)
     diffuse = color;
 }
 
-void DirectionalLight::enable() const
+void DirectionalLight::prepare() const
 {
     glEnable(gl_light(number));
 }
@@ -61,11 +61,11 @@ PointLight::PointLight(xml_node<char>* light)
         get_or_default(params["POSY"], 0),
         get_or_default(params["POSZ"], 0));
     RGB color = get_component("", 1);
-    ambient = color / 0.2;
+    ambient = color * 0.2;
     diffuse = color;
 }
 
-void PointLight::enable() const
+void PointLight::prepare() const
 {
     glEnable(gl_light(number));
 }
@@ -78,6 +78,8 @@ void PointLight::render() const
     glLightfv(gl_light(number), GL_POSITION, position);
     glLightfv(gl_light(number), GL_AMBIENT, amb);
     glLightfv(gl_light(number), GL_DIFFUSE, diff);
+    GLfloat atten = 0.5;
+    glLightfv(gl_light(number), GL_CONSTANT_ATTENUATION, &atten);
 }
 
 SpotLight::SpotLight(xml_node<char>* light)
@@ -93,7 +95,7 @@ SpotLight::SpotLight(xml_node<char>* light)
     diffuse = get_component("", 1);
 }
 
-void SpotLight::enable() const
+void SpotLight::prepare() const
 {
     glEnable(gl_light(number));
 }

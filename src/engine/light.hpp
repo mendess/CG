@@ -7,7 +7,7 @@
 
 class Light {
 public:
-    virtual void enable() const = 0;
+    virtual void prepare() const = 0;
     virtual void render() const = 0;
 };
 
@@ -20,7 +20,7 @@ private:
 
 public:
     PointLight(rapidxml::xml_node<char>*);
-    void enable() const;
+    void prepare() const;
     void render() const;
 };
 
@@ -33,7 +33,7 @@ private:
 
 public:
     DirectionalLight(rapidxml::xml_node<char>*);
-    void enable() const;
+    void prepare() const;
     void render() const;
 };
 
@@ -46,7 +46,7 @@ private:
 
 public:
     SpotLight(rapidxml::xml_node<char>*);
-    void enable() const;
+    void prepare() const;
     void render() const;
 };
 
