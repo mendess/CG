@@ -74,6 +74,7 @@ void renderScene()
     }
     Camera::place_camera();
     if (SHOW_AXIS) {
+        glDisable(GL_LIGHTING);
         // x axis
         glColor3f(1, 0, 0);
         glBegin(GL_LINES);
@@ -98,6 +99,7 @@ void renderScene()
             glVertex3f(0, 0, 10000);
         }
         glEnd();
+        glEnable(GL_LIGHTING);
     }
     glScalef(SCALE, SCALE, SCALE);
 
@@ -234,10 +236,6 @@ int render(int argc, char** argv, unique_ptr<Group> scene)
     ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
 
     SCENE->prepare();
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     // enter GLUT's main cycle
     glutMainLoop();

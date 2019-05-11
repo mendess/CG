@@ -36,8 +36,6 @@ SimpleModel::SimpleModel(string modelFile)
     buffer = 0;
 }
 
-#include <iostream>
-
 void SimpleModel::prepare()
 {
     glGenBuffers(1, &buffer);

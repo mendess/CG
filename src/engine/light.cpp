@@ -78,8 +78,8 @@ void PointLight::render() const
     glLightfv(gl_light(number), GL_POSITION, position);
     glLightfv(gl_light(number), GL_AMBIENT, amb);
     glLightfv(gl_light(number), GL_DIFFUSE, diff);
-    GLfloat atten = 0.5;
-    glLightfv(gl_light(number), GL_CONSTANT_ATTENUATION, &atten);
+    GLfloat atten = 0;
+    glLightfv(gl_light(number), GL_LINEAR_ATTENUATION, &atten);
 }
 
 SpotLight::SpotLight(xml_node<char>* light)

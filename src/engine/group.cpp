@@ -131,11 +131,11 @@ void Group::draw(int max_depth, double elapsed) const
     if (max_depth > 0) {
         glPushMatrix();
         glColor4f(r, g, b, a);
-        for (const auto& light : lights) {
-            light->render();
-        }
         for (const auto& transformation : transformations) {
             transformation->transform(elapsed);
+        }
+        for (const auto& light : lights) {
+            light->render();
         }
         for (const auto& model : models) {
             model->draw();
@@ -391,6 +391,7 @@ unique_ptr<Model> parse_model(xml_node<char>* node)
             get_component("SPEC", 0),
             get_component("EMIS", 0),
             get_component("AMBI", 0));
+    } else {
+        return make_unique<SimpleModel>(file);
     }
-    return make_unique<SimpleModel>(file);
 }
