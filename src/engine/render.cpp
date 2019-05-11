@@ -100,7 +100,8 @@ void renderScene()
             glVertex3f(0, 0, 10000);
         }
         glEnd();
-        glEnable(GL_LIGHTING);
+        if (LIGHTS)
+            glEnable(GL_LIGHTING);
     }
     glScalef(SCALE, SCALE, SCALE);
 
