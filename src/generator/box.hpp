@@ -8,9 +8,9 @@ private:
     int divisions;
 
 public:
+    const inline static std::string help_message = "box requires: x y z [divisions]";
     Box(int argc, char** args);
     std::vector<Point> draw() const;
-    const static std::string help_message;
     ~Box() {};
 };
 

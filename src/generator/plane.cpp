@@ -18,15 +18,20 @@ std::vector<Point> Plane::draw() const
     vector<Point> coordsPlane;
     float axis = side_length / 2;
 
+    Vector normal(0, 1, 0);
+    Point p0(-axis, 0, -axis, normal, 0, 0);
+    Point p1(-axis, 0, axis, normal, 0, 1);
+    Point p2(axis, 0, -axis, normal, 1, 0);
+    Point p3(axis, 0, axis, normal, 1, 1);
     //first triangle
-    coordsPlane.push_back(Point(axis, 0, axis));
-    coordsPlane.push_back(Point(-axis, 0, -axis));
-    coordsPlane.push_back(Point(-axis, 0, axis));
+    coordsPlane.push_back(p3);
+    coordsPlane.push_back(p0);
+    coordsPlane.push_back(p1);
 
     //second triangle
-    coordsPlane.push_back(Point(-axis, 0, -axis));
-    coordsPlane.push_back(Point(axis, 0, axis));
-    coordsPlane.push_back(Point(axis, 0, -axis));
+    coordsPlane.push_back(p0);
+    coordsPlane.push_back(p3);
+    coordsPlane.push_back(p2);
 
     return coordsPlane;
 }

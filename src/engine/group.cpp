@@ -1,5 +1,7 @@
 #include "group.hpp"
+#include "../common/util.hpp"
 #include "../dependencies/rapidxml.hpp"
+#include "light.hpp"
 #include "model.hpp"
 #include "transformations.hpp"
 #include <algorithm>
@@ -22,11 +24,15 @@
 using namespace std;
 using namespace rapidxml;
 
-unique_ptr<Transformation> parse_translate(xml_node<char>* node);
+unique_ptr<Transformation> parse_translate(xml_node<char>*);
 
-unique_ptr<Transformation> parse_rotate(xml_node<char>* node);
+unique_ptr<Transformation> parse_rotate(xml_node<char>*);
 
-unique_ptr<Transformation> parse_scale(xml_node<char>* node);
+unique_ptr<Transformation> parse_scale(xml_node<char>*);
+
+optional<unique_ptr<Light>> parse_light(xml_node<char>*);
+
+unique_ptr<Model> parse_model(xml_node<char>*, RGBA);
 
 void mutl_matrix(const float a[4][4], float b[4][4]);
 
@@ -55,10 +61,10 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
             this->b = stof(value);
         } else if ("A" == name) {
             this->a = stof(attr->value());
-        } else if ("RAND" == name && value != "false"){
+        } else if ("RAND" == name && value != "false") {
             static default_random_engine generator(42);
             static uniform_int_distribution<int> distribution(0, 100);
-            static auto rng = bind(distribution, generator);
+            static auto rng = std::bind(distribution, generator);
             this->r = rng() / 100.0f;
             this->g = rng() / 100.0f;
             this->b = rng() / 100.0f;
@@ -70,19 +76,27 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         if ("models" == name) {
             for (auto model = node->first_node(); model != NULL; model = model->next_sibling()) {
                 try {
-                    models.push_back(Model(model->first_attribute()->value()));
+                    cout << parse_model(model, RGBA(this->r, this->g, this->b, this->a))->to_string() << endl;
+                    models.push_back(parse_model(model, RGBA(this->r, this->g, this->b, this->a)));
                 } catch (string error) {
                     cerr << error << endl;
                 }
             }
         } else if ("group" == name) {
-            subgroups.push_back(Group(node, this->r, this->g, this->b, this->a));
+            Group group(node, this->r, this->g, this->b, this->a);
+            subgroups.push_back(move(group));
         } else if ("translate" == name) {
             transformations.push_back(parse_translate(node));
         } else if ("rotate" == name) {
             transformations.push_back(parse_rotate(node));
         } else if ("scale" == name) {
             transformations.push_back(parse_scale(node));
+        } else if ("lights" == name) {
+            for (auto light = node->first_node(); light != NULL; light = light->next_sibling()) {
+                auto l = parse_light(light);
+                if (l)
+                    lights.push_back(std::move(*l));
+            }
         }
     }
     int max_level = 0;
@@ -95,7 +109,7 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
     _levels = max_level + 1;
 }
 
-void Group::draw(int max_depth, double elapsed)
+void Group::draw(int max_depth, double elapsed) const
 {
     if (max_depth > 0) {
         glPushMatrix();
@@ -103,11 +117,14 @@ void Group::draw(int max_depth, double elapsed)
         for (const auto& transformation : transformations) {
             transformation->transform(elapsed);
         }
-        for (size_t i = 0; i < models.size(); i++) {
-            models[i].draw();
+        for (const auto& light : lights) {
+            light->render();
         }
-        for (size_t i = 0; i < subgroups.size(); i++) {
-            subgroups[i].draw(max_depth - 1, elapsed);
+        for (const auto& model : models) {
+            model->draw();
+        }
+        for (const auto& subgroup : subgroups) {
+            subgroup.draw(max_depth - 1, elapsed);
         }
         glPopMatrix();
     }
@@ -299,5 +316,70 @@ unique_ptr<Transformation> parse_scale(xml_node<char>* node)
         return make_unique<ScaleStatic>(x, y, z);
     } else {
         return make_unique<ScaleAnimated>(xi, yi, zi, xf, yf, zf, dur);
+    }
+}
+
+optional<unique_ptr<Light>> parse_light(xml_node<char>* light)
+{
+    auto type = light->first_attribute("type");
+    if (!type) {
+        cerr << "no light type specified" << endl;
+        return nullopt;
+    }
+    string value = type->value();
+    std::transform(value.begin(), value.end(), value.begin(), ::toupper);
+    if ("POINT" == value) {
+        return make_unique<PointLight>(light);
+    } else if ("DIRECTIONAL" == value) {
+        return make_unique<DirectionalLight>(light);
+    } else if ("SPOT" == value) {
+        return make_unique<SpotLight>(light);
+    } else {
+        cerr << "Invalid light type: " << value << endl;
+    }
+    return nullopt;
+}
+
+bool has_components(unordered_map<string, string> params)
+{
+    const string components[] = { "DIFF", "SPEC", "EMIS", "AMBI" };
+    const string rgb[] = { "R", "G", "B" };
+    for (const auto comp : components) {
+        for (const auto color : rgb) {
+            if (params[comp + color] != "")
+                return true;
+        }
+    }
+    return false;
+}
+
+unique_ptr<Model> parse_model(xml_node<char>* node, RGBA rgba)
+{
+    unordered_map<string, string> params = util::params_to_map(node);
+    string file = params["FILE"];
+    if (file == "")
+        throw invalid_argument("No model file");
+    if (params["TEXTURE"] != "") {
+        return make_unique<TexturedModel>(
+            file,
+            params["TEXTURE"],
+            get_component("DIFF", 1),
+            get_component("SPEC", 0),
+            get_component("EMIS", 0),
+            get_component("AMBI", 0));
+    } else if (has_components(params)) {
+        return make_unique<ColoredModel>(
+            file,
+            get_component("DIFF", 1),
+            get_component("SPEC", 0),
+            get_component("EMIS", 0),
+            get_component("AMBI", 0));
+    } else {
+        return make_unique<ColoredModel>(
+            file,
+            RGBA(),
+            RGBA(),
+            rgba,
+            RGBA());
     }
 }

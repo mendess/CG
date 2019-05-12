@@ -19,3 +19,9 @@ If no scene is provided `config.xml` will be used.
 
 ### Help
 Both programs support a `--help` flag to provide some guidance on how to use them.
+
+
+## Doubts
+
+- Fazer fix do follow mode
+- Documentacao

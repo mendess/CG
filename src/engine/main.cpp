@@ -4,6 +4,7 @@
 #include "render.hpp"
 #include <iostream>
 #include <vector>
+#include <utility>
 
 using namespace std;
 
@@ -27,8 +28,6 @@ int main(int argc, char** argv)
             it++;
         }
     }
-    Group* scene = Parser::load(args);
     if (render)
-        Render::render(argc, argv, scene);
-    delete scene;
+        Render::render(argc, argv, args);
 }
