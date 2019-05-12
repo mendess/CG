@@ -6,7 +6,7 @@
     <group R="1" G="1" B="1" A="1">
         <scale X="20" Y="20" Z="20" />
         <models>
-            <model file="scenes/sphere.3d" texture="assets/8k_sun.jpg" EMISR="1" EMISG="1" EMISB="1"/>
+            <model file="models/sphere.3d" texture="assets/8k_sun.jpg" EMISR="1" EMISG="1" EMISB="1"/>
         </models>
          <!-- Mercury -->
          <group R="1" G="1" B="1">
@@ -29,7 +29,7 @@
              </translate>
              <scale X="0.0216" Y="0.0216" Z="0.0216" />
              <models>
-                 <model file="scenes/sphere.3d" texture="assets/8k_mercury.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
+                 <model file="models/sphere.3d" texture="assets/8k_mercury.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
              </models>
          </group>
          <!-- Venus -->
@@ -53,7 +53,7 @@
              </translate>
              <scale X="0.0531" Y="0.0531" Z="0.0531" />
              <models>
-                 <model file="scenes/sphere.3d" texture="assets/8k_venus_surface.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
+                 <model file="models/sphere.3d" texture="assets/8k_venus_surface.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
              </models>
          </group>
          <!-- Earth -->
@@ -77,7 +77,7 @@
              </translate>
              <scale X="0.0555" Y="0.0555" Z="0.0555" />
              <models>
-                 <model file="scenes/sphere.3d" texture="assets/8k_earth_daymap.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
+                 <model file="models/sphere.3d" texture="assets/8k_earth_daymap.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
              </models>
              <!-- Moon -->
              <group R="0.8" G="0.8" B="0.8" >
@@ -101,7 +101,7 @@
                  <rotate Y="1" time="10" />
                  <scale X="0.25" Y="0.25" Z="0.25" />
                  <models>
-                     <model file="scenes/sphere.3d" texture="assets/2k_moon.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
+                     <model file="models/sphere.3d" texture="assets/2k_moon.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
                  </models>
              </group>
          </group>
@@ -126,7 +126,7 @@
              </translate>
              <scale X="0.0333" Y="0.0333" Z="0.0333" />
              <models>
-                 <model file="scenes/sphere.3d" texture="assets/8k_mars.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
+                 <model file="models/sphere.3d" texture="assets/8k_mars.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
              </models>
          </group>
          <!-- Jupiter -->
@@ -150,7 +150,7 @@
              </translate>
              <scale X="0.6111" Y="0.6111" Z="0.6111" />
              <models>
-                 <model file="scenes/sphere.3d" texture="assets/8k_jupiter.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
+                 <model file="models/sphere.3d" texture="assets/8k_jupiter.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
              </models>
              <!-- Europa -->
              <group R="0.8" G="0.8" B="0.8" >
@@ -174,7 +174,7 @@
                  <rotate Y="1" time="10" />
                  <scale X="0.0222" Y="0.0222" Z="0.0222" />
                  <models>
-                     <model file="scenes/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
+                     <model file="models/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
                  </models>
              </group>
              <!-- Io -->
@@ -199,7 +199,7 @@
                  <rotate Y="1" time="10" />
                  <scale X="0.03181" Y="0.03181" Z="0.03181" />
                  <models>
-                     <model file="scenes/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
+                     <model file="models/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
                  </models>
              </group>
              <!-- Ganymede -->
@@ -224,7 +224,7 @@
                  <rotate Y="1" time="10" />
                  <scale X="0.03704" Y="0.03704" Z="0.03704" />
                  <models>
-                     <model file="scenes/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
+                     <model file="models/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
                  </models>
              </group>
              <!-- Callisto -->
@@ -249,7 +249,7 @@
                  <rotate Y="1" time="10" />
                  <scale X="0.03448" Y="0.03448" Z="0.03448" />
                  <models>
-                     <model file="scenes/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
+                     <model file="models/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
                  </models>
              </group>
          </group>
@@ -274,7 +274,7 @@
              </translate>
              <scale X="0.4888" Y="0.4888" Z="0.4888" />
              <models>
-                 <model file="scenes/sphere.3d" texture="assets/8k_saturn.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
+                 <model file="models/sphere.3d" texture="assets/8k_saturn.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
              </models>
              <!-- Titan -->
              <group R="0.8" G="0.8" B="0.8" >
@@ -298,14 +298,14 @@
                  <rotate Y="1" time="10" />
                  <scale X="0.04425" Y="0.04425" Z="0.04425" />
                  <models>
-                     <model file="scenes/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
+                     <model file="models/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
                  </models>
              </group>
              <group R="0.803" G="0.702" B="0.503">
                  <rotate X="1" Y="0" Z="0.5" angle="90" />
                  <scale X="1.5" Y="1.5" Z="0.1" />
                  <models>
-                     <model file="scenes/torus.3d" texture="assets/8k_saturn_ring_alpha_full.png" diffR="0.803" diffG="0.702" diffB="0.503"/>
+                     <model file="models/torus.3d" texture="assets/8k_saturn_ring_alpha_full.png" diffR="0.803" diffG="0.702" diffB="0.503"/>
                  </models>
              </group>
          </group>
@@ -330,7 +330,7 @@
              </translate>
              <scale X="0.2052" Y="0.2052" Z="0.2052" />
              <models>
-                 <model file="scenes/sphere.3d" texture="assets/2k_uranus.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
+                 <model file="models/sphere.3d" texture="assets/2k_uranus.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
              </models>
              <!-- Miranda -->
              <group R="0.8" G="0.8" B="0.8" >
@@ -354,7 +354,7 @@
                  <rotate Y="1" time="10" />
                  <scale X="0.0037728" Y="0.0037728" Z="0.0037728" />
                  <models>
-                     <model file="scenes/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
+                     <model file="models/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
                  </models>
              </group>
              <!-- Ariel -->
@@ -379,7 +379,7 @@
                  <rotate Y="1" time="10" />
                  <scale X="0.0092624" Y="0.0092624" Z="0.0092624" />
                  <models>
-                     <model file="scenes/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
+                     <model file="models/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
                  </models>
              </group>
              <!-- Umbriel -->
@@ -404,7 +404,7 @@
                  <rotate Y="1" time="10" />
                  <scale X="0.0093552" Y="0.0093552" Z="0.0093552" />
                  <models>
-                     <model file="scenes/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
+                     <model file="models/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
                  </models>
              </group>
              <!-- Titania -->
@@ -429,7 +429,7 @@
                  <rotate Y="1" time="10" />
                  <scale X="0.0126144" Y="0.0126144" Z="0.0126144" />
                  <models>
-                     <model file="scenes/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
+                     <model file="models/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
                  </models>
              </group>
              <!-- Oberon -->
@@ -454,7 +454,7 @@
                  <rotate Y="1" time="10" />
                  <scale X="0.0121824" Y="0.0121824" Z="0.0121824" />
                  <models>
-                     <model file="scenes/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
+                     <model file="models/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
                  </models>
              </group>
          </group>
@@ -479,7 +479,7 @@
              </translate>
              <scale X="0.1887" Y="0.1887" Z="0.1887" />
              <models>
-                 <model file="scenes/sphere.3d" texture="assets/2k_neptune.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
+                 <model file="models/sphere.3d" texture="assets/2k_neptune.jpg" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>
              </models>
              <!-- Triton -->
              <group R="0.8" G="0.8" B="0.8" >
@@ -503,7 +503,7 @@
                  <rotate Y="1" time="10" />
                  <scale X="2.05e-05" Y="2.05e-05" Z="2.05e-05" />
                  <models>
-                     <model file="scenes/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
+                     <model file="models/sphere.3d" diffR="0.8" diffG="0.8" diffB="0.8"/>
                  </models>
              </group>
          </group>
@@ -528,7 +528,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d"/>
+                 <model file="models/sphere.3d"/>
              </models>
          </group>
          <!-- Commet -->
@@ -552,7 +552,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/teapot.3d"/>
+                 <model file="models/teapot.3d"/>
              </models>
          </group>
          <!-- Asteroid 0 -->
@@ -576,7 +576,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 1 -->
@@ -600,7 +600,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 2 -->
@@ -624,7 +624,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 3 -->
@@ -648,7 +648,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 4 -->
@@ -672,7 +672,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 5 -->
@@ -696,7 +696,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 6 -->
@@ -720,7 +720,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 7 -->
@@ -744,7 +744,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 8 -->
@@ -768,7 +768,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 9 -->
@@ -792,7 +792,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 10 -->
@@ -816,7 +816,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 11 -->
@@ -840,7 +840,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 12 -->
@@ -864,7 +864,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 13 -->
@@ -888,7 +888,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 14 -->
@@ -912,7 +912,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 15 -->
@@ -936,7 +936,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 16 -->
@@ -960,7 +960,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 17 -->
@@ -984,7 +984,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 18 -->
@@ -1008,7 +1008,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 19 -->
@@ -1032,7 +1032,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 20 -->
@@ -1056,7 +1056,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 21 -->
@@ -1080,7 +1080,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 22 -->
@@ -1104,7 +1104,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 23 -->
@@ -1128,7 +1128,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 24 -->
@@ -1152,7 +1152,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 25 -->
@@ -1176,7 +1176,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 26 -->
@@ -1200,7 +1200,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 27 -->
@@ -1224,7 +1224,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 28 -->
@@ -1248,7 +1248,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 29 -->
@@ -1272,7 +1272,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 30 -->
@@ -1296,7 +1296,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 31 -->
@@ -1320,7 +1320,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 32 -->
@@ -1344,7 +1344,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 33 -->
@@ -1368,7 +1368,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 34 -->
@@ -1392,7 +1392,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 35 -->
@@ -1416,7 +1416,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 36 -->
@@ -1440,7 +1440,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 37 -->
@@ -1464,7 +1464,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 38 -->
@@ -1488,7 +1488,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 39 -->
@@ -1512,7 +1512,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 40 -->
@@ -1536,7 +1536,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 41 -->
@@ -1560,7 +1560,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 42 -->
@@ -1584,7 +1584,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 43 -->
@@ -1608,7 +1608,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 44 -->
@@ -1632,7 +1632,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 45 -->
@@ -1656,7 +1656,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 46 -->
@@ -1680,7 +1680,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 47 -->
@@ -1704,7 +1704,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 48 -->
@@ -1728,7 +1728,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 49 -->
@@ -1752,7 +1752,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 50 -->
@@ -1776,7 +1776,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 51 -->
@@ -1800,7 +1800,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 52 -->
@@ -1824,7 +1824,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 53 -->
@@ -1848,7 +1848,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 54 -->
@@ -1872,7 +1872,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 55 -->
@@ -1896,7 +1896,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 56 -->
@@ -1920,7 +1920,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 57 -->
@@ -1944,7 +1944,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 58 -->
@@ -1968,7 +1968,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 59 -->
@@ -1992,7 +1992,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 60 -->
@@ -2016,7 +2016,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 61 -->
@@ -2040,7 +2040,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 62 -->
@@ -2064,7 +2064,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 63 -->
@@ -2088,7 +2088,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 64 -->
@@ -2112,7 +2112,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 65 -->
@@ -2136,7 +2136,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 66 -->
@@ -2160,7 +2160,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 67 -->
@@ -2184,7 +2184,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 68 -->
@@ -2208,7 +2208,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 69 -->
@@ -2232,7 +2232,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 70 -->
@@ -2256,7 +2256,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 71 -->
@@ -2280,7 +2280,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 72 -->
@@ -2304,7 +2304,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 73 -->
@@ -2328,7 +2328,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 74 -->
@@ -2352,7 +2352,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 75 -->
@@ -2376,7 +2376,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 76 -->
@@ -2400,7 +2400,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 77 -->
@@ -2424,7 +2424,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 78 -->
@@ -2448,7 +2448,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 79 -->
@@ -2472,7 +2472,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 80 -->
@@ -2496,7 +2496,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 81 -->
@@ -2520,7 +2520,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 82 -->
@@ -2544,7 +2544,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 83 -->
@@ -2568,7 +2568,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 84 -->
@@ -2592,7 +2592,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 85 -->
@@ -2616,7 +2616,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 86 -->
@@ -2640,7 +2640,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 87 -->
@@ -2664,7 +2664,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 88 -->
@@ -2688,7 +2688,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 89 -->
@@ -2712,7 +2712,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 90 -->
@@ -2736,7 +2736,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 91 -->
@@ -2760,7 +2760,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 92 -->
@@ -2784,7 +2784,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 93 -->
@@ -2808,7 +2808,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 94 -->
@@ -2832,7 +2832,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 95 -->
@@ -2856,7 +2856,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 96 -->
@@ -2880,7 +2880,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 97 -->
@@ -2904,7 +2904,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 98 -->
@@ -2928,7 +2928,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
          <!-- Asteroid 99 -->
@@ -2952,7 +2952,7 @@
              </translate>
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
+                 <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>
              </models>
          </group>
     </group>

@@ -3,14 +3,14 @@
     <group R="0" G="0.5" B="0">
         <scale X="1000" Z="1000" />
         <models>
-            <model file="scenes/plane.3d" />
+            <model file="models/plane.3d" />
         </models>
     </group>
     <!-- sky -->
     <group B="0.6" G="0" R="0" >
         <scale X="-200" Y="-200" Z="-200" />
         <models>
-            <model file="scenes/sphere.3d" />
+            <model file="models/sphere.3d" />
         </models>
     </group>
     <!-- sun -->
@@ -18,7 +18,7 @@
         <translate X="-100" Y="100" Z="-100"/>
         <scale X="5" Y="5" Z="5" />
         <models>
-            <model file="scenes/sphere.3d" />
+            <model file="models/sphere.3d" />
         </models>
     </group>
     <!-- house -->
@@ -31,7 +31,7 @@
             <translate Y="2.5" Z="-2.5"/>
             <scale X="5" Y="5" Z="5"/>
             <models>
-                <model file="scenes/box.3d" />
+                <model file="models/box.3d" />
             </models>
         </group>
         <!-- windows -->
@@ -42,14 +42,14 @@
             <group>
                 <translate Z="-1.2"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <!-- right -->
             <group>
                 <translate Z="-3.9"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
         </group>
@@ -58,7 +58,7 @@
             <translate X="2.5" Y="0.8" Z="-2.5" />
             <scale X="0.5" Y="1.7" Z="1.5" />
             <models>
-                <model file="scenes/box.3d" />
+                <model file="models/box.3d" />
             </models>
         </group>
         <!-- roof -->
@@ -66,7 +66,7 @@
             <translate Y="5" Z="-2.5"/>
             <scale X="3" Y="3" Z="3"/>
             <models>
-                <model file="scenes/piramid.3d" />
+                <model file="models/piramid.3d" />
             </models>
         </group>
         <!-- small house -->
@@ -74,7 +74,7 @@
             <translate Y="1.5" Z="1.5"/>
             <scale X="3" Y="3" Z="3"/>
             <models>
-                <model file="scenes/box.3d" />
+                <model file="models/box.3d" />
             </models>
         </group>
     </group>
@@ -86,21 +86,21 @@
             <translate Y="0"/>
             <scale X="4" Y="4" Z="4"/>
             <models>
-                <model file="scenes/cone.3d" />
+                <model file="models/cone.3d" />
             </models>
         </group>
         <group B="0" G="0.7" R="0" >
             <translate Y="2"/>
             <scale X="3" Y="3" Z="3"/>
             <models>
-                <model file="scenes/cone.3d" />
+                <model file="models/cone.3d" />
             </models>
         </group>
         <group B="0" G="0.5" R="0" >
             <translate Y="4"/>
             <scale X="2" Y="2" Z="2"/>
             <models>
-                <model file="scenes/cone.3d" />
+                <model file="models/cone.3d" />
             </models>
         </group>
     </group>
@@ -116,7 +116,7 @@
         <group B="1" G="0" R="0" >
             <scale X="6" Z="2"/>
             <models>
-                <model file="scenes/box.3d" />
+                <model file="models/box.3d" />
             </models>
         </group>
         <!-- tejadilho -->
@@ -124,7 +124,7 @@
             <translate X="-1" Y="1.5"/>
             <scale X="4" Z="2" Y="0.1"/>
             <models>
-                <model file="scenes/box.3d" />
+                <model file="models/box.3d" />
             </models>
         </group>
         <!-- torres carro -->
@@ -133,42 +133,42 @@
                 <translate Z="0.9" X="1" Y="1"/>
                 <scale X="0.1" Z="0.1" Y="1"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
                 <translate Z="-0.9" X="1" Y="1"/>
                 <scale X="0.1" Z="0.1" Y="1"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
                 <translate Z="0.9" X="-2.9" Y="1"/>
                 <scale X="0.1" Z="0.1" Y="1"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
                 <translate Z="-0.9" X="-2.9" Y="1"/>
                 <scale X="0.1" Z="0.1" Y="1"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
                 <translate Z="0.9" X="-1" Y="1"/>
                 <scale X="0.3" Z="0.1" Y="1"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
                 <translate Z="-0.9" X="-1" Y="1"/>
                 <scale X="0.3" Z="0.1" Y="1"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
         </group>
@@ -178,14 +178,14 @@
                 <translate X="3" Z="-0.7" Y="0.2"/>
                 <scale X="0.15" Y="0.15" Z="0.15"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
                 <translate X="3" Z="0.7" Y="0.2"/>
                 <scale X="0.15" Y="0.15" Z="0.15"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
         </group>
@@ -196,14 +196,14 @@
                 <translate Z="-0.7"/>
                 <scale X="0.05" Y="0.2" Z="0.15"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
                 <translate Z="0.7"/>
                 <scale X="0.05" Y="0.2" Z="0.15"/>
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
         </group>
@@ -212,14 +212,14 @@
             <translate X="3" Y="-0.4"/>
             <scale X="0.15" Y="0.05" Z="2.1"/>
             <models>
-                <model file="scenes/box.3d" />
+                <model file="models/box.3d" />
             </models>
         </group>
         <group R="0.5" G="0.5" B="0.5">
             <translate X="-3" Y="-0.4"/>
             <scale X="0.15" Y="0.05" Z="2.1"/>
             <models>
-                <model file="scenes/box.3d" />
+                <model file="models/box.3d" />
             </models>
         </group>
         <!-- rodas -->
@@ -230,7 +230,7 @@
                 <scale X="1" Z="0.2" Y="1"/>
                 <rotate time="1" Z="-1" />
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
@@ -238,7 +238,7 @@
                 <scale X="1" Z="0.2" Y="1"/>
                 <rotate time="1" Z="-1" />
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
@@ -246,7 +246,7 @@
                 <scale X="1" Z="0.2" Y="1"/>
                 <rotate time="1" Z="-1" />
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
@@ -254,7 +254,7 @@
                 <scale X="1" Z="0.2" Y="1"/>
                 <rotate time="1" Z="-1" />
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
         </group>
@@ -266,7 +266,7 @@
                 <scale X="0.5" Z="0.2" Y="0.5"/>
                 <rotate time="1" Z="1" />
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
@@ -274,7 +274,7 @@
                 <scale X="0.5" Z="0.2" Y="0.5"/>
                 <rotate time="1" Z="1" />
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
@@ -282,7 +282,7 @@
                 <scale X="0.5" Z="0.2" Y="0.5"/>
                 <rotate time="1" Z="1" />
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
             <group>
@@ -290,7 +290,7 @@
                 <scale X="0.5" Z="0.2" Y="0.5"/>
                 <rotate time="1" Z="1" />
                 <models>
-                    <model file="scenes/box.3d" />
+                    <model file="models/box.3d" />
                 </models>
             </group>
         </group>
@@ -299,7 +299,7 @@
             <translate X="-1" Y="1"/>
             <scale X="3.9" Z="2" Y="1"/>
             <models>
-                <model file="scenes/box.3d" />
+                <model file="models/box.3d" />
             </models>
         </group>
     </group>

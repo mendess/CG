@@ -3,14 +3,14 @@
     <group R="1" G="1" B="0" A="1">
         <scale X="20" Y="20" Z="20" />
         <models>
-            <model file="scenes/sphere.3d" />
+            <model file="models/sphere.3d" />
         </models>
          <!-- Mercury -->
          <group R="1" G="0" B="0" >
              <translate X="-0.0378246429902437" Z="1.7996025384463816" /> <!-- alpha: -0.021015237378258278 | radius: 1.8 -->
              <scale X="0.0216" Y="0.0216" Z="0.0216" />
              <models>
-                 <model file="scenes/sphere.3d"/>
+                 <model file="models/sphere.3d"/>
              </models>
          </group>
          <!-- Venus -->
@@ -18,7 +18,7 @@
              <translate X="-0.9541075765499087" Z="1.982341729462925" /> <!-- alpha: -0.4485786692897512 | radius: 2.2 -->
              <scale X="0.0531" Y="0.0531" Z="0.0531" />
              <models>
-                 <model file="scenes/sphere.3d"/>
+                 <model file="models/sphere.3d"/>
              </models>
          </group>
          <!-- Earth -->
@@ -26,14 +26,14 @@
              <translate X="1.1023444082205645" Z="2.243844202627458" /> <!-- alpha: 0.4566432233109321 | radius: 2.5 -->
              <scale X="0.0555" Y="0.0555" Z="0.0555" />
              <models>
-                 <model file="scenes/sphere.3d"/>
+                 <model file="models/sphere.3d"/>
              </models>
              <!-- Moon -->
              <group R="0.8" G="0.8" B="0.8">
                  <translate X="-1.562802456801457" Y="0.3495855806969056" Z="1.2820609824747564" /> <!-- alpha: 5.399421988971284 | radius: 2.0514 -->
                  <scale X="0.25" Y="0.25" Z="0.25" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
          </group>
@@ -42,7 +42,7 @@
              <translate X="-1.8129991570166193" Z="2.8762882429716647" /> <!-- alpha: -0.5624200571083329 | radius: 3.4 -->
              <scale X="0.0333" Y="0.0333" Z="0.0333" />
              <models>
-                 <model file="scenes/sphere.3d"/>
+                 <model file="models/sphere.3d"/>
              </models>
          </group>
          <!-- Jupiter -->
@@ -50,14 +50,14 @@
              <translate X="-0.11115273553965137" Z="6.7990914885286" /> <!-- alpha: -0.01634671852610481 | radius: 6.8 -->
              <scale X="0.6111" Y="0.6111" Z="0.6111" />
              <models>
-                 <model file="scenes/sphere.3d"/>
+                 <model file="models/sphere.3d"/>
              </models>
              <!-- Europa -->
              <group R="0.8" G="0.8" B="0.8">
                  <translate X="-1.9739134754677707" Y="-0.6058151146019737" Z="-0.32106354244377094" /> <!-- alpha: 4.551147722545702 | radius: 2.0896 -->
                  <scale X="0.0222" Y="0.0222" Z="0.0222" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
              <!-- Io -->
@@ -65,7 +65,7 @@
                  <translate X="1.3009021831337488" Y="-0.9117855918605499" Z="1.290616435814047" /> <!-- alpha: 0.7893671463847127 | radius: 2.0468 -->
                  <scale X="0.03181" Y="0.03181" Z="0.03181" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
              <!-- Ganymede -->
@@ -73,7 +73,7 @@
                  <translate X="-1.6360631702462545" Y="0.18780201298969929" Z="1.3716172741988903" /> <!-- alpha: 5.410089129623691 | radius: 2.1432 -->
                  <scale X="0.03704" Y="0.03704" Z="0.03704" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
              <!-- Callisto -->
@@ -81,7 +81,7 @@
                  <translate X="-0.7902424269980806" Y="0.4610331189744719" Z="-2.057125987823996" /> <!-- alpha: 3.5083599438343995 | radius: 2.2514 -->
                  <scale X="0.03448" Y="0.03448" Z="0.03448" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
          </group>
@@ -90,21 +90,21 @@
              <translate X="3.9053847471424357" Z="13.027201156687005" /> <!-- alpha: 0.29126131340995487 | radius: 13.6 -->
              <scale X="0.4888" Y="0.4888" Z="0.4888" />
              <models>
-                 <model file="scenes/sphere.3d"/>
+                 <model file="models/sphere.3d"/>
              </models>
              <!-- Titan -->
              <group R="0.8" G="0.8" B="0.8">
                  <translate X="-0.623182250994466" Y="-0.44433399546510904" Z="2.0202819957915485" /> <!-- alpha: -0.29920281941546634 | radius: 2.1604 -->
                  <scale X="0.04425" Y="0.04425" Z="0.04425" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
              <group R="0.803" G="0.702" B="0.503" A="0.5">
                  <rotate X="1" Y="0" Z="0.5" angle="90" />
                  <scale X="1.5" Y="1.5" Z="0" />
                  <models>
-                     <model file="scenes/torus.3d" />
+                     <model file="models/torus.3d" />
                  </models>
              </group>
          </group>
@@ -113,14 +113,14 @@
              <translate X="-1.1387076500733375" Z="27.17615397527149" /> <!-- alpha: -0.04187649015215089 | radius: 27.2 -->
              <scale X="0.2052" Y="0.2052" Z="0.2052" />
              <models>
-                 <model file="scenes/sphere.3d"/>
+                 <model file="models/sphere.3d"/>
              </models>
              <!-- Miranda -->
              <group R="0.8" G="0.8" B="0.8">
                  <translate X="0.98943899321693" Y="-0.30295734745001557" Z="0.02647147007475641" /> <!-- alpha: -4.739136619271513 | radius: 1.03512 -->
                  <scale X="0.0037728" Y="0.0037728" Z="0.0037728" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
              <!-- Ariel -->
@@ -128,7 +128,7 @@
                  <translate X="-0.06895170372620689" Y="-0.24934606877077728" Z="-1.5061026479432975" /> <!-- alpha: 3.187342251872174 | radius: 1.52816 -->
                  <scale X="0.0092624" Y="0.0092624" Z="0.0092624" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
              <!-- Umbriel -->
@@ -136,7 +136,7 @@
                  <translate X="0.5658399564594316" Y="1.1761745075093901" Z="-1.683758543128744" /> <!-- alpha: 2.8173922121456716 | radius: 2.1304 -->
                  <scale X="0.0093552" Y="0.0093552" Z="0.0093552" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
              <!-- Titania -->
@@ -144,7 +144,7 @@
                  <translate X="-1.423712709885508" Y="-0.1104434509015812" Z="3.1815037580149763" /> <!-- alpha: 5.8624150037967375 | radius: 3.48728 -->
                  <scale X="0.0126144" Y="0.0126144" Z="0.0126144" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
              <!-- Oberon -->
@@ -152,7 +152,7 @@
                  <translate X="0.15274979821996085" Y="-0.6680450275971876" Z="4.617586071298124" /> <!-- alpha: -6.2501173545660915 | radius: 4.66816 -->
                  <scale X="0.0121824" Y="0.0121824" Z="0.0121824" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
          </group>
@@ -161,14 +161,14 @@
              <translate X="-14.758121400868891" Z="37.17792157608082" /> <!-- alpha: -0.37788233116053316 | radius: 40 -->
              <scale X="0.1887" Y="0.1887" Z="0.1887" />
              <models>
-                 <model file="scenes/sphere.3d"/>
+                 <model file="models/sphere.3d"/>
              </models>
              <!-- Triton -->
              <group R="0.8" G="0.8" B="0.8">
                  <translate X="10.7182539421744" Y="-6.168509809381747" Z="10.5726732268913" /> <!-- alpha: -5.4909495624328155 | radius: 16.27 -->
                  <scale X="2.05e-05" Y="2.05e-05" Z="2.05e-05" />
                  <models>
-                     <model file="scenes/sphere.3d"/>
+                     <model file="models/sphere.3d"/>
                  </models>
              </group>
          </group>
@@ -177,7 +177,7 @@
              <translate X="24.639319031721364" Z="47.601091979628514" /> <!-- alpha: 0.4776447342524617 | radius: 53.6 -->
              <scale X="0.01" Y="0.01" Z="0.01" />
              <models>
-                 <model file="scenes/sphere.3d"/>
+                 <model file="models/sphere.3d"/>
              </models>
          </group>
     </group>
