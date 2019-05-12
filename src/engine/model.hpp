@@ -8,6 +8,7 @@
 #include <optional>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #ifdef __APPLE__
@@ -16,6 +17,15 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #endif
+
+class Textures {
+private:
+    static inline std::unordered_map<std::string, GLuint> textures;
+
+public:
+    static GLuint load_texture(std::string);
+    Textures() {}
+};
 
 class Model {
 public:

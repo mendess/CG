@@ -1,49 +1,35 @@
-from math import pi, cos, floor
-import sys
+from math import floor
+from perlin import PerlinNoiseFactory
 
 def block(x, y, z):
     print('<group R="1" G="1" B="1">')
-    print('<translate x="{}" y="{}" z="{}" />'.format(x, y, z))
-    print('<models>')
-    print('<model file="scenes/box.3d" ambiR="0.5" ambiG="0.5" ambiB="0.5" texture="assets/grass_block.png" />')
-    print('</models>')
+    print('  <translate x="{}" y="{}" z="{}" />'.format(x, y, z))
+    print('  <models>')
+    print('    <model file="scenes/box.3d" ambiR="0.5" ambiG="0.5" ambiB="0.5" texture="assets/grass_block.png" />')
+    print('  </models>')
     print('</group>')
 
+sky = [0.529, 0.808, 0.922]
 print('<scene>')
 print('<lights>')
-print('<light type="POINT" y="10" x="5" z="5"/>')
+print('  <light type="POINT" y="10" x="5" z="5"/>')
 print('</lights>')
-# d = 1.0
-# c = 1.0
-# a = c * (-1.0 + 2.0 * (floor(d * fx) % 2.0))
-# b = -c * ((floor(d * fx) % 2.0))
-# y = (d - floor(d * fx)) * a + b + (c / 2.0)
+print('<group R="{}" G="{}" B="{}">'.format(sky[0], sky[1], sky[2]))
+print('  <scale x="-200" y="-200" z="-200" />')
+print('  <models>')
+print('    <model file="scenes/sphere.3d" diffR="{}" diffG="{}" diffB="{}" />'.format(sky[0], sky[1], sky[2]))
+print('  </models>')
+print('</group>')
 
-# t = 1.0
-# p = 1
-# cenas = floor(((2 * t) / p) + 0.5)
-# y = (4 / p) * (t - (p / 2) * cenas) * -1 ** cenas
+PNFactory = PerlinNoiseFactory(2)
 
-ys = [-2, -1, 0, 1, 2]
-y_index = 0
-up = True
+x_size = 128
+y_size = 128
 
-for x in range(-8, 8):
-    for z in range(-8, 8):
-        print(y_index, file=sys.stderr)
-        y = ys[y_index]
-        block(x, y, z)
-        if up:
-            y_index += 1
-            if y_index >= len(ys):
-                up = False
-                y_index = len(ys) - 1
-        else:
-            y_index -= 1
-            if y_index < 0:
-                y_index = 0
-                up = True
-
+for x in range(x_size):
+    for z in range(y_size):
+        y = floor( PNFactory(x / 16, z / 16) * 4 )
+        block(x - (x_size / 2), y, z - (y_size / 2))
 
 
 print('</scene>')

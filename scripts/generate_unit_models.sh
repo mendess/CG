@@ -1,7 +1,7 @@
 #!/bin/bash
 
 files=( scenes/box.3d scenes/cone.3d scenes/plane.3d scenes/sphere.3d  scenes/torus.3d )
-args=( "1 1 1 10"        "1 1 20 20"    "1"             "1 50 50"         "0.545 2.327 50 30")
+args=( "1 1 1 1"        "1 1 20 20"    "1"             "1 50 50"         "0.545 2.327 50 30")
 for ((i = 0; i < ${#files[@]}; i++))
 do
     echo -en "\033[32m"

@@ -19,6 +19,33 @@
 
 using namespace std;
 
+GLuint Textures::load_texture(string texture) {
+    if (textures.find(texture) != textures.end()) {
+        return textures[texture];
+    }
+    unsigned int t, tw, th;
+    ilGenImages(1, &t);
+    ilBindImage(t);
+    ilLoadImage((ILstring)texture.c_str());
+    tw = ilGetInteger(IL_IMAGE_WIDTH);
+    th = ilGetInteger(IL_IMAGE_HEIGHT);
+    ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+    unsigned char* texData = ilGetData();
+
+    GLuint texture_slot;
+
+    glGenTextures(1, &texture_slot);
+    glBindTexture(GL_TEXTURE_2D, texture_slot);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tw, th, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+
+    textures[texture] = texture_slot;
+    return texture_slot;
+}
+
 SimpleModel::SimpleModel(string modelFile)
 {
     float x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y;
@@ -26,8 +53,7 @@ SimpleModel::SimpleModel(string modelFile)
     if (!infile.good()) {
         string error = "Couldn't load '";
         error.append(modelFile);
-        error.append("': No such file or directory");
-        throw error;
+        error.append("': No such file or directory"); throw error;
     }
     while (infile >> x >> y >> z >> normal_x >> normal_y >> normal_z >> texture_x >> texture_y) {
         push(x, y, z);
@@ -180,22 +206,7 @@ void TexturedModel::prepare()
     glBindBuffer(GL_ARRAY_BUFFER, texture_buffer());
     glBufferData(GL_ARRAY_BUFFER, texture_coords.size() * sizeof(float), texture_coords.data(), GL_STATIC_DRAW);
 
-    unsigned int t, tw, th;
-    ilGenImages(1, &t);
-    ilBindImage(t);
-    ilLoadImage((ILstring)texture_file.c_str());
-    tw = ilGetInteger(IL_IMAGE_WIDTH);
-    th = ilGetInteger(IL_IMAGE_HEIGHT);
-    ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-    unsigned char* texData = ilGetData();
-
-    glGenTextures(1, &texture_slot);
-    glBindTexture(GL_TEXTURE_2D, texture_slot);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tw, th, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+    texture_slot = Textures::load_texture(texture_file);
 }
 
 void TexturedModel::draw() const
