@@ -3,6 +3,8 @@ import random
 from random import uniform, gauss
 from math import sin, cos, pi, sqrt
 
+TRANSLATE_STEPS = 15
+
 class Planet:
     def __init__(self, name, radius, r, g, b, distance=None, moons=[], rings=[], orbit_x=None, orbit_y=None, texture=None):
         self.name = name
@@ -31,11 +33,10 @@ class Planet:
         else:
             print(' ' * indent, '<group R="1" G="1" B="1">')
         print(' ' * indent, '    <translate time="{}">'.format(time))
-        STEPS = 500
-        for i in range(STEPS):
-            a = ((2 * pi)/STEPS) * i
-            x = self.orbit_x * sin(a)
-            z = self.orbit_y * cos(a)
+        for i in range(TRANSLATE_STEPS):
+            a = ((2 * pi)/TRANSLATE_STEPS) * i
+            x = self.orbit_x * cos(a)
+            z = self.orbit_y * sin(a)
             print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
         print(' ' * indent, '    </translate>')
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(self.radius))
@@ -52,14 +53,13 @@ class Planet:
         print(' ' * indent, '</group>')
 
     def print_moon(self, indent=12):
-        STEPS = 100
         shift = uniform(0, 2 * pi)
         print(' ' * indent, '<!-- {} -->'.format(self.name))
         print(' ' * indent, '<group R="{}" G="{}" B="{}" >'.format(self.r, self.g, self.b))
         print(' ' * indent, '    <translate time="{}">'.format(10))
         if self.name == 'Moon':
-            for i in range(STEPS):
-                a = ((2 * pi)/STEPS) * i
+            for i in range(TRANSLATE_STEPS):
+                a = ((2 * pi)/TRANSLATE_STEPS) * i
                 x = self.orbit_x * sin(a)
                 z = self.orbit_y * cos(a)
                 print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
@@ -67,8 +67,8 @@ class Planet:
             n = make_rand_vector()
             u = make_rand_vector_par(n)
             uxn = cross(u,n)
-            for i in range(STEPS):
-                a = ((2 * pi) / STEPS) * i + shift
+            for i in range(TRANSLATE_STEPS):
+                a = ((2 * pi) / TRANSLATE_STEPS) * i + shift
                 x = self.distance * cos(a) * u[0] + self.distance * sin(a) * uxn[0]
                 y = self.distance * cos(a) * u[1] + self.distance * sin(a) * uxn[1]
                 z = self.distance * cos(a) * u[2] + self.distance * sin(a) * uxn[2]
@@ -139,8 +139,8 @@ def draw_asteroids(number, min_distance, max_distance, indent=8):
         print(' ' * indent, '<!-- Asteroid {} -->'.format(i))
         print(' ' * indent, '<group R="0.6" G="0.6" B="0.6" >')
         print(' ' * indent, '    <translate time="{}">'.format(time))
-        for i in range(STEPS):
-            a = ((2 * pi) / STEPS) * i + shift
+        for i in range(TRANSLATE_STEPS):
+            a = ((2 * pi) / TRANSLATE_STEPS) * i + shift
             x = distance * sin(a)
             z = distance * cos(a)
             print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
@@ -161,8 +161,8 @@ def draw_commet(indent=8):
     print(' ' * indent, '<group R="1" G="0.6" B="0" >')
     print(' ' * indent, '    <translate time="{}">'.format(time))
     yShift = 10
-    for i in range(STEPS):
-        a = ((2 * pi) / STEPS) * i
+    for i in range(TRANSLATE_STEPS):
+        a = ((2 * pi) / TRANSLATE_STEPS) * i
         x = distance_x * sin(a) + distance_x * .75
         z = distance_z * cos(a)
         print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
