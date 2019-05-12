@@ -91,25 +91,7 @@ std::unique_ptr<ModelBuffer>& ModelBuffer::get(string modelFile)
     return modelBuffers[modelFile];
 }
 
-SimpleModel::SimpleModel(string modelFile)
-{
-    auto& model = ModelBuffer::get(modelFile);
-    n_vertices = model->n_vertices();
-    buffer = model->vbo_buffer();
-}
-
-void SimpleModel::draw() const
-{
-    glEnableClientState(GL_VERTEX_ARRAY);
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glVertexPointer(3, GL_FLOAT, 0, 0);
-        glDrawArrays(GL_TRIANGLES, 0, n_vertices);
-    }
-    glDisableClientState(GL_VERTEX_ARRAY);
-}
-
-ColoredModel::ColoredModel(string modelFile, RGB diffuse, RGB specular, RGB emissive, RGB ambient)
+ColoredModel::ColoredModel(string modelFile, RGBA diffuse, RGBA specular, RGBA emissive, RGBA ambient)
     : diffuse(diffuse)
     , specular(specular)
     , emissive(emissive)
@@ -126,17 +108,13 @@ void ColoredModel::draw() const
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
     {
-        float diffuse_arr[] = { diffuse.r, diffuse.g, diffuse.b, 1 };
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_arr);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse.to_array().data());
 
-        float specular_arr[] = { specular.r, specular.g, specular.b, 1 };
-        glMaterialfv(GL_FRONT, GL_SPECULAR, specular_arr);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, specular.to_array().data());
 
-        float emissive_arr[] = { emissive.r, emissive.g, emissive.b, 1 };
-        glMaterialfv(GL_FRONT, GL_EMISSION, emissive_arr);
+        glMaterialfv(GL_FRONT, GL_EMISSION, emissive.to_array().data());
 
-        float ambient_arr[] = { ambient.r, ambient.g, ambient.b, 1 };
-        glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_arr);
+        glMaterialfv(GL_FRONT, GL_AMBIENT, ambient.to_array().data());
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer());
         glVertexPointer(3, GL_FLOAT, 0, 0);
@@ -153,10 +131,10 @@ void ColoredModel::draw() const
 TexturedModel::TexturedModel(
     string modelFile,
     string texture_file,
-    RGB diffuse,
-    RGB specular,
-    RGB emissive,
-    RGB ambient)
+    RGBA diffuse,
+    RGBA specular,
+    RGBA emissive,
+    RGBA ambient)
     : texture_file(texture_file)
     , diffuse(diffuse)
     , specular(specular)
@@ -177,17 +155,13 @@ void TexturedModel::draw() const
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     {
-        float diffuse_arr[] = { diffuse.r, diffuse.g, diffuse.b, 1 };
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_arr);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse.to_array().data());
 
-        float specular_arr[] = { specular.r, specular.g, specular.b, 1 };
-        glMaterialfv(GL_FRONT, GL_SPECULAR, specular_arr);
+        glMaterialfv(GL_FRONT, GL_SPECULAR, specular.to_array().data());
 
-        float emissive_arr[] = { emissive.r, emissive.g, emissive.b, 1 };
-        glMaterialfv(GL_FRONT, GL_EMISSION, emissive_arr);
+        glMaterialfv(GL_FRONT, GL_EMISSION, emissive.to_array().data());
 
-        float ambient_arr[] = { ambient.r, ambient.g, ambient.b, 1 };
-        glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_arr);
+        glMaterialfv(GL_FRONT, GL_AMBIENT, ambient.to_array().data());
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer());
         glVertexPointer(3, GL_FLOAT, 0, 0);

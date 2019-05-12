@@ -47,34 +47,20 @@ public:
     virtual std::string to_string() const = 0;
 };
 
-class SimpleModel : public Model {
-private:
-    GLuint buffer;
-    size_t n_vertices;
-
-public:
-    SimpleModel(std::string);
-    void draw() const;
-    std::string to_string() const
-    {
-        return "SimpleModel{}";
-    }
-};
-
 class ColoredModel : public Model {
 private:
     GLuint buffers[2];
-    RGB diffuse;
-    RGB specular;
-    RGB emissive;
-    RGB ambient;
+    RGBA diffuse;
+    RGBA specular;
+    RGBA emissive;
+    RGBA ambient;
     size_t n_vertices;
 
     inline GLuint vbo_buffer() const { return buffers[0]; }
     inline GLuint normal_buffer() const { return buffers[1]; }
 
 public:
-    ColoredModel(std::string, RGB, RGB, RGB, RGB);
+    ColoredModel(std::string, RGBA, RGBA, RGBA, RGBA);
     void draw() const;
     std::string to_string() const
     {
@@ -93,10 +79,10 @@ private:
     GLuint buffers[3];
     GLuint texture_slot;
     std::string texture_file;
-    RGB diffuse;
-    RGB specular;
-    RGB emissive;
-    RGB ambient;
+    RGBA diffuse;
+    RGBA specular;
+    RGBA emissive;
+    RGBA ambient;
     size_t n_vertices;
 
     inline GLuint vbo_buffer() const { return buffers[0]; }
@@ -104,7 +90,7 @@ private:
     inline GLuint texture_buffer() const { return buffers[2]; }
 
 public:
-    TexturedModel(std::string, std::string, RGB, RGB, RGB, RGB);
+    TexturedModel(std::string, std::string, RGBA, RGBA, RGBA, RGBA);
     void draw() const;
     std::string to_string() const
     {

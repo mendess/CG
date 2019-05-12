@@ -25,8 +25,8 @@ public:
 class PointLight : public Light {
 private:
     Point pos;
-    RGB ambient;
-    RGB diffuse;
+    RGBA ambient;
+    RGBA diffuse;
     size_t number;
 
 public:
@@ -37,8 +37,8 @@ public:
 class DirectionalLight : public Light {
 private:
     Point pos;
-    RGB ambient;
-    RGB diffuse;
+    RGBA ambient;
+    RGBA diffuse;
     size_t number;
 
 public:
@@ -50,7 +50,7 @@ class SpotLight : public Light {
 private:
     Point direction;
     Point pos;
-    RGB diffuse;
+    RGBA diffuse;
     size_t number;
 
 public:

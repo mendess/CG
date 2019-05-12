@@ -1,35 +1,45 @@
-#ifndef RGB_HPP
-#define RGB_HPP
+#ifndef RGBA_HPP
+#define RGBA_HPP
 
-class RGB {
+#include <array>
+
+class RGBA {
 public:
-    float r, g, b;
-    RGB()
+    float r, g, b, a;
+    RGBA()
         : r(0)
         , g(0)
         , b(0)
+        , a(1)
     {
     }
-    RGB(float r, float g, float b)
+    RGBA(float r, float g, float b, float a)
         : r(r)
         , g(g)
         , b(b)
+        , a(a)
     {
     }
-    RGB operator/(float val)
+    RGBA operator/(float val)
     {
-        return RGB(
+        return RGBA(
             r / val,
             g / val,
-            b / val);
+            b / val,
+            a / val);
     }
-    RGB operator*(float val)
+    RGBA operator*(float val)
     {
-        return RGB(
+        return RGBA(
             r * val,
             g * val,
-            b * val);
+            b * val,
+            a / val);
+    }
+    std::array<float, 4> to_array() const
+    {
+        return { r, g, b, a };
     }
 };
 
-#endif // RGB_HPP
+#endif // RGBA_HPP

@@ -24,15 +24,15 @@
 using namespace std;
 using namespace rapidxml;
 
-unique_ptr<Transformation> parse_translate(xml_node<char>* node);
+unique_ptr<Transformation> parse_translate(xml_node<char>*);
 
-unique_ptr<Transformation> parse_rotate(xml_node<char>* node);
+unique_ptr<Transformation> parse_rotate(xml_node<char>*);
 
-unique_ptr<Transformation> parse_scale(xml_node<char>* node);
+unique_ptr<Transformation> parse_scale(xml_node<char>*);
 
-optional<unique_ptr<Light>> parse_light(xml_node<char>* node);
+optional<unique_ptr<Light>> parse_light(xml_node<char>*);
 
-unique_ptr<Model> parse_model(xml_node<char>* node);
+unique_ptr<Model> parse_model(xml_node<char>*, RGBA);
 
 void mutl_matrix(const float a[4][4], float b[4][4]);
 
@@ -76,8 +76,8 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         if ("models" == name) {
             for (auto model = node->first_node(); model != NULL; model = model->next_sibling()) {
                 try {
-                    cout << parse_model(model)->to_string() << endl;
-                    models.push_back(parse_model(model));
+                    cout << parse_model(model, RGBA(this->r, this->g, this->b, this->a))->to_string() << endl;
+                    models.push_back(parse_model(model, RGBA(this->r, this->g, this->b, this->a)));
                 } catch (string error) {
                     cerr << error << endl;
                 }
@@ -353,7 +353,7 @@ bool has_components(unordered_map<string, string> params)
     return false;
 }
 
-unique_ptr<Model> parse_model(xml_node<char>* node)
+unique_ptr<Model> parse_model(xml_node<char>* node, RGBA rgba)
 {
     unordered_map<string, string> params = util::params_to_map(node);
     string file = params["FILE"];
@@ -375,6 +375,11 @@ unique_ptr<Model> parse_model(xml_node<char>* node)
             get_component("EMIS", 0),
             get_component("AMBI", 0));
     } else {
-        return make_unique<SimpleModel>(file);
+        return make_unique<ColoredModel>(
+            file,
+            RGBA(),
+            RGBA(),
+            rgba,
+            RGBA());
     }
 }

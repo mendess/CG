@@ -28,7 +28,7 @@ DirectionalLight::DirectionalLight(xml_node<char>* light)
         get_or_default(params["POSX"], 0),
         get_or_default(params["POSY"], 0),
         get_or_default(params["POSZ"], 0));
-    RGB color = get_component("", 1);
+    RGBA color = get_component("", 1);
     ambient = color / 0.2;
     diffuse = color;
     number = Light::next_number();
@@ -55,7 +55,7 @@ PointLight::PointLight(xml_node<char>* light)
         get_or_default(params["POSX"], 0),
         get_or_default(params["POSY"], 0),
         get_or_default(params["POSZ"], 0));
-    RGB color = get_component("", 1);
+    RGBA color = get_component("", 1);
     ambient = color * 0.2;
     diffuse = color;
     number = Light::next_number();
