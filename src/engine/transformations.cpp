@@ -1,4 +1,10 @@
 #include "transformations.hpp"
+#include "render.hpp"
+
+#include <cmath>
+#include <cstring>
+#include <iostream>
+#include <tuple>
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -6,10 +12,6 @@
 #include <GL/glut.h>
 #endif
 
-#include <cmath>
-#include <cstring>
-#include <iostream>
-#include <tuple>
 
 using namespace std;
 
@@ -85,6 +87,7 @@ Matrix TranslateAnimated::matrix(double elapsed) const
 
 void TranslateAnimated::draw_routes() const
 {
+    glDisable(GL_LIGHTING);
     float gt = 0.0;
     const float NUM_STEPS = 100;
     const float gt_step = 1.0 / NUM_STEPS;
@@ -96,6 +99,9 @@ void TranslateAnimated::draw_routes() const
         gt += gt_step;
     }
     glEnd();
+    if(Render::LIGHTS) {
+        glEnable(GL_LIGHTING);
+    }
 }
 
 void ScaleStatic::transform(double elapsed) const

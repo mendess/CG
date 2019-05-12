@@ -29,7 +29,7 @@ static size_t FOLLOW_TARGET = 0;
 static bool FOLLOWING = false;
 static bool PAUSED = false;
 static double TIME_SCALE = 1.0;
-static bool LIGHTS = true;
+bool LIGHTS = true;
 
 void changeSize(int w, int h)
 {

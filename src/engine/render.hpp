@@ -5,6 +5,8 @@
 
 namespace Render {
 
+extern bool LIGHTS;
+
 void render(int argc, char** argv, std::vector<std::string> scene);
 
 }
