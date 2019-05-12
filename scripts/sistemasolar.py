@@ -78,7 +78,7 @@ class Planet:
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(self.radius))
         print(' ' * indent, '    <models>')
         if self.texture is None:
-            print(' ' * indent, '        <model file="scenes/sphere.3d"/>')
+            print(' ' * indent, '        <model file="scenes/sphere.3d" diffR="{}" diffG="{}" diffB="{}"/>'.format(self.r, self.g, self.b))
         else:
             print(' ' * indent, '        <model file="scenes/sphere.3d" texture="{}" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>'.format(self.texture))
         print(' ' * indent, '    </models>')
