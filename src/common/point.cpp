@@ -127,13 +127,23 @@ Point Point::setYZtoTexture(float maxY, float maxZ, float y_offset, float z_offs
 
 Point Point::setTexture(float x, float y) const
 {
-    cout << "x: " << x << " y: " << y << endl;
     return Point(
         _x,
         _y,
         _z,
         _normal,
         make_tuple(x, y));
+}
+
+Point Point::setNormal(Vector v) const
+{
+    return Point(
+        _x,
+        _y,
+        _z,
+        v,
+        _texture_x,
+        _texture_y);
 }
 
 array<float, 3> Point::as_array() const

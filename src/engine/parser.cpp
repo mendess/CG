@@ -6,6 +6,7 @@
 #include <fstream>
 #include <functional>
 #include <iostream>
+#include <memory>
 #include <vector>
 
 namespace Parser {
@@ -28,7 +29,7 @@ string read_file(string config)
     return text;
 }
 
-Group* load(vector<string> configs)
+unique_ptr<Group> load(vector<string> configs)
 {
     vector<string> texts;
     transform(configs.begin(), configs.end(),
@@ -52,11 +53,10 @@ Group* load(vector<string> configs)
             cerr << configs[i] << ": " << e.what() << ": " << e.where<char>() << endl;
         }
     }
-    Group* group;
-    group = new Group(doc->first_node("scene"));
+    auto scene = make_unique<Group>(doc->first_node("scene"));
     doc->clear();
     delete doc;
-    return group;
+    return scene;
 }
 
 }

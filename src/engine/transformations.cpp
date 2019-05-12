@@ -1,4 +1,10 @@
 #include "transformations.hpp"
+#include "render.hpp"
+
+#include <cmath>
+#include <cstring>
+#include <iostream>
+#include <tuple>
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -6,10 +12,6 @@
 #include <GL/glut.h>
 #endif
 
-#include <cmath>
-#include <cstring>
-#include <iostream>
-#include <tuple>
 
 using namespace std;
 
@@ -57,9 +59,8 @@ bool TranslateAnimated::show_routes = false;
 
 tuple<Point, Vector> TranslateAnimated::get_position(double elapsed) const
 {
-    while (elapsed > dur)
-        elapsed -= dur;
-    tuple<Point, Vector> pos_deriv = getGlobalCatmullRomPoint(points, elapsed / dur);
+    int elapsed_i = ((int) elapsed) % ((int) dur);
+    tuple<Point, Vector> pos_deriv = getGlobalCatmullRomPoint(points, ((float) elapsed_i) / dur);
     return pos_deriv;
 }
 
@@ -70,12 +71,12 @@ void TranslateAnimated::transform(double elapsed) const
     auto pos_deriv = get_position(elapsed);
     Point pos = get<0>(pos_deriv);
     glTranslatef(pos.x(), pos.y(), pos.z());
-    Vector X = get<1>(pos_deriv).normalize();
-    Vector Z = X.cross({ 0, 1, 0 }).normalize();
-    Vector Y = Z.cross(X).normalize();
-    float m[16];
-    buildRotMatrix(X, Y, Z, m);
-    glMultMatrixf(m);
+    /* Vector X = get<1>(pos_deriv).normalize(); */
+    /* Vector Z = X.cross({ 0, 1, 0 }).normalize(); */
+    /* Vector Y = Z.cross(X).normalize(); */
+    /* float m[16]; */
+    /* buildRotMatrix(X, Y, Z, m); */
+    /* glMultMatrixf(m); */
 }
 
 Matrix TranslateAnimated::matrix(double elapsed) const
@@ -86,6 +87,7 @@ Matrix TranslateAnimated::matrix(double elapsed) const
 
 void TranslateAnimated::draw_routes() const
 {
+    glDisable(GL_LIGHTING);
     float gt = 0.0;
     const float NUM_STEPS = 100;
     const float gt_step = 1.0 / NUM_STEPS;
@@ -97,6 +99,9 @@ void TranslateAnimated::draw_routes() const
         gt += gt_step;
     }
     glEnd();
+    if(Render::LIGHTS) {
+        glEnable(GL_LIGHTING);
+    }
 }
 
 void ScaleStatic::transform(double elapsed) const
@@ -230,7 +235,6 @@ tuple<Point, Vector> getCatmullRomPoint(float t, Point p0, Point p1, Point p2, P
     return make_tuple(pos, deriv);
 }
 
-// given  global t, returns the point in the curve
 tuple<Point, Vector> getGlobalCatmullRomPoint(vector<Point> points, float gt)
 {
     const size_t point_count = points.size();

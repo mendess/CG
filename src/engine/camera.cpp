@@ -142,6 +142,30 @@ void fps_move_right()
     z += speed * look_x;
 }
 
+void fps_move_forward_fast()
+{
+    x += speed * 2 * look_x;
+    z += speed * 2 * look_z;
+}
+
+void fps_move_left_fast()
+{
+    x += speed * 2 * look_z;
+    z += speed * 2 * -1 * look_x;
+}
+
+void fps_move_back_fast()
+{
+    x += speed * 2 * -1 * look_x;
+    z += speed * 2 * -1 * look_z;
+}
+
+void fps_move_right_fast()
+{
+    x += speed * 2 * -1 * look_z;
+    z += speed * 2 * look_x;
+}
+
 void fps_look_left()
 {
     alpha += 0.05;
@@ -230,6 +254,18 @@ void fps_cam(unsigned char key)
         break;
     case 's':
         Camera::fps_move_back();
+        break;
+    case 'W':
+        Camera::fps_move_forward_fast();
+        break;
+    case 'A':
+        Camera::fps_move_left_fast();
+        break;
+    case 'D':
+        Camera::fps_move_right_fast();
+        break;
+    case 'S':
+        Camera::fps_move_back_fast();
         break;
     case 'h':
         Camera::fps_look_left();

@@ -1,6 +1,7 @@
 #include "camera.hpp"
 #include "group.hpp"
 #include "model.hpp"
+#include "parser.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -21,13 +22,14 @@ using namespace std;
 namespace Render {
 
 static float SCALE = 1;
-static Group* SCENE;
+static unique_ptr<Group> SCENE;
 static int DRAW_LEVEL = -1;
 static bool SHOW_AXIS = false;
 static size_t FOLLOW_TARGET = 0;
 static bool FOLLOWING = false;
 static bool PAUSED = false;
 static double TIME_SCALE = 1.0;
+bool LIGHTS = true;
 
 void changeSize(int w, int h)
 {
@@ -74,6 +76,7 @@ void renderScene()
     }
     Camera::place_camera();
     if (SHOW_AXIS) {
+        glDisable(GL_LIGHTING);
         // x axis
         glColor3f(1, 0, 0);
         glBegin(GL_LINES);
@@ -98,6 +101,8 @@ void renderScene()
             glVertex3f(0, 0, 10000);
         }
         glEnd();
+        if (LIGHTS)
+            glEnable(GL_LIGHTING);
     }
     glScalef(SCALE, SCALE, SCALE);
 
@@ -123,6 +128,11 @@ void renderScene()
     if (FOLLOWING) {
         title << " | FOLLOW TARGET: "
               << FOLLOW_TARGET;
+    }
+    if (LIGHTS) {
+        title << " | LIGHTING: ON";
+    } else {
+        title << " | LIGHTING: OFF";
     }
     if (PAUSED)
         title << " | PAUSED |";
@@ -193,13 +203,22 @@ void key_bindings(unsigned char key, int _x, int _y)
     case 'p':
         PAUSED = !PAUSED;
         break;
+    case '/':
+        if (LIGHTS)
+            glDisable(GL_LIGHTING);
+        else
+            glEnable(GL_LIGHTING);
+        LIGHTS = !LIGHTS;
+        break;
     case 'q':
         exit(0);
     }
     renderScene();
 }
 
-int render(int argc, char** argv, Group* scene)
+#include <iostream>
+
+int render(int argc, char** argv, vector<string> args)
 {
     // init GLUT and the window
     glutInit(&argc, argv);
@@ -208,9 +227,20 @@ int render(int argc, char** argv, Group* scene)
     glutInitWindowSize(1200, 1050);
     glutCreateWindow("CG-Engine");
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //  OpenGL settings
     glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
 
-    SCENE = scene;
+    glewInit();
+
+    ilInit();
+    ilEnable(IL_ORIGIN_SET);
+    ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
+
+    SCENE = Parser::load(args);
     DRAW_LEVEL = SCENE->levels();
 
     // Required callback registry
@@ -218,23 +248,6 @@ int render(int argc, char** argv, Group* scene)
     glutReshapeFunc(changeSize);
     glutIdleFunc(renderScene);
     glutKeyboardFunc(key_bindings);
-
-    glewInit();
-
-    //  OpenGL settings
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_TEXTURE_2D);
-
-    ilInit();
-    ilEnable(IL_ORIGIN_SET);
-    ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
-
-    SCENE->prepare();
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     // enter GLUT's main cycle
     glutMainLoop();

@@ -29,8 +29,8 @@ std::vector<Point> Sphere::draw() const
     //vertical direction to count all of the stacks;
     float thetaMovement = M_PI / stacks;
 
-    float texture_x_shift = 1.0 / slices;
-    float texture_y_shift = 1.0 / stacks;
+    const float texture_x_shift = 1.0 / slices;
+    const float texture_y_shift = 1.0 / stacks;
 
     for (int phi = 0; phi < slices; phi++) {
         for (int theta = 0; theta < stacks; theta++) {

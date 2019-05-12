@@ -1,7 +1,23 @@
 <scene>
-    <group R="0.803" G="0.702" B="0.503">
+    <group>
+        <lights>
+            <light type="POINT" />
+        </lights>
+        <translate time="5" >
+            <translate Y="-8" Z="10" />
+            <translate Y="0" Z="10" />
+            <translate Y="8" Z="10" />
+            <translate Y="0" Z="10" />
+            <translate Y="-8" Z="10" />
+        </translate>
         <models>
-            <model file="scenes/torus.3d" />
+            <model file="scenes/sphere.3d" emisR="1" emisG="1" emisB="1" />
+        </models>
+    </group>
+    <group R="0.803" G="0.702" B="0.503">
+        <rotate Y="1" time="6" />
+        <models>
+            <model file="scenes/torus.3d" texture="assets/donut.png" diffR="0.803" diffG="0.702" diffB="0.503" />
         </models>
     </group>
 </scene>

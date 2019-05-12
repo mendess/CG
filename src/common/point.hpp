@@ -42,6 +42,7 @@ public:
     Point setXZtoTexture(float, float, float, float) const;
     Point setYZtoTexture(float, float, float, float) const;
     Point setNormalToOrigin() const;
+    Point setNormal(Vector) const;
     Point setTexture(float, float) const;
     std::array<float, 3> as_array() const;
     Point operator+(const Point) const;

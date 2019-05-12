@@ -1,5 +1,7 @@
 #include "group.hpp"
+#include "../common/util.hpp"
 #include "../dependencies/rapidxml.hpp"
+#include "light.hpp"
 #include "model.hpp"
 #include "transformations.hpp"
 #include <algorithm>
@@ -22,13 +24,15 @@
 using namespace std;
 using namespace rapidxml;
 
-unique_ptr<Transformation> parse_translate(xml_node<char>* node);
+unique_ptr<Transformation> parse_translate(xml_node<char>*);
 
-unique_ptr<Transformation> parse_rotate(xml_node<char>* node);
+unique_ptr<Transformation> parse_rotate(xml_node<char>*);
 
-unique_ptr<Transformation> parse_scale(xml_node<char>* node);
+unique_ptr<Transformation> parse_scale(xml_node<char>*);
 
-unique_ptr<Model> parse_model(xml_node<char>* node);
+optional<unique_ptr<Light>> parse_light(xml_node<char>*);
+
+unique_ptr<Model> parse_model(xml_node<char>*, RGBA);
 
 void mutl_matrix(const float a[4][4], float b[4][4]);
 
@@ -60,7 +64,7 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         } else if ("RAND" == name && value != "false") {
             static default_random_engine generator(42);
             static uniform_int_distribution<int> distribution(0, 100);
-            static auto rng = bind(distribution, generator);
+            static auto rng = std::bind(distribution, generator);
             this->r = rng() / 100.0f;
             this->g = rng() / 100.0f;
             this->b = rng() / 100.0f;
@@ -72,19 +76,27 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         if ("models" == name) {
             for (auto model = node->first_node(); model != NULL; model = model->next_sibling()) {
                 try {
-                    models.push_back(parse_model(model));
+                    cout << parse_model(model, RGBA(this->r, this->g, this->b, this->a))->to_string() << endl;
+                    models.push_back(parse_model(model, RGBA(this->r, this->g, this->b, this->a)));
                 } catch (string error) {
                     cerr << error << endl;
                 }
             }
         } else if ("group" == name) {
-            subgroups.push_back(Group(node, this->r, this->g, this->b, this->a));
+            Group group(node, this->r, this->g, this->b, this->a);
+            subgroups.push_back(move(group));
         } else if ("translate" == name) {
             transformations.push_back(parse_translate(node));
         } else if ("rotate" == name) {
             transformations.push_back(parse_rotate(node));
         } else if ("scale" == name) {
             transformations.push_back(parse_scale(node));
+        } else if ("lights" == name) {
+            for (auto light = node->first_node(); light != NULL; light = light->next_sibling()) {
+                auto l = parse_light(light);
+                if (l)
+                    lights.push_back(std::move(*l));
+            }
         }
     }
     int max_level = 0;
@@ -97,16 +109,6 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
     _levels = max_level + 1;
 }
 
-void Group::prepare()
-{
-    for (size_t i = 0; i < models.size(); i++) {
-        models[i]->prepare();
-    }
-    for (size_t i = 0; i < subgroups.size(); i++) {
-        subgroups[i].prepare();
-    }
-}
-
 void Group::draw(int max_depth, double elapsed) const
 {
     if (max_depth > 0) {
@@ -114,6 +116,9 @@ void Group::draw(int max_depth, double elapsed) const
         glColor4f(r, g, b, a);
         for (const auto& transformation : transformations) {
             transformation->transform(elapsed);
+        }
+        for (const auto& light : lights) {
+            light->render();
         }
         for (const auto& model : models) {
             model->draw();
@@ -314,42 +319,67 @@ unique_ptr<Transformation> parse_scale(xml_node<char>* node)
     }
 }
 
-unique_ptr<Model> parse_model(xml_node<char>* node)
+optional<unique_ptr<Light>> parse_light(xml_node<char>* light)
 {
-    ModelBuilder mb;
-    for (auto attr = node->first_attribute(); attr != NULL; attr = attr->next_attribute()) {
-        string name = string(attr->name());
-        string value = string(attr->value());
-        std::transform(name.begin(), name.end(), name.begin(), ::toupper);
-        if ("FILE" == name) {
-            mb.withFile(value);
-        } else if ("TEXTURE" == name) {
-            mb.withTexture(value);
-        } else if ("DIFFR" == name) {
-            mb.withDiffuseR(stof(value));
-        } else if ("SPECR" == name) {
-            mb.withSpecularR(stof(value));
-        } else if ("EMISR" == name) {
-            mb.withEmissiveR(stof(value));
-        } else if ("AMBIR" == name) {
-            mb.withAmbientR(stof(value));
-        } else if ("DIFFG" == name) {
-            mb.withDiffuseG(stof(value));
-        } else if ("SPECG" == name) {
-            mb.withSpecularG(stof(value));
-        } else if ("EMISG" == name) {
-            mb.withEmissiveG(stof(value));
-        } else if ("AMBIG" == name) {
-            mb.withAmbientG(stof(value));
-        } else if ("DIFFB" == name) {
-            mb.withDiffuseB(stof(value));
-        } else if ("SPECB" == name) {
-            mb.withSpecularB(stof(value));
-        } else if ("EMISB" == name) {
-            mb.withEmissiveB(stof(value));
-        } else if ("AMBIB" == name) {
-            mb.withAmbientB(stof(value));
+    auto type = light->first_attribute("type");
+    if (!type) {
+        cerr << "no light type specified" << endl;
+        return nullopt;
+    }
+    string value = type->value();
+    std::transform(value.begin(), value.end(), value.begin(), ::toupper);
+    if ("POINT" == value) {
+        return make_unique<PointLight>(light);
+    } else if ("DIRECTIONAL" == value) {
+        return make_unique<DirectionalLight>(light);
+    } else if ("SPOT" == value) {
+        return make_unique<SpotLight>(light);
+    } else {
+        cerr << "Invalid light type: " << value << endl;
+    }
+    return nullopt;
+}
+
+bool has_components(unordered_map<string, string> params)
+{
+    const string components[] = { "DIFF", "SPEC", "EMIS", "AMBI" };
+    const string rgb[] = { "R", "G", "B" };
+    for (const auto comp : components) {
+        for (const auto color : rgb) {
+            if (params[comp + color] != "")
+                return true;
         }
     }
-    return mb.build();
+    return false;
+}
+
+unique_ptr<Model> parse_model(xml_node<char>* node, RGBA rgba)
+{
+    unordered_map<string, string> params = util::params_to_map(node);
+    string file = params["FILE"];
+    if (file == "")
+        throw invalid_argument("No model file");
+    if (params["TEXTURE"] != "") {
+        return make_unique<TexturedModel>(
+            file,
+            params["TEXTURE"],
+            get_component("DIFF", 1),
+            get_component("SPEC", 0),
+            get_component("EMIS", 0),
+            get_component("AMBI", 0));
+    } else if (has_components(params)) {
+        return make_unique<ColoredModel>(
+            file,
+            get_component("DIFF", 1),
+            get_component("SPEC", 0),
+            get_component("EMIS", 0),
+            get_component("AMBI", 0));
+    } else {
+        return make_unique<ColoredModel>(
+            file,
+            RGBA(),
+            RGBA(),
+            rgba,
+            RGBA());
+    }
 }
