@@ -5,9 +5,20 @@
 #include "../dependencies/rapidxml.hpp"
 #include "rgb.hpp"
 
+#include <stdexcept>
+
 class Light {
+private:
+    static inline size_t number = 0;
+
 public:
-    virtual void prepare() const = 0;
+    static size_t next_number()
+    {
+        if (number >= 8) {
+            throw std::invalid_argument("Too many lights !");
+        }
+        return number++;
+    }
     virtual void render() const = 0;
 };
 
@@ -20,7 +31,6 @@ private:
 
 public:
     PointLight(rapidxml::xml_node<char>*);
-    void prepare() const;
     void render() const;
 };
 
@@ -33,7 +43,6 @@ private:
 
 public:
     DirectionalLight(rapidxml::xml_node<char>*);
-    void prepare() const;
     void render() const;
 };
 
@@ -46,7 +55,6 @@ private:
 
 public:
     SpotLight(rapidxml::xml_node<char>*);
-    void prepare() const;
     void render() const;
 };
 

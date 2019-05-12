@@ -109,23 +109,6 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
     _levels = max_level + 1;
 }
 
-void Group::prepare()
-{
-    if (lights.size() > 8) {
-        cerr << "Too many lights (" << lights.size() << ")!" << endl;
-        exit(1);
-    }
-    for (size_t i = 0; i < lights.size(); i++) {
-        lights[i]->prepare();
-    }
-    for (size_t i = 0; i < models.size(); i++) {
-        models[i]->prepare();
-    }
-    for (size_t i = 0; i < subgroups.size(); i++) {
-        subgroups[i].prepare();
-    }
-}
-
 void Group::draw(int max_depth, double elapsed) const
 {
     if (max_depth > 0) {

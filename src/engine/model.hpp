@@ -24,12 +24,25 @@ private:
 
 public:
     static GLuint load_texture(std::string);
-    Textures() {}
+};
+
+class ModelBuffer {
+private:
+    static inline std::unordered_map<std::string, std::unique_ptr<ModelBuffer>> modelBuffers;
+    GLuint buffers[3];
+    size_t _n_vertices;
+
+public:
+    ModelBuffer(std::string);
+    GLuint vbo_buffer() const { return buffers[0]; }
+    GLuint normal_buffer() const { return buffers[1]; }
+    GLuint texture_buffer() const { return buffers[2]; }
+    size_t n_vertices() const { return _n_vertices; }
+    static std::unique_ptr<ModelBuffer>& get(std::string);
 };
 
 class Model {
 public:
-    virtual void prepare() = 0;
     virtual void draw() const = 0;
     virtual std::string to_string() const = 0;
 };
@@ -37,14 +50,10 @@ public:
 class SimpleModel : public Model {
 private:
     GLuint buffer;
-    std::vector<float> vbo;
     size_t n_vertices;
-
-    void push(float, float, float);
 
 public:
     SimpleModel(std::string);
-    void prepare();
     void draw() const;
     std::string to_string() const
     {
@@ -55,22 +64,17 @@ public:
 class ColoredModel : public Model {
 private:
     GLuint buffers[2];
-    std::vector<float> vbo;
-    std::vector<float> normals;
     RGB diffuse;
     RGB specular;
     RGB emissive;
     RGB ambient;
     size_t n_vertices;
 
-    void push(float, float, float, float, float, float);
-
     inline GLuint vbo_buffer() const { return buffers[0]; }
     inline GLuint normal_buffer() const { return buffers[1]; }
 
 public:
     ColoredModel(std::string, RGB, RGB, RGB, RGB);
-    void prepare();
     void draw() const;
     std::string to_string() const
     {
@@ -89,16 +93,11 @@ private:
     GLuint buffers[3];
     GLuint texture_slot;
     std::string texture_file;
-    std::vector<float> vbo;
-    std::vector<float> normals;
-    std::vector<float> texture_coords;
     RGB diffuse;
     RGB specular;
     RGB emissive;
     RGB ambient;
     size_t n_vertices;
-
-    void push(float, float, float, float, float, float, float, float);
 
     inline GLuint vbo_buffer() const { return buffers[0]; }
     inline GLuint normal_buffer() const { return buffers[1]; }
@@ -106,7 +105,6 @@ private:
 
 public:
     TexturedModel(std::string, std::string, RGB, RGB, RGB, RGB);
-    void prepare();
     void draw() const;
     std::string to_string() const
     {

@@ -2,8 +2,6 @@
 #include "light.hpp"
 #include "../common/util.hpp"
 
-#include <algorithm>
-#include <iostream>
 #include <unordered_map>
 
 #ifdef __APPLE__
@@ -33,10 +31,7 @@ DirectionalLight::DirectionalLight(xml_node<char>* light)
     RGB color = get_component("", 1);
     ambient = color / 0.2;
     diffuse = color;
-}
-
-void DirectionalLight::prepare() const
-{
+    number = Light::next_number();
     glEnable(gl_light(number));
 }
 
@@ -63,10 +58,7 @@ PointLight::PointLight(xml_node<char>* light)
     RGB color = get_component("", 1);
     ambient = color * 0.2;
     diffuse = color;
-}
-
-void PointLight::prepare() const
-{
+    number = Light::next_number();
     glEnable(gl_light(number));
 }
 
@@ -93,10 +85,7 @@ SpotLight::SpotLight(xml_node<char>* light)
         get_or_default(params["POSY"], 0),
         get_or_default(params["POSZ"], 0));
     diffuse = get_component("", 1);
-}
-
-void SpotLight::prepare() const
-{
+    number = Light::next_number();
     glEnable(gl_light(number));
 }
 

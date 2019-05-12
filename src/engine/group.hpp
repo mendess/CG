@@ -33,7 +33,6 @@ public:
     int model_count() const { return _model_count; }
     std::optional<Matrix> get_model_position(size_t, Matrix, double) const;
     std::optional<Point> get_model_position(size_t, double) const;
-    void prepare();
     void draw(int, double) const;
 };
 

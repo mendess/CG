@@ -5,7 +5,7 @@
 
 namespace Render {
 
-void render(int argc, char** argv, std::unique_ptr<Group> scene);
+void render(int argc, char** argv, std::vector<std::string> scene);
 
 }
 

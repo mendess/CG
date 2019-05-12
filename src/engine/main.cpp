@@ -28,7 +28,6 @@ int main(int argc, char** argv)
             it++;
         }
     }
-    auto scene = Parser::load(args);
     if (render)
-        Render::render(argc, argv, move(scene));
+        Render::render(argc, argv, args);
 }

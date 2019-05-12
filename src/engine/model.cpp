@@ -19,7 +19,8 @@
 
 using namespace std;
 
-GLuint Textures::load_texture(string texture) {
+GLuint Textures::load_texture(string texture)
+{
     if (textures.find(texture) != textures.end()) {
         return textures[texture];
     }
@@ -46,27 +47,55 @@ GLuint Textures::load_texture(string texture) {
     return texture_slot;
 }
 
-SimpleModel::SimpleModel(string modelFile)
+ModelBuffer::ModelBuffer(string modelFile)
 {
-    float x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y;
+    vector<float> vbo;
+    vector<float> normals;
+    vector<float> texture_coords;
     ifstream infile(modelFile);
     if (!infile.good()) {
         string error = "Couldn't load '";
         error.append(modelFile);
-        error.append("': No such file or directory"); throw error;
+        error.append("': No such file or directory");
+        throw error;
     }
+    float x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y;
     while (infile >> x >> y >> z >> normal_x >> normal_y >> normal_z >> texture_x >> texture_y) {
-        push(x, y, z);
+        vbo.push_back(x);
+        vbo.push_back(y);
+        vbo.push_back(z);
+        normals.push_back(normal_x);
+        normals.push_back(normal_y);
+        normals.push_back(normal_z);
+        texture_coords.push_back(texture_x);
+        texture_coords.push_back(texture_y);
     }
-    n_vertices = vbo.size() / 3;
-    buffer = 0;
+    _n_vertices = vbo.size() / 3;
+    glGenBuffers(3, buffers);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer());
+    glBufferData(GL_ARRAY_BUFFER, vbo.size() * sizeof(float), vbo.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, normal_buffer());
+    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), normals.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, texture_buffer());
+    glBufferData(GL_ARRAY_BUFFER, texture_coords.size() * sizeof(float), texture_coords.data(), GL_STATIC_DRAW);
 }
 
-void SimpleModel::prepare()
+std::unique_ptr<ModelBuffer>& ModelBuffer::get(string modelFile)
 {
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, vbo.size() * sizeof(float), vbo.data(), GL_STATIC_DRAW);
+    if (modelBuffers.find(modelFile) == modelBuffers.end()) {
+        modelBuffers[modelFile] = make_unique<ModelBuffer>(modelFile);
+    }
+    return modelBuffers[modelFile];
+}
+
+SimpleModel::SimpleModel(string modelFile)
+{
+    auto& model = ModelBuffer::get(modelFile);
+    n_vertices = model->n_vertices();
+    buffer = model->vbo_buffer();
 }
 
 void SimpleModel::draw() const
@@ -80,45 +109,16 @@ void SimpleModel::draw() const
     glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-inline void SimpleModel::push(
-    float x,
-    float y,
-    float z)
-{
-    vbo.push_back(x);
-    vbo.push_back(y);
-    vbo.push_back(z);
-}
-
 ColoredModel::ColoredModel(string modelFile, RGB diffuse, RGB specular, RGB emissive, RGB ambient)
     : diffuse(diffuse)
     , specular(specular)
     , emissive(emissive)
     , ambient(ambient)
 {
-    float x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y;
-    ifstream infile(modelFile);
-    if (!infile.good()) {
-        string error = "Couldn't load '";
-        error.append(modelFile);
-        error.append("': No such file or directory");
-        throw error;
-    }
-    while (infile >> x >> y >> z >> normal_x >> normal_y >> normal_z >> texture_x >> texture_y) {
-        push(x, y, z, normal_x, normal_y, normal_z);
-    }
-    n_vertices = vbo.size() / 3;
-}
-
-void ColoredModel::prepare()
-{
-    glGenBuffers(2, buffers);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer());
-    glBufferData(GL_ARRAY_BUFFER, vbo.size() * sizeof(float), vbo.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, normal_buffer());
-    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), normals.data(), GL_STATIC_DRAW);
+    auto& model = ModelBuffer::get(modelFile);
+    n_vertices = model->n_vertices();
+    buffers[0] = model->vbo_buffer();
+    buffers[1] = model->normal_buffer();
 }
 
 void ColoredModel::draw() const
@@ -150,22 +150,6 @@ void ColoredModel::draw() const
     glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-inline void ColoredModel::push(
-    float x,
-    float y,
-    float z,
-    float normal_x,
-    float normal_y,
-    float normal_z)
-{
-    vbo.push_back(x);
-    vbo.push_back(y);
-    vbo.push_back(z);
-    normals.push_back(normal_x);
-    normals.push_back(normal_y);
-    normals.push_back(normal_z);
-}
-
 TexturedModel::TexturedModel(
     string modelFile,
     string texture_file,
@@ -179,33 +163,11 @@ TexturedModel::TexturedModel(
     , emissive(emissive)
     , ambient(ambient)
 {
-    float x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y;
-    ifstream infile(modelFile);
-    if (!infile.good()) {
-        string error = "Couldn't load '";
-        error.append(modelFile);
-        error.append("': No such file or directory");
-        throw error;
-    }
-    while (infile >> x >> y >> z >> normal_x >> normal_y >> normal_z >> texture_x >> texture_y) {
-        push(x, y, z, normal_x, normal_y, normal_z, texture_x, texture_y);
-    }
-    n_vertices = vbo.size() / 3;
-}
-
-void TexturedModel::prepare()
-{
-    glGenBuffers(3, buffers);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_buffer());
-    glBufferData(GL_ARRAY_BUFFER, vbo.size() * sizeof(float), vbo.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, normal_buffer());
-    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), normals.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, texture_buffer());
-    glBufferData(GL_ARRAY_BUFFER, texture_coords.size() * sizeof(float), texture_coords.data(), GL_STATIC_DRAW);
-
+    auto& model = ModelBuffer::get(modelFile);
+    n_vertices = model->n_vertices();
+    buffers[0] = model->vbo_buffer();
+    buffers[1] = model->normal_buffer();
+    buffers[2] = model->texture_buffer();
     texture_slot = Textures::load_texture(texture_file);
 }
 
@@ -243,24 +205,4 @@ void TexturedModel::draw() const
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-}
-
-inline void TexturedModel::push(
-    float x,
-    float y,
-    float z,
-    float normal_x,
-    float normal_y,
-    float normal_z,
-    float texture_x,
-    float texture_y)
-{
-    vbo.push_back(x);
-    vbo.push_back(y);
-    vbo.push_back(z);
-    normals.push_back(normal_x);
-    normals.push_back(normal_y);
-    normals.push_back(normal_z);
-    texture_coords.push_back(texture_x);
-    texture_coords.push_back(texture_y);
 }
