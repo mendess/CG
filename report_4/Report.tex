@@ -1,0 +1,111 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{graphicx}
+\usepackage{a4wide}
+\usepackage[pdftex,hidelinks]{hyperref}
+\usepackage{float}
+\usepackage{indentfirst}
+\usepackage{subcaption}
+\usepackage[cache=false]{minted}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{gensymb}
+\usepackage{tikz}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+language=C++,
+aboveskip=3mm,
+belowskip=3mm,
+showstringspaces=false,
+columns=flexible,
+basicstyle={\small\ttfamily},
+numbers=none,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=true,
+breakatwhitespace=true,
+tabsize=4
+}
+
+\newcommand{\x}{\times}
+
+\begin{document}
+
+\title{Computação Gráfica\\ Animações}
+\author{Bárbara Cardoso (a80453) \and Márcio Sousa (a82400) \and Pedro Mendes (a79003)}
+\date{\today}
+
+\begin{titlepage}
+
+    %título
+    \thispagestyle{empty}
+    \begin{center}
+        \begin{minipage}{0.75\linewidth}
+            \centering
+            %engenharia logo
+            \includegraphics[width=0.4\textwidth]{eng.jpeg}\par\vspace{1cm}
+            \vspace{1.5cm}
+            %títulos
+            \href{https://www.uminho.pt/PT}{\scshape\LARGE Universidade do Minho} \par
+            \vspace{1cm}
+            \href{https://www.di.uminho.pt/}{\scshape\Large Departamento de Informática} \par
+            \vspace{1.5cm}
+
+            \maketitle
+        \end{minipage}
+    \end{center}
+
+\end{titlepage}
+
+\tableofcontents
+
+\pagebreak
+
+\section{Introdução}
+
+\section{Generator}
+
+O output do \textit{generator} foi alterado para incluir as normais e coordenadas de textura correspondentes aos pontos dos triângulos calculados.
+
+\subsection{Plano}
+Como um plano está situado no plano xOz e as normais são sempre vetores perpendiculares, as normais deste são vetores unitários com apenas a componente y positiva.
+As coordenadas de textura para o plano são calculadas de forma muito simples. Como o plano e a textura tem a mesma forma, o mapeamento é direto, assim, os cantos da textura são mapeados para os cantos do plano.
+
+\subsection{Esfera}
+Sendo que a esfera está sempre centrada na origem, para calcular as normais desta, é preciso apenas normalizar as coordenadas dos pontos de forma a obter as normais.
+A textura usada para aplicar à esfera é retangular, devido a isto, o raciocínio utilizado para aplicar a textura é imaginar que a esfera e cortada em altura e ``espalmada'' sobre a textura, de seguida é apenas necessário mapear diretamente a textura sobre estar interpretação da esfera.
+
+\subsection{Cone}
+
+
+\subsection{Cubo}
+As normais de um cubo também são simples de calcular, pois cada uma das faces está situada em apenas dois dos eixos, ou seja, o processo do cálculo destas é idêntico ao do cálculo das normais do plano com o extra de que no cubo existem componentes negativas e positivas. 
+
+
+
+\section{Engine}
+
+O \textit{engine} foi estendido para para possibilitar a renderização de modelos com superfícies mais complexas, permitindo definir se um objeto tem uma superfície difusa, especular, emissiva e/ou ambiente, assim como definir uma textura para a cobrir.
+
+\subsection{Sem texturas}
+
+\subsection{Com texturas}
+
+\section{Sistema Solar}
+
+\section{Optimizações}
+Para otimizar a utilização de memoria do programa, foi criada uma cache de modelos e texturas, assim cada conjunto de pontos, normais e coordenadas de textura, correspondente a um ficheiro \textitt{.3d}, é carregado apenas uma vez para o GPU e reutilizado para todos os modelos que os utilizam. O mesmo raciocinio foi feito para as texturas, para que nao fosse lido para memória mais do que uma cópia de cada textura.
+
+Para o caso do sistema solar, como todos os planetas utilizam o mesmo modelo unitario da esfera, independentemente de quantos astros sejam colocados no modelo, o ficheiro \texttt{sphere.3d} é lido apenas uma vez.
+
+\section{Conclusões e Trabalho Futuro}
+
+\end{document}
