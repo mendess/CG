@@ -51,7 +51,11 @@ std::vector<Point> Box::draw() const
             const Vector rightV = Vector(1, 0, 0);
             //Front
             {
-                const auto f = [=](Point p) { return p.setXYtoTexture(halfX, halfY, 0, 0); };
+                const auto f = [=](Point p) {
+                    return p.setTexture(
+                        ((p.x() + halfX) * 0.33) / x,
+                        ((p.y() + halfY) * 0.5) / y);
+                };
                 coordsBox.push_back(f(Point(currentX, currentY, halfZ, frontV)));
                 coordsBox.push_back(f(Point(nextX, currentY, halfZ, frontV)));
                 coordsBox.push_back(f(Point(currentX, nextY, halfZ, frontV)));
@@ -61,7 +65,11 @@ std::vector<Point> Box::draw() const
             }
             //Back
             {
-                const auto f = [=](Point p) { return p.setXYtoTexture(halfX, halfY, 0, .5f); };
+                const auto f = [=](Point p) {
+                    return p.setTexture(
+                        ((p.x() + halfX) * 0.33) / x,
+                        (.5 + (p.y() + halfY) * 0.5) / y);
+                };
                 coordsBox.push_back(f(Point(currentX, currentY, -halfZ, backV)));
                 coordsBox.push_back(f(Point(currentX, nextY, -halfZ, backV)));
                 coordsBox.push_back(f(Point(nextX, currentY, -halfZ, backV)));
@@ -71,7 +79,11 @@ std::vector<Point> Box::draw() const
             }
             //Up
             {
-                const auto f = [=](Point p) { return p.setXZtoTexture(halfX, halfZ, 1.f / 3.f, 0); };
+                const auto f = [=](Point p) {
+                    return p.setTexture(
+                        (1.f / 3.f) + ((p.x() + halfX) * 0.33) / x,
+                        0 + ((p.z() + halfZ) * 0.5) / z);
+                };
                 coordsBox.push_back(f(Point(currentX, halfY, currentZ, upV)));
                 coordsBox.push_back(f(Point(currentX, halfY, nextZ, upV)));
                 coordsBox.push_back(f(Point(nextX, halfY, nextZ, upV)));
@@ -81,7 +93,11 @@ std::vector<Point> Box::draw() const
             }
             //Down
             {
-                const auto f = [=](Point p) { return p.setXZtoTexture(halfX, halfZ, 1.f / 3.f, .5f); };
+                const auto f = [=](Point p) {
+                    return p.setTexture(
+                        (1.f / 3.f) + ((p.x() + halfX) * 0.33) / x,
+                        .5f + ((p.z() + halfZ) * 0.5) / z);
+                };
                 coordsBox.push_back(f(Point(currentX, -halfY, currentZ, downV)));
                 coordsBox.push_back(f(Point(nextX, -halfY, nextZ, downV)));
                 coordsBox.push_back(f(Point(currentX, -halfY, nextZ, downV)));
@@ -91,7 +107,11 @@ std::vector<Point> Box::draw() const
             }
             //Left
             {
-                const auto f = [=](Point p) { return p.setYZtoTexture(halfY, halfY, 2.f / 3.f, 0); };
+                const auto f = [=](Point p) {
+                    return p.setTexture(
+                        (2.f / 3.f) + ((p.y() + halfY) * 0.33) / y,
+                        ((p.z() + halfZ) * 0.5) / z);
+                };
                 coordsBox.push_back(f(Point(-halfX, -halfY + spacingY * i, currentZ, leftV)));
                 coordsBox.push_back(f(Point(-halfX, -halfY + spacingY * i, nextZ, leftV)));
                 coordsBox.push_back(f(Point(-halfX, -halfY + spacingY * (i + 1), currentZ, leftV)));
@@ -101,7 +121,11 @@ std::vector<Point> Box::draw() const
             }
             //Right
             {
-                const auto f = [=](Point p) { return p.setYZtoTexture(halfY, halfZ, 2.f / 3.f, .5f); };
+                const auto f = [=](Point p) {
+                    return p.setTexture(
+                        (2.f / 3.f) + ((p.y() + halfY) * 0.33) / y,
+                        .5f + ((p.z() + halfZ) * 0.5) / z);
+                };
                 coordsBox.push_back(f(Point(halfX, -halfY + spacingY * i, currentZ, rightV)));
                 coordsBox.push_back(f(Point(halfX, -halfY + spacingY * (i + 1), currentZ, rightV)));
                 coordsBox.push_back(f(Point(halfX, -halfY + spacingY * i, nextZ, rightV)));

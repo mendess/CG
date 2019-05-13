@@ -1,22 +1,44 @@
 <scene>
-    <lights>
-        <light type="POINT" Y="10" />
-    </lights>
     <group R="1" G="1" B="1">
-        <scale XF="2" YF="2" ZF="2" TIME="1" />
-        <models>
-            <model file="models/box.3d" texture="assets/grass_block.png"/>
-        </models>
-    </group>
-    <group B="1">
-        <translate TIME="1" >
-            <point X="1" />
-            <point X="3" />
-            <point X="2" />
-            <point X="4" />
+        <lights>
+            <light type="POINT" />
+        </lights>
+        <translate time="20" >
+            <translate Y="-8" Z="10" />
+            <translate Y="0" Z="10" />
+            <translate Y="8" Z="10" />
+            <translate Y="0" Z="10" />
+            <translate Y="-8" Z="10" />
+            <translate X="-8" Z="10" />
+            <translate X="0" Z="10" />
+            <translate X="8" Z="10" />
+            <translate X="0" Z="10" />
+            <translate X="-8" Z="10" />
+            <translate Y="-8" Z="-10" />
+            <translate Y="0"  Z="-10" />
+            <translate Y="8"  Z="-10" />
+            <translate Y="0"  Z="-10" />
+            <translate Y="-8" Z="-10" />
+            <translate X="-8" Z="-10" />
+            <translate X="0"  Z="-10" />
+            <translate X="8"  Z="-10" />
+            <translate X="0"  Z="-10" />
+            <translate X="-8" Z="-10" />
         </translate>
         <models>
-            <model file="models/box.3d" />
+            <model file="models/sphere.3d" emisR="1" emisG="1" emisB="1" />
+        </models>
+    </group>
+    <group R="1" G="1" B="1">
+        <!-- <scale XF="2" YF="2" ZF="2" TIME="1" /> -->
+        <models>
+            <model file="models/box.3d" texture="assets/grass_block_anotated_r.png"/>
+        </models>
+    </group>
+    <group>
+        <translate X="3"/>
+        <models>
+            <model file="models/box.3d" diffB="1" />
         </models>
     </group>
 </scene>
