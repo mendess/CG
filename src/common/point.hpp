@@ -38,13 +38,9 @@ public:
     Vector normal() const { return _normal; }
     float texture_x() const { return _texture_x; }
     float texture_y() const { return _texture_y; }
-    Point setXYtoTexture(float, float, float, float) const;
-    Point setXZtoTexture(float, float, float, float) const;
-    Point setYZtoTexture(float, float, float, float) const;
     Point setNormalToOrigin() const;
     Point setNormal(Vector) const;
     Point setTexture(float, float) const;
-    std::array<float, 3> as_array() const;
     Point operator+(const Point) const;
     Point operator*(float)const;
     Point operator/(float) const;
