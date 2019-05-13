@@ -132,54 +132,49 @@ void Group::draw(int max_depth, double elapsed) const
 
 optional<Point> Group::get_model_position(size_t index, double elapsed) const
 {
-    Matrix m = { .matrix = {
-                     { 1, 0, 0, 0 },
-                     { 0, 1, 0, 0 },
-                     { 0, 0, 1, 0 },
-                     { 0, 0, 0, 1 } } };
-    auto p = get_model_position(index, m, elapsed);
-    if (p.has_value()) {
-        const Matrix m = p.value();
-        float coords[4];
-        const float base[4] = { 0, 0, 0, 1 };
-        for (int i = 0; i < 4; ++i) {
-            coords[i] = 0;
-            for (int j = 0; j < 4; ++j) {
-                coords[i] += base[j] * m.matrix[i][j];
-            }
-        }
-        return Point(coords[0], coords[1], coords[2]);
-    } else {
+    glPushMatrix();
+    if (!load_model_position(index, elapsed)) {
+        glPopMatrix();
         return nullopt;
     }
+    float M[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX, M);
+    glPopMatrix();
+    float coords[4];
+    const float base[4] = { 0, 0, 0, 1 };
+    Matrix m = { .matrix = {
+                     { M[0], M[4], M[8], M[12] },
+                     { M[1], M[5], M[9], M[13] },
+                     { M[2], M[6], M[10], M[14] },
+                     { M[3], M[7], M[11], M[15] } } };
+    for (int i = 0; i < 4; ++i) {
+        coords[i] = 0;
+        for (int j = 0; j < 4; ++j) {
+            coords[i] += base[j] * m.matrix[i][j];
+        }
+    }
+    return Point(coords[0], coords[1], coords[2]);
 }
 
-optional<Matrix> Group::get_model_position(size_t index, Matrix position, double elapsed) const
+bool Group::load_model_position(size_t index, double elapsed) const
 {
+    for (const auto& transformation : transformations) {
+        transformation->transform(elapsed);
+    }
     if (index >= models.size()) {
         size_t models_skiped = models.size();
         for (const auto& sg : subgroups) {
             if (index < models_skiped + sg.model_count()) {
-                auto p = sg.get_model_position(index - models_skiped, position, elapsed);
-                if (!p.has_value()) {
-                    return nullopt;
-                } else {
-                    position = p.value();
-                }
-                for (size_t i = transformations.size(); i > 0; --i) {
-                    mutl_matrix(transformations[i - 1]->matrix(elapsed).matrix, position.matrix);
-                }
-                return position;
+                sg.load_model_position(index - models_skiped, elapsed);
+                return true;
+            } else {
+                models_skiped += sg.model_count();
             }
-            models_skiped += sg.model_count();
         }
     } else {
-        for (size_t i = transformations.size(); i > 0; --i) {
-            mutl_matrix(transformations[i - 1]->matrix(elapsed).matrix, position.matrix);
-        }
-        return position;
+        return true;
     }
-    return nullopt;
+    return false;
 }
 
 void mutl_matrix(const float a[4][4], float b[4][4])

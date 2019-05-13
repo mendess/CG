@@ -69,10 +69,12 @@ void renderScene()
     if (!PAUSED)
         elapsed += delta;
     if (FOLLOWING) {
+        TranslateAnimated::toggle_routes();
         auto p = SCENE->get_model_position(FOLLOW_TARGET, elapsed);
         if (p.has_value()) {
             Camera::set_follow(p.value());
         }
+        TranslateAnimated::toggle_routes();
     }
     Camera::place_camera();
     if (SHOW_AXIS) {

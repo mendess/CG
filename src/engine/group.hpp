@@ -22,6 +22,7 @@ private:
     bool random_color;
 
     Group(rapidxml::xml_node<char>*, float, float, float, float);
+    bool load_model_position(size_t, double) const;
 
 public:
     Group(rapidxml::xml_node<char>* group)
@@ -31,7 +32,6 @@ public:
 
     int levels() const { return _levels; };
     int model_count() const { return _model_count; }
-    std::optional<Matrix> get_model_position(size_t, Matrix, double) const;
     std::optional<Point> get_model_position(size_t, double) const;
     void draw(int, double) const;
 };
