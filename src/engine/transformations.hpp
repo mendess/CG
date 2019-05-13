@@ -86,6 +86,13 @@ public:
     Matrix matrix(double elapsed) const override;
     void draw_routes() const;
     static void toggle_routes() { show_routes = !show_routes; };
+    template<typename F>
+    static void run_without_routes(F& action) {
+        bool routes_val = show_routes;
+        show_routes = false;
+        action();
+        show_routes = routes_val;
+    }
 };
 
 class ScaleStatic : public Transformation {
