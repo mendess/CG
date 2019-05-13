@@ -42,9 +42,9 @@ class Planet:
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(self.radius))
         print(' ' * indent, '    <models>')
         if self.texture is None:
-            print(' ' * indent, '        <model file="scenes/sphere.3d"/>')
+            print(' ' * indent, '        <model file="models/sphere.3d"/>')
         else:
-            print(' ' * indent, '        <model file="scenes/sphere.3d" texture="{}" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>'.format(self.texture))
+            print(' ' * indent, '        <model file="models/sphere.3d" texture="{}" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>'.format(self.texture))
         print(' ' * indent, '    </models>')
         for moon in self.moons:
             moon.print_moon()
@@ -56,31 +56,21 @@ class Planet:
         shift = uniform(0, 2 * pi)
         print(' ' * indent, '<!-- {} -->'.format(self.name))
         print(' ' * indent, '<group R="{}" G="{}" B="{}" >'.format(self.r, self.g, self.b))
+        print(' ' * indent, '    <rotate x="{}" y="{}" z="{}" angle="{}" />'.format(uniform(0, 1), 0, uniform(0, 1), uniform(15, 50)))
         print(' ' * indent, '    <translate time="{}">'.format(10))
-        if self.name == 'Moon':
-            for i in range(TRANSLATE_STEPS):
-                a = ((2 * pi)/TRANSLATE_STEPS) * i
-                x = self.orbit_x * sin(a)
-                z = self.orbit_y * cos(a)
-                print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
-        else:
-            n = make_rand_vector()
-            u = make_rand_vector_par(n)
-            uxn = cross(u,n)
-            for i in range(TRANSLATE_STEPS):
-                a = ((2 * pi) / TRANSLATE_STEPS) * i + shift
-                x = self.distance * cos(a) * u[0] + self.distance * sin(a) * uxn[0]
-                y = self.distance * cos(a) * u[1] + self.distance * sin(a) * uxn[1]
-                z = self.distance * cos(a) * u[2] + self.distance * sin(a) * uxn[2]
-                print(' ' * indent, '        <point X="{}" Y="{}" Z="{}"/>'.format(x, y, z))
+        for i in range(TRANSLATE_STEPS):
+            a = ((2 * pi)/TRANSLATE_STEPS) * i
+            x = self.orbit_x * sin(a)
+            z = self.orbit_y * cos(a)
+            print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
         print(' ' * indent, '    </translate>')
         print(' ' * indent, '    <rotate Y="1" time="10" />')
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(self.radius))
         print(' ' * indent, '    <models>')
         if self.texture is None:
-            print(' ' * indent, '        <model file="scenes/sphere.3d" diffR="{}" diffG="{}" diffB="{}"/>'.format(self.r, self.g, self.b))
+            print(' ' * indent, '        <model file="models/sphere.3d" diffR="{}" diffG="{}" diffB="{}"/>'.format(self.r, self.g, self.b))
         else:
-            print(' ' * indent, '        <model file="scenes/sphere.3d" texture="{}" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>'.format(self.texture))
+            print(' ' * indent, '        <model file="models/sphere.3d" texture="{}" AMBIR="0.001" AMBIB="0.001" AMBIG="0.001"/>'.format(self.texture))
         print(' ' * indent, '    </models>')
         print(' ' * indent, '</group>')
 
@@ -122,9 +112,9 @@ class Ring:
         print(' ' * indent, '    <scale X="{}" Y="{}" Z="{}" />'.format(self.sx, self.sy, self.sz))
         print(' ' * indent, '    <models>')
         if self.texture is not None:
-            print(' ' * indent, '        <model file="scenes/torus.3d" texture="{}" diffR="{}" diffG="{}" diffB="{}"/>'.format(self.texture, self.r, self.g, self.b))
+            print(' ' * indent, '        <model file="models/torus.3d" texture="{}" diffR="{}" diffG="{}" diffB="{}"/>'.format(self.texture, self.r, self.g, self.b))
         else:
-            print(' ' * indent, '        <model file="scenes/torus.3d" diffR="{}" diffG="{}" diffB="{}"/>'.format(self.r, self.g, self.b))
+            print(' ' * indent, '        <model file="models/torus.3d" diffR="{}" diffG="{}" diffB="{}"/>'.format(self.r, self.g, self.b))
         print(' ' * indent, '    </models>')
         print(' ' * indent, '</group>')
 
@@ -147,7 +137,7 @@ def draw_asteroids(number, min_distance, max_distance, indent=8):
         print(' ' * indent, '    </translate>')
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(0.01))
         print(' ' * indent, '    <models>')
-        print(' ' * indent, '        <model file="scenes/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>')
+        print(' ' * indent, '        <model file="models/sphere.3d" diffR="0.6" diffG="0.6" diffB="0.6"/>')
         print(' ' * indent, '    </models>')
         print(' ' * indent, '</group>')
 
@@ -169,7 +159,7 @@ def draw_commet(indent=8):
     print(' ' * indent, '    </translate>')
     print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(0.01))
     print(' ' * indent, '    <models>')
-    print(' ' * indent, '        <model file="scenes/teapot.3d"/>')
+    print(' ' * indent, '        <model file="models/teapot.3d"/>')
     print(' ' * indent, '    </models>')
     print(' ' * indent, '</group>')
 
@@ -215,7 +205,7 @@ print('    <!--Sun-->')
 print('    <group R="1" G="1" B="1" A="1">')
 print('        <scale X="20" Y="20" Z="20" />')
 print('        <models>')
-print('            <model file="scenes/sphere.3d" texture="assets/8k_sun.jpg" EMISR="1" EMISG="1" EMISB="1"/>')
+print('            <model file="models/sphere.3d" texture="assets/8k_sun.jpg" EMISR="1" EMISG="1" EMISB="1"/>')
 print('        </models>')
 for planet in planets:
     planet.print_planet()
