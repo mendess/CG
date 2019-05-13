@@ -26,7 +26,7 @@ std::vector<Point> Cone::draw() const
     vector<Point> coordsCone;
     const float phi = (2 * M_PI) / slices;
     const float stackHeight = height / stacks;
-    const float stackWidth = radius / stacks;
+    const float stackRadius = radius / stacks;
 
     const float beta = atan(height / radius);
     const float alpha_shift = 2 * M_PI / slices;
@@ -41,9 +41,9 @@ std::vector<Point> Cone::draw() const
 
     for (int i = 0; i < stacks; i++) {
         for (int k = 0; k < slices; k++) {
-            const float currentStackWidth = stackWidth * i;
+            const float currentStackRadius = stackRadius * i;
             const float currentPhi = phi * k;
-            const float nextStackWidth = stackWidth * (i + 1);
+            const float nextStackRadius = stackRadius * (i + 1);
             const float nextPhi = phi * (k + 1);
             const float current_texture_x_width = texture_x_width * i;
             const float current_texture_y_width = texture_y_width * i;
@@ -67,19 +67,19 @@ std::vector<Point> Cone::draw() const
 #define sin_to_texture_sn(a) (side_texture_x + ((texture_x_radius - next_texture_x_width) * sin(a)))
 #define cos_to_texture_sn(a) (side_texture_y + ((texture_y_radius - next_texture_y_width) * cos(a)))
 
-            Point p0 = Point((radius - currentStackWidth) * sin(currentPhi), i * stackHeight, (radius - currentStackWidth) * cos(currentPhi))
+            Point p0 = Point((radius - currentStackRadius) * sin(currentPhi), i * stackHeight, (radius - currentStackRadius) * cos(currentPhi))
                            .setNormal(sideNorm)
                            .setTexture(sin_to_texture_s(currentPhi), cos_to_texture_s(currentPhi));
 
-            Point p1 = Point((radius - currentStackWidth) * sin(nextPhi), i * stackHeight, (radius - currentStackWidth) * cos(nextPhi))
+            Point p1 = Point((radius - currentStackRadius) * sin(nextPhi), i * stackHeight, (radius - currentStackRadius) * cos(nextPhi))
                            .setNormal(sideNorm)
                            .setTexture(sin_to_texture_sn(nextPhi), cos_to_texture_s(nextPhi));
 
-            Point p2 = Point((radius - nextStackWidth) * sin(nextPhi), (i + 1) * stackHeight, (radius - nextStackWidth) * cos(nextPhi))
+            Point p2 = Point((radius - nextStackRadius) * sin(nextPhi), (i + 1) * stackHeight, (radius - nextStackRadius) * cos(nextPhi))
                            .setNormal(sideNorm)
                            .setTexture(sin_to_texture_s(nextPhi), cos_to_texture_sn(nextPhi));
 
-            Point p3 = Point((radius - nextStackWidth) * sin(currentPhi), (i + 1) * stackHeight, (radius - nextStackWidth) * cos(currentPhi))
+            Point p3 = Point((radius - nextStackRadius) * sin(currentPhi), (i + 1) * stackHeight, (radius - nextStackRadius) * cos(currentPhi))
                            .setNormal(sideNorm)
                            .setTexture(sin_to_texture_sn(currentPhi), cos_to_texture_sn(currentPhi));
 
@@ -92,7 +92,7 @@ std::vector<Point> Cone::draw() const
 
             if (i == stacks - 1) {
                 //Top
-                Point tip = Point(0, stacks * stackWidth, 0)
+                Point tip = Point(0, stacks * stackRadius, 0)
                                 .setNormal(sideNorm)
                                 .setTexture(side_texture_x, side_texture_y);
 
