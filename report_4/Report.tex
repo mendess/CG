@@ -73,27 +73,73 @@ tabsize=4
 
 \section{Generator}
 
-O output do \textit{generator} foi alterado para incluir as normais e coordenadas de textura correspondentes aos pontos dos triângulos calculados.
+O output do \textit{generator} foi alterado para incluir as normais e
+coordenadas de textura correspondentes aos pontos dos triângulos calculados.
 
 \subsection{Plano}
-Como um plano está situado no plano xOz e as normais são sempre vetores perpendiculares, as normais deste são vetores unitários com apenas a componente y positiva.
-As coordenadas de textura para o plano são calculadas de forma muito simples. Como o plano e a textura tem a mesma forma, o mapeamento é direto, assim, os cantos da textura são mapeados para os cantos do plano.
+Como um plano está situado no plano xOz e as normais são sempre vetores
+perpendiculares, as normais deste são vetores unitários com apenas a componente
+y positiva.
+
+As coordenadas de textura para o plano são calculadas de forma
+muito simples. Como o plano e a textura tem a mesma forma, o mapeamento é
+direto, assim, os cantos da textura são mapeados para os cantos do plano.
 
 \subsection{Esfera}
-Sendo que a esfera está sempre centrada na origem, para calcular as normais desta, é preciso apenas normalizar as coordenadas dos pontos de forma a obter as normais.
-A textura usada para aplicar à esfera é retangular, devido a isto, o raciocínio utilizado para aplicar a textura é imaginar que a esfera e cortada em altura e ``espalmada'' sobre a textura, de seguida é apenas necessário mapear diretamente a textura sobre estar interpretação da esfera.
+Sendo que a esfera está sempre centrada na origem, para calcular as normais
+desta, é preciso apenas normalizar as coordenadas dos pontos de forma a obter
+as normais.
+
+A textura usada para aplicar à esfera é retangular, devido a isto, o raciocínio
+utilizado para aplicar a textura é imaginar que a esfera e cortada em altura e
+``espalmada'' sobre a textura, de seguida é apenas necessário mapear
+diretamente a textura sobre estar interpretação da esfera.
 
 \subsection{Cone}
 
-
 \subsection{Cubo}
-As normais de um cubo também são simples de calcular, pois cada uma das faces está situada em apenas dois dos eixos, ou seja, o processo do cálculo destas é idêntico ao do cálculo das normais do plano com o extra de que no cubo existem componentes negativas e positivas. 
+As normais de um cubo também são simples de calcular, pois cada uma das faces é
+paralela a um dos planos (xOz, xOy, yOz), logo as normais dessa face são
+perpendiculares ao plano correspondente.
 
+Para as texturas começou-se por definir uma formula que mapeasse as coordenadas
+de cada face para valores compreendidos entre, 0 e $\frac{1}{3}$ e 0 e
+$\frac{1}{2}$, dependendo do eixo pretendido. Depois é somado um
+\textit{offset} a estes valores dependendo da secção da textura que se pretende
+mapear.
+
+Assumindo que o ponto de visto é colocado em (0,0,1), as coordenadas de textura
+da face da frente são $x \in [0,\frac{1}{3}]$ e $y \in [0,\frac{1}{2}]$ logo o
+\textit{offset} destes é nulo. No entanto, para a face da esquerda, as suas
+coordenadas de textura são $x \in [\frac{2}{3},1]$ e $y \in [\frac{1}{2},1]$,
+logo o \textit{offset} destes é $\frac{2}{3}$ e $\frac{1}{2}$, respectivamente.
+
+% (0,0) ====== (0.333,0) ======= (0.666,0) ===== (1,0)
+%   |     F V      |        U      |       R ->  |
+% (0,0.5) ==== (0.333,0.5) ===== (0.666,0.5) === |
+%   |     B V      |        D      |       L ->  |
+% (0,1) ====== (0.333,1) ======= (0.666,1) ===== (1,1)
+
+\subsection{Torus}
+As normais do torus fazem uso da mesma técnica utilizada para a esfera
+(Ver~\ref{sec:esfera}) apenas alterado o centro, agora a origem já não é o
+ponto de referencia mas sim os centros de cada anel do torus, visto que o
+raciocínio para o calculo dos pontos deste já era vectorial, foi apenas
+necessário normalizar os vectores.
+
+Para as coordenadas de textura, o mapeamento e similar ao da esfera, imagina se
+que a \textit{mesh} to torus e espalmada sobre a textura deste, e assim o
+mapeamento e directo. Percorrer a textura ao longo do eixo dos $y$ implica
+percorrer o torus a volta do seu perímetro enquanto que no eixo dos $x$
+desenha-se cada anel do torus.
 
 
 \section{Engine}
 
-O \textit{engine} foi estendido para para possibilitar a renderização de modelos com superfícies mais complexas, permitindo definir se um objeto tem uma superfície difusa, especular, emissiva e/ou ambiente, assim como definir uma textura para a cobrir.
+O \textit{engine} foi estendido para para possibilitar a renderização de
+modelos com superfícies mais complexas, permitindo definir se um objeto tem uma
+superfície difusa, especular, emissiva e/ou ambiente, assim como definir uma
+textura para a cobrir.
 
 \subsection{Sem texturas}
 
@@ -102,9 +148,16 @@ O \textit{engine} foi estendido para para possibilitar a renderização de model
 \section{Sistema Solar}
 
 \section{Optimizações}
-Para otimizar a utilização de memoria do programa, foi criada uma cache de modelos e texturas, assim cada conjunto de pontos, normais e coordenadas de textura, correspondente a um ficheiro \textitt{.3d}, é carregado apenas uma vez para o GPU e reutilizado para todos os modelos que os utilizam. O mesmo raciocinio foi feito para as texturas, para que nao fosse lido para memória mais do que uma cópia de cada textura.
+Para otimizar a utilização de memoria do programa, foi criada uma cache de
+modelos e texturas, assim cada conjunto de pontos, normais e coordenadas de
+textura, correspondente a um ficheiro \texttt{.3d}, é carregado apenas uma vez
+para o GPU e reutilizado para todos os modelos que os utilizam. O mesmo
+raciocinio foi feito para as texturas, para que nao fosse lido para memória
+mais do que uma cópia de cada textura.
 
-Para o caso do sistema solar, como todos os planetas utilizam o mesmo modelo unitario da esfera, independentemente de quantos astros sejam colocados no modelo, o ficheiro \texttt{sphere.3d} é lido apenas uma vez.
+Para o caso do sistema solar, como todos os planetas utilizam o mesmo modelo
+unitario da esfera, independentemente de quantos astros sejam colocados no
+modelo, o ficheiro \texttt{sphere.3d} é lido apenas uma vez.
 
 \section{Conclusões e Trabalho Futuro}
 
