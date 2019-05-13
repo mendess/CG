@@ -21,6 +21,11 @@ Cone::Cone(int argc, char** args)
 #define sin_to_texture_b(a) (base_texture_x + sin(a) / 4)
 #define cos_to_texture_b(a) (base_texture_y + cos(a) / 2)
 
+#define sin_to_texture_s(a) (side_texture_x + (current_texture_x_radius * sin(a)))
+#define cos_to_texture_s(a) (side_texture_y + (current_texture_y_radius * cos(a)))
+#define sin_to_texture_sn(a) (side_texture_x + (next_texture_x_radius * sin(a)))
+#define cos_to_texture_sn(a) (side_texture_y + (next_texture_y_radius * cos(a)))
+
 std::vector<Point> Cone::draw() const
 {
     vector<Point> coordsCone;
@@ -34,10 +39,8 @@ std::vector<Point> Cone::draw() const
     const float base_texture_y = .5;
     const float side_texture_x = .75;
     const float side_texture_y = .5;
-    const float texture_x_radius = .25;
-    const float texture_y_radius = .5;
-    const float texture_x_radius = texture_x_radius / stacks;
-    const float texture_y_radius = texture_y_radius / stacks;
+    const float texture_x_radius = .25 / stacks;
+    const float texture_y_radius = .5 / stacks;
 
     for (int i = 0; i < stacks; i++) {
         for (int k = 0; k < slices; k++) {
@@ -49,6 +52,8 @@ std::vector<Point> Cone::draw() const
             const float current_texture_y_radius = texture_y_radius * i;
             const float next_texture_x_radius = texture_x_radius * (i + 1);
             const float next_texture_y_radius = texture_y_radius * (i + 1);
+            const float currentStackHeight = (stacks - i) * stackHeight;
+            const float nextStackHeight = (stacks - (i + 1)) * stackHeight;
             if (!i) {
                 //Base
                 Point p0(0, 0, 0);
@@ -62,33 +67,21 @@ std::vector<Point> Cone::draw() const
             float alpha = alpha_shift * k;
             Vector sideNorm = Vector(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha)).normalize();
 
-#define sin_to_texture_s(a) (side_texture_x + (current_texture_x_radius * sin(a)))
-#define cos_to_texture_s(a) (side_texture_y + (current_texture_y_radius * cos(a)))
-#define sin_to_texture_sn(a) (side_texture_x + (next_texture_x_radius * sin(a)))
-#define cos_to_texture_sn(a) (side_texture_y + (next_texture_y_radius * cos(a)))
-
-            Point p0 = Point((radius - currentStackRadius) * sin(currentPhi), i * stackHeight, (radius - currentStackRadius) * cos(currentPhi))
+            Point p0 = Point(currentStackRadius * sin(currentPhi), currentStackHeight, currentStackRadius * cos(currentPhi))
                            .setNormal(sideNorm)
                            .setTexture(sin_to_texture_s(currentPhi), cos_to_texture_s(currentPhi));
 
-            Point p1 = Point((radius - currentStackRadius) * sin(nextPhi), i * stackHeight, (radius - currentStackRadius) * cos(nextPhi))
+            Point p1 = Point(currentStackRadius * sin(nextPhi), currentStackHeight, currentStackRadius * cos(nextPhi))
                            .setNormal(sideNorm)
                            .setTexture(sin_to_texture_s(nextPhi), cos_to_texture_s(nextPhi));
 
-            Point p2 = Point((radius - nextStackRadius) * sin(nextPhi), (i + 1) * stackHeight, (radius - nextStackRadius) * cos(nextPhi))
+            Point p2 = Point(nextStackRadius * sin(nextPhi), nextStackHeight, nextStackRadius * cos(nextPhi))
                            .setNormal(sideNorm)
                            .setTexture(sin_to_texture_sn(nextPhi), cos_to_texture_sn(nextPhi));
 
-            Point p3 = Point((radius - nextStackRadius) * sin(currentPhi), (i + 1) * stackHeight, (radius - nextStackRadius) * cos(currentPhi))
+            Point p3 = Point(nextStackRadius * sin(currentPhi), nextStackHeight, nextStackRadius * cos(currentPhi))
                            .setNormal(sideNorm)
                            .setTexture(sin_to_texture_sn(currentPhi), cos_to_texture_sn(currentPhi));
-
-            cout << "=================================================" << endl;
-            cout << "P0: " << p0.to_string() << endl;
-            cout << "P1: " << p1.to_string() << endl;
-            cout << "P2: " << p2.to_string() << endl;
-            cout << "P3: " << p3.to_string() << endl;
-            cout << "=================================================" << endl;
 
             if (i == stacks - 1) {
                 //Top
