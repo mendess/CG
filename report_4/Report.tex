@@ -179,7 +179,7 @@ a textura do modelo utilizando o atributo \texttt{texture}. Por exemplo\\
 \section{Sistema Solar}
 
 \section{Optimizações}
-Para otimizar a utilização de memoria do programa, foi criada uma cache de
+Para optimizar a utilização de memoria do programa, foi criada uma cache de
 modelos e texturas, assim cada conjunto de pontos, normais e coordenadas de
 textura, correspondente a um ficheiro \texttt{.3d}, é carregado apenas uma vez
 para o GPU e reutilizado para todos os modelos que os utilizam. O mesmo
@@ -191,5 +191,9 @@ unitário da esfera, independentemente de quantos astros sejam colocados no
 modelo, o ficheiro \texttt{sphere.3d} é lido apenas uma vez.
 
 \section{Conclusões e Trabalho Futuro}
+
+Em conclusão, a area de computação gráfica apresenta desafios bastante diferentes das outras areas de ciências de computação, no que toca a gestão de memória e de recursos de computação, mas também nos conhecimentos de geometria e algebra.
+
+Como trabalho futuro, poderiam ser feitas varias optimizações como oclusão e a utilização de indices para melhorar o desempenho dos VBOs.
 
 \end{document}
