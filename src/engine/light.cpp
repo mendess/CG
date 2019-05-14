@@ -2,6 +2,7 @@
 #include "light.hpp"
 #include "../common/util.hpp"
 
+#include <sstream>
 #include <unordered_map>
 
 #ifdef __APPLE__
@@ -25,9 +26,9 @@ DirectionalLight::DirectionalLight(xml_node<char>* light)
     float dif_r, dif_g, dif_b;
     unordered_map<string, string> params = util::params_to_map(light);
     pos = Point(
-        get_or_default(params["POSX"], 0),
-        get_or_default(params["POSY"], 0),
-        get_or_default(params["POSZ"], 0));
+        get_or_default(params["DIRX"], 0),
+        get_or_default(params["DIRY"], 0),
+        get_or_default(params["DIRZ"], 0));
     RGBA color = get_component("", 1);
     ambient = color / 0.2;
     diffuse = color;
@@ -43,6 +44,17 @@ void DirectionalLight::render() const
     glLightfv(gl_light(number), GL_POSITION, position);
     glLightfv(gl_light(number), GL_AMBIENT, amb);
     glLightfv(gl_light(number), GL_DIFFUSE, diff);
+}
+
+string DirectionalLight::to_string() const
+{
+    stringstream ss;
+    ss << "DirectionalLight{"
+       << "Pos: { " << pos.x() << ", " << pos.y() << ", " << pos.z() << " } "
+       << "Dif: { " << diffuse.r << ", " << diffuse.g << ", " << diffuse.b << ", " << diffuse.a << " } "
+       << "Amb: { " << ambient.r << ", " << ambient.g << ", " << ambient.b << ", " << ambient.a << " } "
+       << "Num: " << number << " }";
+    return ss.str();
 }
 
 PointLight::PointLight(xml_node<char>* light)
@@ -74,6 +86,17 @@ void PointLight::render() const
     glLightfv(gl_light(number), GL_LINEAR_ATTENUATION, &atten);
 }
 
+string PointLight::to_string() const
+{
+    stringstream ss;
+    ss << "PointLight{"
+       << "Pos: { " << pos.x() << ", " << pos.y() << ", " << pos.z() << " } "
+       << "Dif: { " << diffuse.r << ", " << diffuse.g << ", " << diffuse.b << ", " << diffuse.a << " } "
+       << "Amb: { " << ambient.r << ", " << ambient.g << ", " << ambient.b << ", " << ambient.a << " } "
+       << "Num: " << number << " }";
+    return ss.str();
+}
+
 SpotLight::SpotLight(xml_node<char>* light)
 {
     float x, y, z;
@@ -84,6 +107,10 @@ SpotLight::SpotLight(xml_node<char>* light)
         get_or_default(params["POSX"], 0),
         get_or_default(params["POSY"], 0),
         get_or_default(params["POSZ"], 0));
+    direction = Point(
+        get_or_default(params["DIRX"], 0),
+        get_or_default(params["DIRY"], 0),
+        get_or_default(params["DIRZ"], 0));
     diffuse = get_component("", 1);
     number = Light::next_number();
     glEnable(gl_light(number));
@@ -100,4 +127,15 @@ void SpotLight::render() const
     glLightfv(gl_light(number), GL_SPOT_DIRECTION, spotDir);
     glLightf(gl_light(number), GL_SPOT_CUTOFF, 45.0);
     glLightf(gl_light(number), GL_SPOT_EXPONENT, 0.0);
+}
+
+string SpotLight::to_string() const
+{
+    stringstream ss;
+    ss << "SpotLight{"
+       << "Dir: { " << direction.x() << ", " << direction.y() << ", " << direction.z() << " } "
+       << "Pos: { " << pos.x() << ", " << pos.y() << ", " << pos.z() << " } "
+       << "Dif: { " << diffuse.r << ", " << diffuse.g << ", " << diffuse.b << ", " << diffuse.a << " } "
+       << "Num: " << number << " }";
+    return ss.str();
 }

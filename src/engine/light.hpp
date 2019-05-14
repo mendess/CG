@@ -20,6 +20,7 @@ public:
         return number++;
     }
     virtual void render() const = 0;
+    virtual std::string to_string() const = 0;
 };
 
 class PointLight : public Light {
@@ -32,6 +33,7 @@ private:
 public:
     PointLight(rapidxml::xml_node<char>*);
     void render() const;
+    std::string to_string() const;
 };
 
 class DirectionalLight : public Light {
@@ -44,6 +46,7 @@ private:
 public:
     DirectionalLight(rapidxml::xml_node<char>*);
     void render() const;
+    std::string to_string() const;
 };
 
 class SpotLight : public Light {
@@ -56,6 +59,7 @@ private:
 public:
     SpotLight(rapidxml::xml_node<char>*);
     void render() const;
+    std::string to_string() const;
 };
 
 #endif // LIGHT_HPP

@@ -1,0 +1,34 @@
+<scene>
+    <group>
+        <lights>
+            <light type="DIRECTIONAL" dirX="1" />
+        </lights>
+        <models>
+            <model file="models/sphere.3d" diffR="1" diffG="1" diffB="1" />
+        </models>
+        <group>
+            <translate X="4" />
+            <models>
+                <model file="models/sphere.3d" diffR="1" diffG="1" diffB="1" />
+            </models>
+        </group>
+        <group>
+            <translate X="-4" />
+            <models>
+                <model file="models/sphere.3d" diffR="1" diffG="1" diffB="1" />
+            </models>
+        </group>
+        <group>
+            <translate Z="4" />
+            <models>
+                <model file="models/sphere.3d" diffR="1" diffG="1" diffB="1" />
+            </models>
+        </group>
+        <group>
+            <translate Z="-4" />
+            <models>
+                <model file="models/sphere.3d" diffR="1" diffG="1" diffB="1" />
+            </models>
+        </group>
+    </group>
+</scene>

@@ -76,7 +76,7 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         if ("models" == name) {
             for (auto model = node->first_node(); model != NULL; model = model->next_sibling()) {
                 try {
-                    auto model_obj =  parse_model(model, RGBA(this->r, this->g, this->b, this->a));
+                    auto model_obj = parse_model(model, RGBA(this->r, this->g, this->b, this->a));
                     cout << model_obj->to_string() << endl;
                     models.push_back(move(model_obj));
                 } catch (string error) {
@@ -95,8 +95,10 @@ Group::Group(xml_node<char>* group, float r, float g, float b, float a)
         } else if ("lights" == name) {
             for (auto light = node->first_node(); light != NULL; light = light->next_sibling()) {
                 auto l = parse_light(light);
-                if (l)
+                if (l) {
+                    cout << (*l)->to_string() << endl;
                     lights.push_back(std::move(*l));
+                }
             }
         }
     }
