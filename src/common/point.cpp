@@ -82,7 +82,7 @@ Point::Point(float x, float y, float z, Vector normal, tuple<float, float> textu
 {
 }
 
-Point Point::setNormalToOrigin() const
+Point Point::set_normalToOrigin() const
 {
     return Point(
         _x,
@@ -92,7 +92,7 @@ Point Point::setNormalToOrigin() const
         make_tuple(0, 0));
 }
 
-Point Point::setTexture(float x, float y) const
+Point Point::set_texture(float x, float y) const
 {
     return Point(
         _x,
@@ -102,7 +102,7 @@ Point Point::setTexture(float x, float y) const
         make_tuple(x, y));
 }
 
-Point Point::setNormal(Vector v) const
+Point Point::set_normal(Vector v) const
 {
     return Point(
         _x,

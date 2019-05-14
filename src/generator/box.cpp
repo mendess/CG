@@ -52,7 +52,7 @@ std::vector<Point> Box::draw() const
             //Front
             {
                 const auto f = [=](Point p) {
-                    return p.setTexture(
+                    return p.set_texture(
                         ((p.x() + halfX) * 0.33) / x,
                         ((p.y() + halfY) * 0.5) / y);
                 };
@@ -66,7 +66,7 @@ std::vector<Point> Box::draw() const
             //Back
             {
                 const auto f = [=](Point p) {
-                    return p.setTexture(
+                    return p.set_texture(
                         ((p.x() + halfX) * 0.33) / x,
                         (.5 + (p.y() + halfY) * 0.5) / y);
                 };
@@ -80,7 +80,7 @@ std::vector<Point> Box::draw() const
             //Up
             {
                 const auto f = [=](Point p) {
-                    return p.setTexture(
+                    return p.set_texture(
                         (1.f / 3.f) + ((p.x() + halfX) * 0.33) / x,
                         0 + ((p.z() + halfZ) * 0.5) / z);
                 };
@@ -94,7 +94,7 @@ std::vector<Point> Box::draw() const
             //Down
             {
                 const auto f = [=](Point p) {
-                    return p.setTexture(
+                    return p.set_texture(
                         (1.f / 3.f) + ((p.x() + halfX) * 0.33) / x,
                         .5f + ((p.z() + halfZ) * 0.5) / z);
                 };
@@ -108,7 +108,7 @@ std::vector<Point> Box::draw() const
             //Left
             {
                 const auto f = [=](Point p) {
-                    return p.setTexture(
+                    return p.set_texture(
                         (2.f / 3.f) + ((p.y() + halfY) * 0.33) / y,
                         ((p.z() + halfZ) * 0.5) / z);
                 };
@@ -122,7 +122,7 @@ std::vector<Point> Box::draw() const
             //Right
             {
                 const auto f = [=](Point p) {
-                    return p.setTexture(
+                    return p.set_texture(
                         (2.f / 3.f) + ((p.y() + halfY) * 0.33) / y,
                         .5f + ((p.z() + halfZ) * 0.5) / z);
                 };

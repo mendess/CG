@@ -45,20 +45,20 @@ std::vector<Point> Sphere::draw() const
             const float next_texture_y = (theta + 1) * texture_y_shift;
 
             Point p0 = Point(radius * sin(nextStack) * sin(nextSlice), radius * cos(nextStack), radius * sin(nextStack) * cos(nextSlice))
-                           .setNormalToOrigin()
-                           .setTexture(next_texture_x, next_texture_y);
+                           .set_normalToOrigin()
+                           .set_texture(next_texture_x, next_texture_y);
 
             Point p1 = Point(radius * sin(nextStack) * sin(currentSlice), radius * cos(nextStack), radius * sin(nextStack) * cos(currentSlice))
-                           .setNormalToOrigin()
-                           .setTexture(texture_x, next_texture_y);
+                           .set_normalToOrigin()
+                           .set_texture(texture_x, next_texture_y);
 
             Point p2 = Point(radius * sin(currentStack) * sin(nextSlice), radius * cos(currentStack), radius * sin(currentStack) * cos(nextSlice))
-                           .setNormalToOrigin()
-                           .setTexture(next_texture_x, texture_y);
+                           .set_normalToOrigin()
+                           .set_texture(next_texture_x, texture_y);
 
             Point p3 = Point(radius * sin(currentStack) * sin(currentSlice), radius * cos(currentStack), radius * sin(currentStack) * cos(currentSlice))
-                           .setNormalToOrigin()
-                           .setTexture(texture_x, texture_y);
+                           .set_normalToOrigin()
+                           .set_texture(texture_x, texture_y);
             //////
             coordsSphere.push_back(p0);
             coordsSphere.push_back(p3);

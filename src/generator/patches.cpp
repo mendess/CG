@@ -59,21 +59,36 @@ vector<Point> Patches::draw() const
         for (size_t iu = 0; iu < tessellation; iu++) {
             float u = delta * iu;
             float uNext = delta * (iu + 1);
+            float texture_x = iu / tessellation;
+            float texture_x_next = (iu + 1) / tessellation;
             for (size_t iv = 0; iv < tessellation; iv++) {
                 float v = delta * iv;
                 float vNext = delta * (iv + 1);
-                Point p0 = bezier_point(i, u, v);
-                Point p1 = bezier_point(i, u, vNext);
-                Point p2 = bezier_point(i, uNext, v);
-                Point p3 = bezier_point(i, uNext, vNext);
+                float texture_y = iv / tessellation;
+                float texture_y_next = (iv + 1) / tessellation;
+                Point p0 = bezier_point(i, u, v)
+                               .set_normal(bezier_normal(i, u, v))
+                               .set_texture(texture_x, texture_y);
 
-                points.push_back(p1);
-                points.push_back(p2);
+                Point p1 = bezier_point(i, u, vNext)
+                               .set_normal(bezier_normal(i, u, vNext))
+                               .set_texture(texture_x, texture_y_next);
+
+                Point p2 = bezier_point(i, uNext, v)
+                               .set_normal(bezier_normal(i, uNext, v))
+                               .set_texture(texture_x_next, texture_y);
+
+                Point p3 = bezier_point(i, uNext, vNext)
+                               .set_normal(bezier_normal(i, uNext, vNext))
+                               .set_texture(texture_x_next, texture_y_next);
+
                 points.push_back(p3);
-
-                points.push_back(p1);
-                points.push_back(p0);
                 points.push_back(p2);
+                points.push_back(p1);
+
+                points.push_back(p2);
+                points.push_back(p0);
+                points.push_back(p1);
             }
         }
     }
@@ -120,6 +135,48 @@ Point Patches::bezier_point(size_t patch, float du, float dv) const
         r = r + ump[i] * v_m[i];
     }
     return r;
+}
+
+#define dT(t)                 \
+    {                         \
+        3 * t *t, 2 * t, 1, 0 \
+    }
+
+Vector Patches::tangent(size_t patch, const float u[4], const float v[4]) const
+{
+    float u_m[4];
+    mult_vec_matrix4(u, M, u_m);
+    float v_m[4];
+    mult_vec_matrix4(v, M, v_m);
+    Point points[4][4];
+    for (size_t i = 0; i < 4; i++) {
+        for (size_t j = 0; j < 4; j++) {
+            points[i][j] = point_at(patch, i * 4 + j);
+        }
+    }
+    Point ump[4];
+    for (size_t i = 0; i < 4; i++) {
+        ump[i] = Point();
+        for (size_t j = 0; j < 4; j++) {
+            ump[i] = ump[i] + points[j][i] * u_m[j];
+        }
+    }
+    Point r = Point();
+    for (size_t i = 0; i < 4; i++) {
+        r = r + ump[i] * v_m[i];
+    }
+    return r.to_vector();
+}
+
+Vector Patches::bezier_normal(size_t patch, float du, float dv) const
+{
+    const float u[4] = T(du);
+    const float deriv_u[4] = dT(du);
+    const float v[4] = T(dv);
+    const float deriv_v[4] = dT(dv);
+    Vector tu = tangent(patch, deriv_u, v);
+    Vector tv = tangent(patch, u, deriv_v);
+    return tv.cross(tu);
 }
 
 void mult_vec_matrix4(const float v[4], const float m[4][4], float res[4])

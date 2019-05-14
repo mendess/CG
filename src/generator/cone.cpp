@@ -60,9 +60,9 @@ std::vector<Point> Cone::draw() const
                 Point p1(radius * sin(nextPhi), 0, radius * cos(nextPhi));
                 Point p2(radius * sin(currentPhi), 0, radius * cos(currentPhi));
                 Vector v = Vector(0, -1, 0);
-                coordsCone.push_back(p0.setNormal(v).setTexture(base_texture_x, base_texture_y));
-                coordsCone.push_back(p1.setNormal(v).setTexture(sin_to_texture_b(nextPhi), cos_to_texture_b(nextPhi)));
-                coordsCone.push_back(p2.setNormal(v).setTexture(sin_to_texture_b(currentPhi), cos_to_texture_b(currentPhi)));
+                coordsCone.push_back(p0.set_normal(v).set_texture(base_texture_x, base_texture_y));
+                coordsCone.push_back(p1.set_normal(v).set_texture(sin_to_texture_b(nextPhi), cos_to_texture_b(nextPhi)));
+                coordsCone.push_back(p2.set_normal(v).set_texture(sin_to_texture_b(currentPhi), cos_to_texture_b(currentPhi)));
             }
             float alpha = alpha_shift * k;
             float alpha_next = alpha_shift * (k + 1);
@@ -70,26 +70,26 @@ std::vector<Point> Cone::draw() const
             Vector nextSideNorm = Vector(cos(beta) * sin(alpha_next), sin(beta), cos(beta) * cos(alpha_next)).normalize();
 
             Point p0 = Point(currentStackRadius * sin(currentPhi), currentStackHeight, currentStackRadius * cos(currentPhi))
-                           .setNormal(sideNorm)
-                           .setTexture(sin_to_texture_s(currentPhi), cos_to_texture_s(currentPhi));
+                           .set_normal(sideNorm)
+                           .set_texture(sin_to_texture_s(currentPhi), cos_to_texture_s(currentPhi));
 
             Point p1 = Point(currentStackRadius * sin(nextPhi), currentStackHeight, currentStackRadius * cos(nextPhi))
-                           .setNormal(nextSideNorm)
-                           .setTexture(sin_to_texture_s(nextPhi), cos_to_texture_s(nextPhi));
+                           .set_normal(nextSideNorm)
+                           .set_texture(sin_to_texture_s(nextPhi), cos_to_texture_s(nextPhi));
 
             Point p2 = Point(nextStackRadius * sin(nextPhi), nextStackHeight, nextStackRadius * cos(nextPhi))
-                           .setNormal(nextSideNorm)
-                           .setTexture(sin_to_texture_sn(nextPhi), cos_to_texture_sn(nextPhi));
+                           .set_normal(nextSideNorm)
+                           .set_texture(sin_to_texture_sn(nextPhi), cos_to_texture_sn(nextPhi));
 
             Point p3 = Point(nextStackRadius * sin(currentPhi), nextStackHeight, nextStackRadius * cos(currentPhi))
-                           .setNormal(sideNorm)
-                           .setTexture(sin_to_texture_sn(currentPhi), cos_to_texture_sn(currentPhi));
+                           .set_normal(sideNorm)
+                           .set_texture(sin_to_texture_sn(currentPhi), cos_to_texture_sn(currentPhi));
 
             if (i == stacks - 1) {
                 //Top
                 Point tip = Point(0, stacks * stackRadius, 0)
-                                .setNormal(sideNorm)
-                                .setTexture(side_texture_x, side_texture_y);
+                                .set_normal(sideNorm)
+                                .set_texture(side_texture_x, side_texture_y);
 
                 coordsCone.push_back(p0);
                 coordsCone.push_back(p1);

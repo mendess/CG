@@ -26,6 +26,8 @@ private:
     std::vector<Point> points;
 
     Point bezier_point(size_t, float, float) const;
+    Vector bezier_normal(size_t, float du, float dv) const;
+    Vector tangent(size_t patch, const float u[4], const float v[4]) const;
     Point point_at(size_t, size_t) const;
 
 public:

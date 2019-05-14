@@ -38,9 +38,10 @@ public:
     Vector normal() const { return _normal; }
     float texture_x() const { return _texture_x; }
     float texture_y() const { return _texture_y; }
-    Point setNormalToOrigin() const;
-    Point setNormal(Vector) const;
-    Point setTexture(float, float) const;
+    Point set_normalToOrigin() const;
+    Point set_normal(Vector) const;
+    Point set_texture(float, float) const;
+    Vector to_vector() const { return { _x, _y, _z }; }
     Point operator+(const Point) const;
     Point operator*(float)const;
     Point operator/(float) const;
