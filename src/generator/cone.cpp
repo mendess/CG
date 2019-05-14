@@ -65,18 +65,20 @@ std::vector<Point> Cone::draw() const
                 coordsCone.push_back(p2.setNormal(v).setTexture(sin_to_texture_b(currentPhi), cos_to_texture_b(currentPhi)));
             }
             float alpha = alpha_shift * k;
+            float alpha_next = alpha_shift * (k + 1);
             Vector sideNorm = Vector(cos(beta) * sin(alpha), sin(beta), cos(beta) * cos(alpha)).normalize();
+            Vector nextSideNorm = Vector(cos(beta) * sin(alpha_next), sin(beta), cos(beta) * cos(alpha_next)).normalize();
 
             Point p0 = Point(currentStackRadius * sin(currentPhi), currentStackHeight, currentStackRadius * cos(currentPhi))
                            .setNormal(sideNorm)
                            .setTexture(sin_to_texture_s(currentPhi), cos_to_texture_s(currentPhi));
 
             Point p1 = Point(currentStackRadius * sin(nextPhi), currentStackHeight, currentStackRadius * cos(nextPhi))
-                           .setNormal(sideNorm)
+                           .setNormal(nextSideNorm)
                            .setTexture(sin_to_texture_s(nextPhi), cos_to_texture_s(nextPhi));
 
             Point p2 = Point(nextStackRadius * sin(nextPhi), nextStackHeight, nextStackRadius * cos(nextPhi))
-                           .setNormal(sideNorm)
+                           .setNormal(nextSideNorm)
                            .setTexture(sin_to_texture_sn(nextPhi), cos_to_texture_sn(nextPhi));
 
             Point p3 = Point(nextStackRadius * sin(currentPhi), nextStackHeight, nextStackRadius * cos(currentPhi))
