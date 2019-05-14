@@ -112,15 +112,15 @@ void renderScene()
     SCENE->draw(DRAW_LEVEL, elapsed);
 
     static float deltaComulative = 0;
-    deltaComulative += delta;
+    deltaComulative += delta / TIME_SCALE;
     static float fps = 60;
     if (deltaComulative > 500) {
         deltaComulative -= 1000;
-        fps = (1 / delta) * 1000;
+        fps = (1 / (delta / TIME_SCALE)) * 1000;
     }
 
     stringstream title;
-    title.precision(2);
+    title.precision(4);
     title << "CG-Engine "
           << " | FPS: " << fps
           << " | Draw Level: " << DRAW_LEVEL
