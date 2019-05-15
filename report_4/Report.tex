@@ -103,9 +103,9 @@ Foi adicionado ao gerador a primitiva cilindro. Este é definido pelo raio da
 base, altura e número de \textit{slices}.
 
 Em cada iteração são definidos quatro pontos usando coordenadas polares, estes
-quatro pontos são os cantos da slice respectiva, depois usando estes são
+quatro pontos são os cantos da \textit{slice} respetiva, depois usando estes são
 desenhados quatro triângulos, um para a base, outro para o topo e por fim
-outros dois para a fazer o rectângulo que compõem a \textit{slice}.
+outros dois para a fazer o retângulo que compõem a \textit{slice}.
 
 \begin{figure}[H]
     \centering
@@ -122,11 +122,11 @@ y positiva.
 
 As coordenadas de textura para o plano são calculadas de forma
 muito simples. Como o plano e a textura tem a mesma forma, o mapeamento é
-directo, assim, os cantos da textura são mapeados para os cantos do plano.
+direto, assim, os cantos da textura são mapeados para os cantos do plano.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{plane.png}
+    \includegraphics[width=0.5\textwidth]{plane.png}
     \caption{Plano com textura}
 \end{figure}
 
@@ -155,8 +155,8 @@ logo o \textit{offset} destes é $\frac{2}{3}$ e $\frac{1}{2}$, respetivamente.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{box.png}
-    \caption{Plano com textura}
+    \includegraphics[width=0.35\textwidth]{box.png}
+    \caption{Cubo com textura.}
 \end{figure}
 
 \subsubsection{Esfera}\label{sec:esfera}
@@ -164,20 +164,29 @@ Sendo que a esfera está sempre centrada na origem, para calcular as normais
 desta, é preciso apenas normalizar as coordenadas dos pontos de forma a obter
 as normais.
 
-A textura usada para aplicar à esfera é rectangular, assim, o raciocínio
+A textura usada para aplicar à esfera é retangular, assim, o raciocínio
 utilizado para aplicar a textura é imaginar que a esfera é cortada em altura e
 ``espalmada'' sobre a textura, de seguida é apenas necessário mapear
-directamente a textura sobre estar interpretação da esfera.
+diretamente a textura sobre estar interpretação da esfera.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{sphere.png}
-    \caption{Plano com textura}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../assets/2k_sun.jpg}
+        \caption{Textura exemplo de uma esfera.}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.7\textwidth]{sphere.png}
+        \caption{Esfera com textura}
+    \end{subfigure}
+    \caption{Esfera}
 \end{figure}
 
 \subsubsection{Cone}
 O cálculo das normais do cone é feito em duas partes, primeiro são calculadas
-as normais da base, que por definição são o vector unitário $(0,-1,0)$. A
+as normais da base, que por definição são o vetor unitário $(0,-1,0)$. A
 segunda parte corresponde ao lado do cone, para o qual é calculado o ângulo
 entre qualquer ponto do lado do cone e a base do mesmo através da
 $\arctan(\frac{radius}{stacks})$, este ângulo define a
@@ -192,14 +201,17 @@ faz-se o mapeamento.
 
 \begin{figure}[H]
     \centering
-    \includegraphics{../assets/cone_rain.png}
-    \caption{Textura exemplo de um cone}\label{fig:conetexture}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\textwidth]{cone.png}
-    \caption{Plano com textura}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics{../assets/cone_rain.png}
+        \caption{Textura exemplo de um cone}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.7\textwidth]{cone.png}
+        \caption{Cone com textura.}
+    \end{subfigure}
+    \caption{Cone.}\label{fig:conetexture}
 \end{figure}
 
 \subsection{Cilindro}
@@ -209,7 +221,7 @@ necessário normalizar as coordenadas dos pontos respetivos depois de colocar o
 seu $y$ a 0 (para que seja paralelo ao plano xOz).
 
 Para as coordenadas de textura é foi utilizado o \textit{template} da
-figura~\ref{fig:cilindro}. Para os lados divide-se o rectângulo pelo número de
+figura~\ref{fig:cilindro}. Para os lados divide-se o retângulo pelo número de
 \textit{slices} e sempre que se avança de \textit{slice} soma-se essa quantidade
 ao $x$ da textura. O $y$ so toma dois valores 0 e 0.625. Por fim, o topo e a
 base são obtidas através de coordenadas polares, somando ao centro de cada uma
@@ -217,15 +229,17 @@ $\sin(\alpha) \times 0.1875$ para o $x$ e $\cos(alpha) \times 0.1875$ para o $y$
 
 \begin{figure}[H]
     \centering
-    \includegraphics{../assets/OilBarrel.jpg}
-    \caption{Exemplo de um template possível para o
-    cilindro.}\label{fig:cilindro}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{cylinder.png}
-    \caption{Plano com textura}
+    \begin{subfigure}{0.4\textwidth}
+        \includegraphics{../assets/OilBarrel.jpg}
+        \caption{Exemplo de um \textit{template} possível para o
+        cilindro.}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{cylinder.png}
+        \caption{Cilindro com textura.}
+    \end{subfigure}
+    \caption{Texturas do cilindro.}\label{fig:cilindro}
 \end{figure}
 
 \subsubsection{Torus}
@@ -260,7 +274,7 @@ ponto.
     \caption{Calculo da normal através dos vetores tangentes.}
 \end{figure}
 
-Para as coordenadas de textura, simplesmente mapea-se a textura toda para cada
+Para as coordenadas de textura, simplesmente mapeia-se a textura toda para cada
 superfície de \textit{Bezier}. Ficando assim repetida tantas vezes quantos os
 patches do modelo.
 
@@ -304,9 +318,9 @@ a textura do modelo utilizando o atributo \texttt{texture}. Por exemplo\\
 
 \section{Lighting}
 
-Este programa oferece 3 tipos de luzes, pontual, direccional e
-\textit{spotlight}. Estas são afectadas  por transformações geométricas como
-qualquer outro objecto e podem ser definidas tanto ao nível de cena
+Este programa oferece 3 tipos de luzes, pontual, direcional e
+\textit{spotlight}. Estas são afetadas  por transformações geométricas como
+qualquer outro objeto e podem ser definidas tanto ao nível de cena
 (\texttt{<scene>}) como ao nível de um qualquer grupo, tendo em atenção que
 apenas 8 luzes podem ser carregadas pelo programa.
 
@@ -319,23 +333,37 @@ Para definir uma luz pontual tem de ser passado o atributo \texttt{type} com o
 valor \texttt{POINT}. Os parâmetros admitidos pela luz pontual são:
 
 \begin{itemize}
-    \item \textbf{Posicao}: Através dos atributos \texttt{posX}, \texttt{posY},
+    \item \textbf{Posição}: Através dos atributos \texttt{posX}, \texttt{posY},
         e \texttt{posZ}.
     \item \textbf{Cor}: Através dos atributos \texttt{R}, \texttt{G} e
         \texttt{B}.
 \end{itemize}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{./pointlight.png}
+    \caption{Demonstração da luz pontual, uma fonte de luz no centro (marcada
+    com uma esfera emissiva) rodeada de quatro esferas de cores diferentes.}
+\end{figure}
+
 \subsection{\textit{Directional Light}}
 
-Para definir uma luz direccional tem de ser passado o atributo \texttt{type}
+Para definir uma luz direcional tem de ser passado o atributo \texttt{type}
 com o valor \texttt{DIRECTIONAL}. Os parâmetros admitidos pela luz pontual são:
 
 \begin{itemize}
-    \item \textbf{Direcção}: Através dos atributos \texttt{dirX}, \texttt{dirY}
+    \item \textbf{Direção}: Através dos atributos \texttt{dirX}, \texttt{dirY}
         e \texttt{dirZ}.
     \item \textbf{Cor}: Através dos atributos \texttt{R}, \texttt{G} e
         \texttt{B}.
 \end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{./directional_light.png}
+    \caption{Demonstração da luz direcional, uma fonte de luz em direção a x
+    positivo rodeada de quatro esferas de cores diferentes.}
+\end{figure}
 
 \subsection{\textit{Spotlight}}
 
@@ -352,17 +380,31 @@ pontual são:
         \texttt{B}.
 \end{itemize}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{./spotlight.png}
+    \caption{Demonstração da \textit{spotlight}, uma fonte de luz no centro (marcada
+    com uma esfera emissiva) rodeada de quatro esferas de cores diferentes.}
+\end{figure}
 \section{Sistema Solar}
 O sistema solar foi alterado para aplicar uma textura a cada astro e uma luz
-pontual no centro do Sol.
+pontual no centro do Sol. Alguns detalhes a notar são o cuidado em colocar sempre
+a mesma face da lua virada para a Terra e ainda a um habitante em Marte.
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{solarsystem.png}
+    \caption{O sistema solar final.}
+\end{figure}
+
+\pagebreak
 
 \section{Optimizações}
-Para otimizar a utilização de memória do programa, foi criada uma cache de
-modelos e texturas, assim cada conjunto de pontos, normais e coordenadas de
-textura, correspondente a um ficheiro \texttt{.3d}, é carregado apenas uma vez
-para o GPU e reutilizado para todos os modelos que os utilizam. O mesmo
-raciocínio foi feito para as texturas, para que não fosse lido para memória
-mais do que uma cópia de cada textura.
+Para otimizar a utilização de memória do programa, foi criada uma
+\textit{cache} de modelos e texturas, assim cada conjunto de pontos, normais e
+coordenadas de textura, correspondente a um ficheiro \texttt{.3d}, é carregado
+apenas uma vez para o GPU e reutilizado para todos os modelos que os utilizam.
+O mesmo raciocínio foi feito para as texturas, para que não fosse lido para
+memória mais do que uma cópia de cada textura.
 
 Para o caso do sistema solar, como todos os planetas utilizam o mesmo modelo
 unitário da esfera, independentemente de quantos astros sejam colocados no
