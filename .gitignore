@@ -42,3 +42,5 @@ target/*
 *.toc
 Report.pdf
 __pycache__
+*.bbl
+*.blg

@@ -2,8 +2,7 @@
 \usepackage[utf8x]{inputenc}
 \usepackage[portuguese]{babel}
 \usepackage{graphicx}
-\usepackage{a4wide}
-\usepackage[pdftex,hidelinks]{hyperref}
+\usepackage{a4wide} \usepackage[pdftex,hidelinks]{hyperref}
 \usepackage{float}
 \usepackage{indentfirst}
 \usepackage{subcaption}
@@ -271,7 +270,8 @@ ponto.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{bez-normal.png}
-    \caption{Calculo da normal através dos vetores tangentes.}
+    \caption{Calculo da normal através dos vetores tangentes.
+    (Source~\cite{Bezier})}
 \end{figure}
 
 Para as coordenadas de textura, simplesmente mapeia-se a textura toda para cada
@@ -419,5 +419,10 @@ geometria e álgebra.
 
 Como trabalho futuro, poderiam ser feitas várias otimizações como oclusão e a
 utilização de índices para melhorar o desempenho dos VBOs.
+
+\pagebreak
+
+\bibliographystyle{plain}
+\bibliography{Report}
 
 \end{document}
