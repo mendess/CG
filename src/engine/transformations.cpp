@@ -214,9 +214,9 @@ tuple<Point, Vector> getCatmullRomPoint(float t, Point p0, Point p1, Point p2, P
     float aZ[4];
     float pX[4] = { p0.x(), p1.x(), p2.x(), p3.x() };
     multMatrixVector(m, pX, aX);
-    float pY[4] = { p1.y(), p1.y(), p2.y(), p3.y() };
+    float pY[4] = { p0.y(), p1.y(), p2.y(), p3.y() };
     multMatrixVector(m, pY, aY);
-    float pZ[4] = { p2.z(), p1.z(), p2.z(), p3.z() };
+    float pZ[4] = { p0.z(), p1.z(), p2.z(), p3.z() };
     multMatrixVector(m, pZ, aZ);
 
     float tv[4] = { t * t * t, t * t, t, 1 };
