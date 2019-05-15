@@ -50,6 +50,16 @@ class Planet:
             moon.print_moon()
         for ring in self.rings:
             ring.print_ring()
+        if self.name == 'Mars':
+            print(' ' * indent, '<group R=".6" G=".6" B=".6" >')
+            print(' ' * indent, '    <rotate X="-1" angle="15" />')
+            print(' ' * indent, '    <translate Y="1" />')
+            print(' ' * indent, '    <rotate X="-1" angle="90" />')
+            print(' ' * indent, '    <scale X="0.01" Y="0.01" Z="0.01" />')
+            print(' ' * indent, '    <models>')
+            print(' ' * indent, '        <model file="models/gumbo.3d" diffR=".6" diffG=".6" diffB=".6" texture="assets/elephant.jpg"/>')
+            print(' ' * indent, '    </models>')
+            print(' ' * indent, '</group>')
         print(' ' * indent, '</group>')
 
     def print_moon(self, indent=12):
