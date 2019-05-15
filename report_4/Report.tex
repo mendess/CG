@@ -153,7 +153,7 @@ necessário normalizar os vetores.
 
 Para as coordenadas de textura, o mapeamento é também similar ao da esfera,
 imagina-se que a \textit{mesh} do torus é espalmada sobre a textura deste, e
-assim o mapeamento e direto. Percorrer a textura ao longo do eixo dos $y$
+assim o mapeamento é direto. Percorrer a textura ao longo do eixo dos $y$
 implica percorrer o torus à volta do seu perímetro enquanto que no eixo dos $x$
 desenha-se cada anel do torus.
 
@@ -183,6 +183,54 @@ a textura do modelo utilizando o atributo \texttt{texture}. Por exemplo\\
 \verb!<model file="models/sphere.3d" texture="assets/8k_jupiter.jpg" />!
 
 \section{Lighting}
+
+Este programa oferece 3 tipos de luzes, pontual, direccional e
+\textit{spotlight}. Estas são afectadas  por transformações geométricas como
+qualquer outro objecto e podem ser definidas tanto ao nível de cena
+(\texttt{<scene>}) como ao nível de um qualquer grupo, tendo em atenção que
+apenas 8 luzes podem ser carregadas pelo programa.
+
+Cada uma com os seus parâmetros específicos que serão delineados nas subsecções
+seguintes.
+
+\subsection{\textit{Point Light}}
+
+Para definir uma luz pontual tem de ser passado o atributo \texttt{type} com o
+valor \texttt{POINT}. Os parâmetros admitidos pela luz pontual são:
+
+\begin{itemize}
+    \item \textbf{Posicao}: Através dos atributos \texttt{posX}, \texttt{posY},
+        e \texttt{posZ}.
+    \item \textbf{Cor}: Através dos atributos \texttt{R}, \texttt{G} e
+        \texttt{B}.
+\end{itemize}
+
+\subsection{\textit{Directional Light}}
+
+Para definir uma luz direccional tem de ser passado o atributo \texttt{type}
+com o valor \texttt{DIRECTIONAL}. Os parâmetros admitidos pela luz pontual são:
+
+\begin{itemize}
+    \item \textbf{Direcção}: Através dos atributos \texttt{dirX}, \texttt{dirY}
+        e \texttt{dirZ}.
+    \item \textbf{Cor}: Através dos atributos \texttt{R}, \texttt{G} e
+        \texttt{B}.
+\end{itemize}
+
+\subsection{\textit{Spotlight}}
+
+Para definir uma luz \textit{spotlight} tem de ser passado o atributo
+\texttt{type} com o valor \texttt{SPOT}. Os parâmetros admitidos pela luz
+pontual são:
+
+\begin{itemize}
+    \item \textbf{Posição}: Através dos atributos \texttt{posX}, \texttt{posY},
+        e \texttt{posZ}.
+    \item \textbf{Direcção}: Através dos atributos \texttt{dirX}, \texttt{dirY}
+        e \texttt{dirZ}.
+    \item \textbf{Cor}: Através dos atributos \texttt{R}, \texttt{G} e
+        \texttt{B}.
+\end{itemize}
 
 \section{Sistema Solar}
 
