@@ -107,6 +107,12 @@ quatro pontos são os cantos da slice respectiva, depois usando estes são
 desenhados quatro triângulos, um para a base, outro para o topo e por fim
 outros dois para a fazer o rectângulo que compõem a \textit{slice}.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{cylinder_colored.png}
+    \caption{Cilindro gerado com 10 slices}
+\end{figure}
+
 \subsection{Vetores Normais e Coordenadas de Textura}
 
 \subsubsection{Plano}
@@ -149,15 +155,9 @@ logo o \textit{offset} destes é $\frac{2}{3}$ e $\frac{1}{2}$, respetivamente.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{box.png}
+    \includegraphics[width=0.5\textwidth]{box.png}
     \caption{Plano com textura}
 \end{figure}
-
-% (0,0) ====== (0.333,0) ======= (0.666,0) ===== (1,0)
-%   |     F V      |        U      |       R ->  |
-% (0,0.5) ==== (0.333,0.5) ===== (0.666,0.5) === |
-%   |     B V      |        D      |       L ->  |
-% (0,1) ====== (0.333,1) ======= (0.666,1) ===== (1,1)
 
 \subsubsection{Esfera}\label{sec:esfera}
 Sendo que a esfera está sempre centrada na origem, para calcular as normais
@@ -218,7 +218,8 @@ $\sin(\alpha) \times 0.1875$ para o $x$ e $\cos(alpha) \times 0.1875$ para o $y$
 \begin{figure}[H]
     \centering
     \includegraphics{../assets/OilBarrel.jpg}
-    \caption{Exemplo de um template possível para o cilindro.}
+    \caption{Exemplo de um template possível para o
+    cilindro.}\label{fig:cilindro}
 \end{figure}
 
 \begin{figure}[H]
@@ -239,6 +240,42 @@ imagina-se que a \textit{mesh} do torus é espalmada sobre a textura deste, e
 assim o mapeamento é direto. Percorrer a textura ao longo do eixo dos $y$
 implica percorrer o torus à volta do seu perímetro enquanto que no eixo dos $x$
 desenha-se cada anel do torus.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{torus.png}
+    \caption{Plano com textura}
+\end{figure}
+
+\subsubsection{\textit{Bezier Patches}}
+
+Para calcular as normais do \textit{Bezier patch} usa se o mesmo algoritmo de
+calculo usado para os pontos, mas em vez de calcular um ponto calcula-se dois
+vetores tangentes a este e com o produto escalar encontra-se o vetor normal ao
+ponto.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{bez-normal.png}
+    \caption{Calculo da normal através dos vetores tangentes.}
+\end{figure}
+
+Para as coordenadas de textura, simplesmente mapea-se a textura toda para cada
+superfície de \textit{Bezier}. Ficando assim repetida tantas vezes quantos os
+patches do modelo.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=\textwidth]{./teapot.png}
+        \caption{Teapot}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=\textwidth]{./gumbo.png}
+        \caption{Gumbo}
+    \end{subfigure}
+    \caption{Exemplos de modelos gerados por patches}
+\end{figure}
 
 \section{Engine}
 
