@@ -154,9 +154,18 @@ logo o \textit{offset} destes é $\frac{2}{3}$ e $\frac{1}{2}$, respetivamente.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.35\textwidth]{box.png}
-    \caption{Cubo com textura.}
+    \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=\textwidth]{../assets/grass_block.png}
+        \caption{Exemplo de uma textura para o cubo.}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=.63\textwidth]{box.png}
+        \caption{Cubo com textura.}
+    \end{subfigure}
+    \caption{Cubo.}
 \end{figure}
+
 
 \subsubsection{Esfera}\label{sec:esfera}
 Sendo que a esfera está sempre centrada na origem, para calcular as normais
@@ -256,8 +265,16 @@ desenha-se cada anel do torus.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{torus.png}
-    \caption{Plano com textura}
+    \begin{subfigure}{0.4\textwidth}
+        \includegraphics[width=\textwidth]{../assets/donut.png}
+        \caption{Exemplo de uma textura para o torus.}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{torus.png}
+        \caption{Torus com textura.}
+    \end{subfigure}
+    \caption{Torus.}
 \end{figure}
 
 \subsubsection{\textit{Bezier Patches}}
@@ -288,7 +305,7 @@ patches do modelo.
         \includegraphics[width=\textwidth]{./gumbo.png}
         \caption{Gumbo}
     \end{subfigure}
-    \caption{Exemplos de modelos gerados por patches}
+    \caption{Exemplos de modelos gerados por patches.}
 \end{figure}
 
 \section{Engine}
@@ -395,8 +412,6 @@ a mesma face da lua virada para a Terra e ainda a um habitante em Marte.
     \includegraphics[width=\textwidth]{solarsystem.png}
     \caption{O sistema solar final.}
 \end{figure}
-
-\pagebreak
 
 \section{Optimizações}
 Para otimizar a utilização de memória do programa, foi criada uma
