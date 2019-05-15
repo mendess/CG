@@ -40,7 +40,8 @@ tabsize=4
 \begin{document}
 
 \title{Computação Gráfica\\ Animações}
-\author{Bárbara Cardoso (a80453) \and Márcio Sousa (a82400) \and Pedro Mendes (a79003)}
+\author{Bárbara Cardoso (a80453) \and Márcio Sousa (a82400)
+\and Pedro Mendes (a79003)}
 \date{\today}
 
 \begin{titlepage}
@@ -54,9 +55,11 @@ tabsize=4
             \includegraphics[width=0.4\textwidth]{eng.jpeg}\par\vspace{1cm}
             \vspace{1.5cm}
             %títulos
-            \href{https://www.uminho.pt/PT}{\scshape\LARGE Universidade do Minho} \par
+            \href{https://www.uminho.pt/PT}
+            {\scshape\LARGE Universidade do Minho} \par
             \vspace{1cm}
-            \href{https://www.di.uminho.pt/}{\scshape\Large Departamento de Informática} \par
+            \href{https://www.di.uminho.pt/}
+            {\scshape\Large Departamento de Informática} \par
             \vspace{1.5cm}
 
             \maketitle
@@ -73,8 +76,10 @@ tabsize=4
 
 \section{Generator}
 
-O output do \textit{generator} foi alterado para incluir as normais e
+O output do \textit{generator} foi alterado para incluir as normais e as
 coordenadas de textura correspondentes aos pontos dos triângulos calculados.
+Em seguida, passamos a explicar o processo do cálculo das normais e das
+coordenadas de textura para cada uma das primitivas.
 
 \subsection{Plano}
 Como um plano está situado no plano xOz e as normais são sempre vetores
@@ -90,17 +95,17 @@ As normais de um cubo também são simples de calcular, pois cada uma das faces 
 paralela a um dos planos (xOz, xOy, yOz), logo as normais dessa face são
 perpendiculares ao plano correspondente.
 
-Para as texturas começou-se por definir uma formula que mapeasse as coordenadas
+Para as texturas começou-se por definir uma fórmula que mapeasse as coordenadas
 de cada face para valores compreendidos entre, 0 e $\frac{1}{3}$ e 0 e
 $\frac{1}{2}$, dependendo do eixo pretendido. Depois é somado um
 \textit{offset} a estes valores dependendo da secção da textura que se pretende
 mapear.
 
-Assumindo que o ponto de visto é colocado em (0,0,1), as coordenadas de textura
+Assumindo que o ponto de vista é colocado em (0,0,1), as coordenadas de textura
 da face da frente são $x \in [0,\frac{1}{3}]$ e $y \in [0,\frac{1}{2}]$ logo o
 \textit{offset} destes é nulo. No entanto, para a face da esquerda, as suas
 coordenadas de textura são $x \in [\frac{2}{3},1]$ e $y \in [\frac{1}{2},1]$,
-logo o \textit{offset} destes é $\frac{2}{3}$ e $\frac{1}{2}$, respectivamente.
+logo o \textit{offset} destes é $\frac{2}{3}$ e $\frac{1}{2}$, respetivamente.
 
 % (0,0) ====== (0.333,0) ======= (0.666,0) ===== (1,0)
 %   |     F V      |        U      |       R ->  |
@@ -113,24 +118,25 @@ Sendo que a esfera está sempre centrada na origem, para calcular as normais
 desta, é preciso apenas normalizar as coordenadas dos pontos de forma a obter
 as normais.
 
-A textura usada para aplicar à esfera é rectangular, devido a isto, o raciocínio
-utilizado para aplicar a textura é imaginar que a esfera e cortada em altura e
+A textura usada para aplicar à esfera é rectangular, assim, o raciocínio
+utilizado para aplicar a textura é imaginar que a esfera é cortada em altura e
 ``espalmada'' sobre a textura, de seguida é apenas necessário mapear
 directamente a textura sobre estar interpretação da esfera.
 
 \subsection{Cone}
-O calculo das normais do cone é feito em duas partes, primeiro são calculadas
-as normais da base, que por definição são o vector unitário $(0,-1,0)$. Para o
-lado do cone é calculada o ângulo entre qualquer ponto do lado do cone e a base
-do mesmo através de $\arctan(\frac{radius}{stacks})$, este ângulo define a
-inclinação das normais laterais. Depois disto basta utilizar coordenadas polares
-para determinar as componentes $x$ e $z$ do vector e normalizar.
+O cálculo das normais do cone é feito em duas partes, primeiro são calculadas
+as normais da base, que por definição são o vector unitário $(0,-1,0)$. A
+segunda parte corresponde ao lado do cone, para o qual é calculado o ângulo
+entre qualquer ponto do lado do cone e a base do mesmo através da
+$\arctan(\frac{radius}{stacks})$, este ângulo define a
+inclinação das normais laterais. Depois disto, basta utilizar coordenadas
+polares para determinar as componentes $x$ e $z$ do vetor e normalizar.
 
 Para aplicar uma textura a um cone foi definido o formato da
 figura~\ref{fig:conetexture}, ou seja, a metade esquerda da imagem é a base do
-cone, e a metade direita é a textura do lado do cone. Depois a textura e divida
-nas mesmas \textit{slices} e \textit{stacks} que o cone tem e faz-se o
-mapeamento.
+cone, e a metade direita é a textura do lado do cone. Depois a textura é
+dividida no mesmo número de \textit{slices} e \textit{stacks} que o cone tem e
+faz-se o mapeamento.
 
 \begin{figure}[H]
     \centering
@@ -139,21 +145,21 @@ mapeamento.
 \end{figure}
 
 \subsection{Torus}
-As normais do torus fazem uso da mesma técnica utilizada para a esfera
+As normais do torus fazem uso da mesma técnica utilizada para a esfera,
 (Ver~\ref{sec:esfera}) apenas alterado o centro, agora a origem já não é o
-ponto de referencia mas sim os centros de cada anel do torus, visto que o
-raciocínio para o calculo dos pontos deste já era vectorial, foi apenas
-necessário normalizar os vectores.
+ponto de referência mas sim os centros de cada anel do torus, visto que o
+raciocínio para o cálculo dos pontos deste já era vetorial, foi apenas
+necessário normalizar os vetores.
 
-Para as coordenadas de textura, o mapeamento e similar ao da esfera, imagina se
-que a \textit{mesh} to torus e espalmada sobre a textura deste, e assim o
-mapeamento e directo. Percorrer a textura ao longo do eixo dos $y$ implica
-percorrer o torus a volta do seu perímetro enquanto que no eixo dos $x$
+Para as coordenadas de textura, o mapeamento é também similar ao da esfera,
+imagina-se que a \textit{mesh} do torus é espalmada sobre a textura deste, e
+assim o mapeamento e direto. Percorrer a textura ao longo do eixo dos $y$
+implica percorrer o torus à volta do seu perímetro enquanto que no eixo dos $x$
 desenha-se cada anel do torus.
 
 \section{Engine}
 
-O \textit{engine} foi estendido para para possibilitar a renderização de
+O \textit{engine} foi estendido para possibilitar a renderização de
 modelos com superfícies mais complexas, permitindo definir se um objeto tem uma
 superfície difusa, especular, emissiva e/ou ambiente, assim como definir uma
 textura para a cobrir.
@@ -164,7 +170,7 @@ referidas através das propriedades \texttt{ambi[RGB]}, \texttt{diff[RGB]},
 \texttt{spec[RGB]} e \texttt{emis[RGB]}. Por exemplo,\\
 \verb!<model file="models/sphere.3d" ambiR="0.2" diffB="0.8" />!
 
-Todas as componentes tem valores por defeito de $(0,0,0)$ excepto a componente
+Todas as componentes têm valores por defeito de $(0,0,0)$ exceto a componente
 difusa que tem $(1,1,1)$ por defeito. Num esforço de manter \textit{backwards
 compatibility} e cenas de fases anteriores continuarem a funcionar, quando
 nenhuma componente é especificada a cor do grupo é passada como valor da
@@ -176,10 +182,12 @@ Para além das componentes, pode ser passado também o ficheiro de onde carregar
 a textura do modelo utilizando o atributo \texttt{texture}. Por exemplo\\
 \verb!<model file="models/sphere.3d" texture="assets/8k_jupiter.jpg" />!
 
+\section{Lighting}
+
 \section{Sistema Solar}
 
 \section{Optimizações}
-Para optimizar a utilização de memoria do programa, foi criada uma cache de
+Para otimizar a utilização de memória do programa, foi criada uma cache de
 modelos e texturas, assim cada conjunto de pontos, normais e coordenadas de
 textura, correspondente a um ficheiro \texttt{.3d}, é carregado apenas uma vez
 para o GPU e reutilizado para todos os modelos que os utilizam. O mesmo
@@ -192,8 +200,12 @@ modelo, o ficheiro \texttt{sphere.3d} é lido apenas uma vez.
 
 \section{Conclusões e Trabalho Futuro}
 
-Em conclusão, a area de computação gráfica apresenta desafios bastante diferentes das outras areas de ciências de computação, no que toca a gestão de memória e de recursos de computação, mas também nos conhecimentos de geometria e algebra.
+Em conclusão, a área de computação gráfica apresenta desafios bastante
+diferentes das outras áreas de ciências de computação, tanto no que toca a
+gestão de memória e de recursos de computação, como também nos conhecimentos de
+geometria e álgebra.
 
-Como trabalho futuro, poderiam ser feitas varias optimizações como oclusão e a utilização de indices para melhorar o desempenho dos VBOs.
+Como trabalho futuro, poderiam ser feitas várias otimizações como oclusão e a
+utilização de índices para melhorar o desempenho dos VBOs.
 
 \end{document}
