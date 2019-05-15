@@ -54,18 +54,20 @@ void Patches::construct(string filename, int t)
 vector<Point> Patches::draw() const
 {
     vector<Point> points;
-    const float delta = 1.0 / tessellation;
     for (size_t i = 0; i < patches.size(); i++) {
+        const float delta = 1.0 / tessellation;
+        const float texture_x_delta = 1.0 / tessellation;
+        const float texture_y_delta = 1.0 / tessellation;
         for (size_t iu = 0; iu < tessellation; iu++) {
-            float u = delta * iu;
-            float uNext = delta * (iu + 1);
-            float texture_x = iu / tessellation;
-            float texture_x_next = (iu + 1) / tessellation;
+            const float u = delta * iu;
+            const float uNext = delta * (iu + 1);
+            const float texture_x = texture_x_delta * iu;
+            const float texture_x_next = texture_x_delta * (iu + 1);
             for (size_t iv = 0; iv < tessellation; iv++) {
-                float v = delta * iv;
-                float vNext = delta * (iv + 1);
-                float texture_y = iv / tessellation;
-                float texture_y_next = (iv + 1) / tessellation;
+                const float v = delta * iv;
+                const float vNext = delta * (iv + 1);
+                const float texture_y = texture_y_delta * iv;
+                const float texture_y_next = texture_y_delta * (iv + 1);
                 Point p0 = bezier_point(i, u, v)
                                .set_normal(bezier_normal(i, u, v))
                                .set_texture(texture_x, texture_y);

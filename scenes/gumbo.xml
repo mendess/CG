@@ -33,7 +33,7 @@
         <rotate angle="-90" x="1" />
         <scale X="0.1" Y="0.1" Z="0.1" />
         <models>
-            <model file="models/gumbo.3d" diffR=".6" diffG=".6" diffB="0.6" />
+            <model file="models/gumbo.3d" diffR=".6" diffG=".6" diffB="0.6" texture="assets/rainbow_square.jpg" />
         </models>
     </group>
 </scene>
