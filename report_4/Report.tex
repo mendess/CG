@@ -73,6 +73,22 @@ tabsize=4
 \pagebreak
 
 \section{Introdução}
+Este trabalho foi proposto no âmbito da unidade curricular de Computação
+Gráfica, e tem como objetivo desenvolver um motor gráfico genérico para
+representar objetos a 3 dimensões. Este relatório tem como contexto ambos os
+relatórios anteriores.
+
+Nesta quarta fase do projeto estendemos as capacidades do motor gráfico
+anteriormente definido com a adição de luzes e texturas. Foram também feitas
+algumas otimizações a este.
+
+O gerador de modelos foi também estendido para calcular para cada uma das
+primitivas os vetores normais e as coordenadas de textura das mesmas.
+
+Por fim, o modelo de teste utilizado (O Sistema Solar) foi alterado para
+demonstrar estas capacidades, fazendo uso de texturas para os planetas e Sol,
+assim como colocar iluminação neste.
+
 
 \section{Generator}
 
@@ -81,7 +97,19 @@ coordenadas de textura correspondentes aos pontos dos triângulos calculados.
 Em seguida, passamos a explicar o processo do cálculo das normais e das
 coordenadas de textura para cada uma das primitivas.
 
-\subsection{Plano}
+\subsection{Nova Primitiva: Cilindro}
+
+Foi adicionado ao gerador a primitiva cilindro. Este é definido pelo raio da
+base, altura e número de \textit{slices}.
+
+Em cada iteração são definidos quatro pontos usando coordenadas polares, estes
+quatro pontos são os cantos da slice respectiva, depois usando estes são
+desenhados quatro triângulos, um para a base, outro para o topo e por fim
+outros dois para a fazer o rectângulo que compõem a \textit{slice}.
+
+\subsection{Vetores Normais e Coordenadas de Textura}
+
+\subsubsection{Plano}
 Como um plano está situado no plano xOz e as normais são sempre vetores
 perpendiculares, as normais deste são vetores unitários com apenas a componente
 y positiva.
@@ -90,7 +118,13 @@ As coordenadas de textura para o plano são calculadas de forma
 muito simples. Como o plano e a textura tem a mesma forma, o mapeamento é
 directo, assim, os cantos da textura são mapeados para os cantos do plano.
 
-\subsection{Cubo}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{plane.png}
+    \caption{Plano com textura}
+\end{figure}
+
+\subsubsection{Cubo}
 As normais de um cubo também são simples de calcular, pois cada uma das faces é
 paralela a um dos planos (xOz, xOy, yOz), logo as normais dessa face são
 perpendiculares ao plano correspondente.
@@ -113,13 +147,19 @@ logo o \textit{offset} destes é $\frac{2}{3}$ e $\frac{1}{2}$, respetivamente.
     \caption{Esquema de como a textura deve ser desenhada.}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{box.png}
+    \caption{Plano com textura}
+\end{figure}
+
 % (0,0) ====== (0.333,0) ======= (0.666,0) ===== (1,0)
 %   |     F V      |        U      |       R ->  |
 % (0,0.5) ==== (0.333,0.5) ===== (0.666,0.5) === |
 %   |     B V      |        D      |       L ->  |
 % (0,1) ====== (0.333,1) ======= (0.666,1) ===== (1,1)
 
-\subsection{Esfera}\label{sec:esfera}
+\subsubsection{Esfera}\label{sec:esfera}
 Sendo que a esfera está sempre centrada na origem, para calcular as normais
 desta, é preciso apenas normalizar as coordenadas dos pontos de forma a obter
 as normais.
@@ -129,7 +169,13 @@ utilizado para aplicar a textura é imaginar que a esfera é cortada em altura e
 ``espalmada'' sobre a textura, de seguida é apenas necessário mapear
 directamente a textura sobre estar interpretação da esfera.
 
-\subsection{Cone}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{sphere.png}
+    \caption{Plano com textura}
+\end{figure}
+
+\subsubsection{Cone}
 O cálculo das normais do cone é feito em duas partes, primeiro são calculadas
 as normais da base, que por definição são o vector unitário $(0,-1,0)$. A
 segunda parte corresponde ao lado do cone, para o qual é calculado o ângulo
@@ -150,7 +196,38 @@ faz-se o mapeamento.
     \caption{Textura exemplo de um cone}\label{fig:conetexture}
 \end{figure}
 
-\subsection{Torus}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{cone.png}
+    \caption{Plano com textura}
+\end{figure}
+
+\subsection{Cilindro}
+As normais dos cilindro são relativamente simples, para a base e topo as
+normais são sempre $(0,-1,0)$ e $(0,1,0)$ respetivamente, para o lado, é apenas
+necessário normalizar as coordenadas dos pontos respetivos depois de colocar o
+seu $y$ a 0 (para que seja paralelo ao plano xOz).
+
+Para as coordenadas de textura é foi utilizado o \textit{template} da
+figura~\ref{fig:cilindro}. Para os lados divide-se o rectângulo pelo número de
+\textit{slices} e sempre que se avança de \textit{slice} soma-se essa quantidade
+ao $x$ da textura. O $y$ so toma dois valores 0 e 0.625. Por fim, o topo e a
+base são obtidas através de coordenadas polares, somando ao centro de cada uma
+$\sin(\alpha) \times 0.1875$ para o $x$ e $\cos(alpha) \times 0.1875$ para o $y$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics{../assets/OilBarrel.jpg}
+    \caption{Exemplo de um template possível para o cilindro.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{cylinder.png}
+    \caption{Plano com textura}
+\end{figure}
+
+\subsubsection{Torus}
 As normais do torus fazem uso da mesma técnica utilizada para a esfera,
 (Ver~\ref{sec:esfera}) apenas alterado o centro, agora a origem já não é o
 ponto de referência mas sim os centros de cada anel do torus, visto que o
@@ -239,6 +316,8 @@ pontual são:
 \end{itemize}
 
 \section{Sistema Solar}
+O sistema solar foi alterado para aplicar uma textura a cada astro e uma luz
+pontual no centro do Sol.
 
 \section{Optimizações}
 Para otimizar a utilização de memória do programa, foi criada uma cache de
