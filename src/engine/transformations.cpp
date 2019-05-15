@@ -28,34 +28,16 @@ void RotateStatic::transform(double elapsed) const
     glRotatef(angle, x, y, z);
 }
 
-Matrix RotateStatic::matrix(double elapsed) const
-{
-    return rotation_matrix(angle, x, y, z);
-}
-
 void RotateAnimated::transform(double elapsed) const
 {
     float angle = (elapsed * 360 / dur);
     glRotatef(angle, x, y, z);
 }
 
-Matrix RotateAnimated::matrix(double elapsed) const
-{
-    float angle = (elapsed * 360 / dur);
-    return rotation_matrix(angle, x, y, z);
-}
-
 void TranslateStatic::transform(double elapsed) const
 {
     glTranslatef(x, y, z);
 }
-
-Matrix TranslateStatic::matrix(double elapsed) const
-{
-    return translate_matrix(x, y, z);
-}
-
-bool TranslateAnimated::show_routes = false;
 
 tuple<Point, Vector> TranslateAnimated::get_position(double elapsed) const
 {
@@ -71,18 +53,12 @@ void TranslateAnimated::transform(double elapsed) const
     auto pos_deriv = get_position(elapsed);
     Point pos = get<0>(pos_deriv);
     glTranslatef(pos.x(), pos.y(), pos.z());
-    /* Vector X = get<1>(pos_deriv).normalize(); */
-    /* Vector Z = X.cross({ 0, 1, 0 }).normalize(); */
-    /* Vector Y = Z.cross(X).normalize(); */
-    /* float m[16]; */
-    /* buildRotMatrix(X, Y, Z, m); */
-    /* glMultMatrixf(m); */
-}
-
-Matrix TranslateAnimated::matrix(double elapsed) const
-{
-    Point pos = get<0>(get_position(elapsed));
-    return translate_matrix(pos.x(), pos.y(), pos.z());
+    Vector X = get<1>(pos_deriv).normalize();
+    Vector Z = X.cross({ 0, 1, 0 }).normalize();
+    Vector Y = Z.cross(X).normalize();
+    float m[16];
+    buildRotMatrix(X, Y, Z, m);
+    glMultMatrixf(m);
 }
 
 void TranslateAnimated::draw_routes() const
@@ -109,11 +85,6 @@ void ScaleStatic::transform(double elapsed) const
     glScalef(x, y, z);
 }
 
-Matrix ScaleStatic::matrix(double elapsed) const
-{
-    return scale_matrix(x, y, z);
-}
-
 tuple<float, float, float> ScaleAnimated::get_ratio(double elapsed) const
 {
     while (elapsed > dur)
@@ -129,48 +100,6 @@ void ScaleAnimated::transform(double elapsed) const
 {
     auto r = get_ratio(elapsed);
     glScalef(get<0>(r), get<1>(r), get<2>(r));
-}
-
-Matrix ScaleAnimated::matrix(double elapsed) const
-{
-    auto r = get_ratio(elapsed);
-    return scale_matrix(get<0>(r), get<1>(r), get<2>(r));
-}
-
-Matrix translate_matrix(float x, float y, float z)
-{
-    return { .matrix = {
-                 { 1, 0, 0, x },
-                 { 0, 1, 0, y },
-                 { 0, 0, 1, z },
-                 { 0, 0, 0, 1 } } };
-}
-
-Matrix scale_matrix(float x, float y, float z)
-{
-    return { .matrix = {
-                 { x, 0, 0, 0 },
-                 { 0, y, 0, 0 },
-                 { 0, 0, z, 0 },
-                 { 0, 0, 0, 1 } } };
-}
-
-Matrix rotation_matrix(float angle, float x, float y, float z)
-{
-    Matrix m;
-    m.matrix[0][0] = x * x + (1 - (x * x)) * cos(angle);
-    m.matrix[0][1] = x * y * (1 - cos(angle)) - z * sin(angle);
-    m.matrix[0][2] = x * z * (1 - cos(angle)) + y * sin(angle);
-    m.matrix[1][0] = y * x * (1 - cos(angle)) + z * sin(angle);
-    m.matrix[1][1] = y * y + (1 - y * y) * cos(angle);
-    m.matrix[1][2] = y * z * (1 - cos(angle)) - x * sin(angle);
-    m.matrix[2][0] = z * x * (1 - cos(angle)) - y * sin(angle);
-    m.matrix[2][1] = z * y * (1 - cos(angle)) + x * sin(angle);
-    m.matrix[2][2] = z * z + (1 - z * z) * cos(angle);
-    m.matrix[3][3] = 1;
-    m.matrix[0][3] = m.matrix[1][3] = m.matrix[2][3] = 0;
-    m.matrix[3][0] = m.matrix[3][1] = m.matrix[3][2] = 0;
-    return m;
 }
 
 void buildRotMatrix(Vector x, Vector y, Vector z, float* m)

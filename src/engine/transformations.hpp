@@ -14,7 +14,6 @@ class Transformation {
 public:
     virtual ~Transformation() {};
     virtual void transform(double elapsed) const = 0;
-    virtual Matrix matrix(double elapsed) const = 0;
 };
 
 class RotateStatic : public Transformation {
@@ -31,7 +30,6 @@ public:
     }
     ~RotateStatic() override {};
     void transform(double) const override;
-    Matrix matrix(double elapsed) const override;
 };
 
 class RotateAnimated : public Transformation {
@@ -48,7 +46,6 @@ public:
     }
     ~RotateAnimated() override {};
     void transform(double) const override;
-    Matrix matrix(double elapsed) const override;
 };
 
 class TranslateStatic : public Transformation {
@@ -64,12 +61,11 @@ public:
     }
     ~TranslateStatic() override {};
     void transform(double) const override;
-    Matrix matrix(double elapsed) const override;
 };
 
 class TranslateAnimated : public Transformation {
 private:
-    static bool show_routes;
+    static inline bool show_routes = false;
     std::vector<Point> points;
     float dur;
 
@@ -83,7 +79,6 @@ public:
     }
     ~TranslateAnimated() override {};
     void transform(double) const override;
-    Matrix matrix(double elapsed) const override;
     void draw_routes() const;
     static void toggle_routes() { show_routes = !show_routes; };
     template<typename F>
@@ -108,7 +103,6 @@ public:
     }
     ~ScaleStatic() override {};
     void transform(double) const override;
-    Matrix matrix(double elapsed) const override;
 };
 
 class ScaleAnimated : public Transformation {
@@ -132,6 +126,5 @@ public:
     }
     ~ScaleAnimated() override {};
     void transform(double) const override;
-    Matrix matrix(double elapsed) const override;
 };
 #endif // TRANSFORMATIONS_HPP

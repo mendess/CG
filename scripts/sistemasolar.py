@@ -39,6 +39,7 @@ class Planet:
             z = self.orbit_y * sin(a)
             print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
         print(' ' * indent, '    </translate>')
+        print(' ' * indent, '    <rotate Y="1" TIME="10" />')
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(self.radius))
         print(' ' * indent, '    <models>')
         if self.texture is None:
@@ -74,7 +75,7 @@ class Planet:
             z = self.orbit_y * cos(a)
             print(' ' * indent, '        <point X="{}" Z="{}"/>'.format(x, z))
         print(' ' * indent, '    </translate>')
-        print(' ' * indent, '    <rotate Y="1" time="10" />')
+        # print(' ' * indent, '    <rotate Y="1" time="10" />')
         print(' ' * indent, '    <scale X="{0}" Y="{0}" Z="{0}" />'.format(self.radius))
         print(' ' * indent, '    <models>')
         if self.texture is None:
