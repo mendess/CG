@@ -16,7 +16,7 @@ void follow_cam(unsigned char key);
 
 float speed = 1.0;
 float radius = 100;
-float alpha = M_PI;
+float alpha = 0;
 float beta = M_PI / 5;
 float look_x = 0.0;
 float look_y = 0.0;

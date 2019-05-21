@@ -4,26 +4,26 @@
             <light type="POINT" />
         </lights>
         <translate time="20" >
-            <translate Y="-8" Z="10" />
-            <translate Y="0" Z="10" />
-            <translate Y="8" Z="10" />
-            <translate Y="0" Z="10" />
-            <translate Y="-8" Z="10" />
-            <translate X="-8" Z="10" />
-            <translate X="0" Z="10" />
-            <translate X="8" Z="10" />
-            <translate X="0" Z="10" />
-            <translate X="-8" Z="10" />
-            <translate Y="-8" Z="-10" />
-            <translate Y="0"  Z="-10" />
-            <translate Y="8"  Z="-10" />
-            <translate Y="0"  Z="-10" />
-            <translate Y="-8" Z="-10" />
-            <translate X="-8" Z="-10" />
-            <translate X="0"  Z="-10" />
-            <translate X="8"  Z="-10" />
-            <translate X="0"  Z="-10" />
-            <translate X="-8" Z="-10" />
+            <point Y="-8" Z="10.1" />
+            <point Y="0" Z="10" />
+            <point Y="8" Z="9.9" />
+            <point Y="0" Z="10" />
+            <point Y="-8" Z="10.1" />
+            <point X="-8" Z="9.9" />
+            <point X="0" Z="10" />
+            <point X="8" Z="10" />
+            <point X="0" Z="10" />
+            <point X="-8" Z="10" />
+            <point Y="-8" Z="-10.1" />
+            <point Y="0"  Z="-10" />
+            <point Y="8"  Z="-9.9" />
+            <point Y="0"  Z="-10" />
+            <point Y="-8" Z="-10.1" />
+            <point X="-8" Z="-10" />
+            <point X="0"  Z="-10" />
+            <point X="8"  Z="-10" />
+            <point X="0"  Z="-10" />
+            <point X="-8" Z="-10" />
         </translate>
         <models>
             <model file="models/sphere.3d" emisR="1" emisG="1" emisB="1" />
