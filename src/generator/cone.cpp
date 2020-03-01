@@ -1,4 +1,4 @@
-#include "cone.hpp"
+#include "generator/cone.hpp"
 #include <cmath>
 #include <stdexcept>
 

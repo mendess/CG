@@ -1,6 +1,6 @@
 #include "dependencies/rapidxml.hpp"
-#include "group.hpp"
-#include "render.hpp"
+#include "engine/group.hpp"
+#include "engine/render.hpp"
 #include <algorithm>
 #include <cstring>
 #include <fstream>

@@ -1,4 +1,4 @@
-#include "sphere.hpp"
+#include "generator/sphere.hpp"
 #include <cmath>
 #include <stdexcept>
 

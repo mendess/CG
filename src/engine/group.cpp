@@ -1,9 +1,9 @@
-#include "group.hpp"
+#include "engine/group.hpp"
 #include "common/util.hpp"
 #include "dependencies/rapidxml.hpp"
-#include "light.hpp"
-#include "model.hpp"
-#include "transformations.hpp"
+#include "engine/light.hpp"
+#include "engine/model.hpp"
+#include "engine/transformations.hpp"
 #include <algorithm>
 #include <cstring>
 #include <functional>

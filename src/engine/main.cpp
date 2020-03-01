@@ -1,7 +1,7 @@
 #include "dependencies/rapidxml.hpp"
-#include "group.hpp"
-#include "parser.hpp"
-#include "render.hpp"
+#include "engine/group.hpp"
+#include "engine/parser.hpp"
+#include "engine/render.hpp"
 #include <iostream>
 #include <vector>
 #include <utility>

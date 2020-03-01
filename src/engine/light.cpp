@@ -1,5 +1,5 @@
 
-#include "light.hpp"
+#include "engine/light.hpp"
 #include "common/util.hpp"
 
 #include <sstream>

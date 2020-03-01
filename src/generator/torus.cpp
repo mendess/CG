@@ -1,4 +1,4 @@
-#include "torus.hpp"
+#include "generator/torus.hpp"
 #include <cmath>
 #include <stdexcept>
 

@@ -1,4 +1,4 @@
-#include "camera.hpp"
+#include "engine/camera.hpp"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>

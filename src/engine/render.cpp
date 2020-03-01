@@ -1,7 +1,7 @@
-#include "camera.hpp"
-#include "group.hpp"
-#include "model.hpp"
-#include "parser.hpp"
+#include "engine/camera.hpp"
+#include "engine/group.hpp"
+#include "engine/model.hpp"
+#include "engine/parser.hpp"
 
 #include <iostream>
 #include <sstream>
