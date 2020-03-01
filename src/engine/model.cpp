@@ -1,5 +1,5 @@
 #include "model.hpp"
-#include "../dependencies/rapidxml.hpp"
+#include "dependencies/rapidxml.hpp"
 
 #include <cstring>
 #include <fstream>

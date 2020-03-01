@@ -1,6 +1,6 @@
 #include "group.hpp"
-#include "../common/util.hpp"
-#include "../dependencies/rapidxml.hpp"
+#include "common/util.hpp"
+#include "dependencies/rapidxml.hpp"
 #include "light.hpp"
 #include "model.hpp"
 #include "transformations.hpp"

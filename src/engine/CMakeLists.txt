@@ -7,7 +7,7 @@ add_executable(engine main.cpp model.cpp camera.cpp transformations.cpp group.cp
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})
-include_directories(${globalProject_SOURCE_DIR}/src/common/)
+target_include_directories(engine PUBLIC ../../include/engine)
 link_directories(${OpenGL_LIBRARY_DIRS})
 add_definitions(${OpenGL_DEFINITIONS})
 

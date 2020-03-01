@@ -1,4 +1,4 @@
-#include "../dependencies/rapidxml.hpp"
+#include "dependencies/rapidxml.hpp"
 #include "group.hpp"
 #include "parser.hpp"
 #include "render.hpp"

@@ -1,6 +1,6 @@
 
 #include "light.hpp"
-#include "../common/util.hpp"
+#include "common/util.hpp"
 
 #include <sstream>
 #include <unordered_map>

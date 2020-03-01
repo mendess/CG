@@ -7,7 +7,7 @@ add_executable(generator main.cpp cone.cpp box.cpp cylinder.cpp plane.cpp sphere
 
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})
-include_directories(${globalProject_SOURCE_DIR}/src/common/)
+target_include_directories(generator PUBLIC ../../include/generator)
 link_directories(${OpenGL_LIBRARY_DIRS})
 add_definitions(${OpenGL_DEFINITIONS})
 
